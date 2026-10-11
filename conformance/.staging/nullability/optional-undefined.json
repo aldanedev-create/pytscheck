@@ -1,0 +1,14 @@
+{
+  "case": "nullability/optional-undefined.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "optional-undefined.ts",
+      "line": 3,
+      "column": 10,
+      "code": 18048,
+      "category": "error",
+      "message": "'x' is possibly 'undefined'."
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+version: "3"
+
+vars:
+  PLATFORM: '{{.PLATFORM | default "linux-x64"}}'
+
+tasks:
+  install:
+    cmds:
+      - pip install -e .
+
+  dev:
+    cmds:
+      - pip install -e ".[dev]"
+
+  test:
+    cmds:
+      - pytest
+
+  lint:
+    cmds:
+      - ruff check src tests scripts
+
+  type:
+    cmds:
+      - mypy src/pytscheck
+
+  format:
+    cmds:
+      - ruff format src tests scripts
+
+  coverage:
+    cmds:
+      - pytest --cov=pytscheck --cov-report=term-missing
+
+  build:
+    cmds:
+      - python -m build
+
+  binaries:
+    cmds:
+      - python scripts/build_binaries.py {{.PLATFORM}}
+
+  verify:
+    cmds:
+      - python scripts/verify_binaries.py
+
+  clean:
+    cmds:
+      - rm -rf build dist *.egg-info .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov

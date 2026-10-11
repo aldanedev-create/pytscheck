@@ -1,0 +1,77 @@
+name: Compiler compatibility
+description: Report a behavior difference between pytscheck and the bundled compiler, or between compiler versions.
+title: "[Compiler] "
+labels: ["compiler", "compatibility", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when the issue is specifically about how
+        pytscheck reports what the bundled `tsgo` compiler says. For
+        general bugs, use the bug report template.
+
+        If you upgraded the pinned compiler and saw a diagnostic change,
+        this is the right template.
+
+  - type: input
+    id: old-version
+    attributes:
+      label: Previous compiler version
+      description: The version before the change (if applicable).
+    validations:
+      required: false
+
+  - type: input
+    id: new-version
+    attributes:
+      label: New compiler version
+      description: The version now pinned by pytscheck.
+    validations:
+      required: true
+
+  - type: textarea
+    id: case
+    attributes:
+      label: Case that changed
+      description: |
+        The exact TypeScript source and the two expected outputs. If a
+        conformance case exists, name it (e.g.
+        `assignability/literal-mismatch.ts`).
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: diff
+    attributes:
+      label: Observed difference
+      description: |
+        Paste the diagnostic list before and after. If you have
+        `conformance/expected/` diffs, include them.
+      render: text
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Diagnostic appeared (new error)
+        - Diagnostic disappeared (regression, silent pass)
+        - Diagnostic code changed
+        - Diagnostic position changed
+        - Diagnostic message changed
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Confirmations
+      options:
+        - label: I ran the compiler directly against the same input and confirmed the difference is in the compiler, not just in pytscheck.
+          required: true
+        - label: I checked the upstream TypeScript changelog and this isn't a documented change.
+          required: false

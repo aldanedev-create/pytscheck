@@ -1,0 +1,5 @@
+{
+  "compilerOptions": {"strict": true, "noEmit": true},
+  "include": ["lib/**/*.ts"],
+  "references": [{"path": "./app"}]
+}

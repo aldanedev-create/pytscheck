@@ -1,0 +1,17 @@
+[run]
+source = src/pytscheck
+branch = True
+omit =
+    src/pytscheck/bin/*
+    src/pytscheck/__main__.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if TYPE_CHECKING:
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    \.\.\.
+show_missing = True
+skip_covered = False
+fail_under = 85

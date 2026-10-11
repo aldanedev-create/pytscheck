@@ -1,0 +1,14 @@
+{
+  "case": "nullability/possibly-null.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "possibly-null.ts",
+      "line": 3,
+      "column": 10,
+      "code": 18047,
+      "category": "error",
+      "message": "'x' is possibly 'null'."
+    }
+  ]
+}

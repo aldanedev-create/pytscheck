@@ -1,0 +1,14 @@
+{
+  "case": "assignability/union-to-narrower.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "union-to-narrower.ts",
+      "line": 3,
+      "column": 3,
+      "code": 2322,
+      "category": "error",
+      "message": "Type 'string | number' is not assignable to type 'string'.\nType 'number' is not assignable to type 'string'."
+    }
+  ]
+}

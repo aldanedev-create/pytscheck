@@ -1,0 +1,14 @@
+{
+  "case": "classes/abstract-not-implemented.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "abstract-not-implemented.ts",
+      "line": 3,
+      "column": 14,
+      "code": 2515,
+      "category": "error",
+      "message": "Non-abstract class 'Square' does not implement inherited abstract member area from class 'Shape'."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Funding configuration for pytscheck.
+#
+# This file controls the "Sponsor" button that GitHub shows on the
+# repository page. Fill in the platforms you actually use; uncomment
+# and set the username.
+#
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+github: []          # e.g. [your-github-username]
+# patreon: your-handle
+# open_collective: your-collective
+# ko_fi: your-handle
+# tidelift: pypi/pytscheck
+# community_bridge: your-project
+# liberapay: your-handle
+# issuehunt: your-handle
+# lfx_crowdfunding: your-project
+# polar: your-handle
+# buy_me_a_coffee: your-handle
+# thanks_dev: your-handle
+# custom: ["https://example.com/donate"]

@@ -1,0 +1,5 @@
+{
+  "case": "inference/literal.ts",
+  "success": true,
+  "diagnostics": []
+}

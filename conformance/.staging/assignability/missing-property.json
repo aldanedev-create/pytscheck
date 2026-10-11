@@ -1,0 +1,14 @@
+{
+  "case": "assignability/missing-property.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "missing-property.ts",
+      "line": 3,
+      "column": 14,
+      "code": 2741,
+      "category": "error",
+      "message": "Property 'b' is missing in type '{ a: number; }' but required in type 'A'."
+    }
+  ]
+}

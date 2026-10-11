@@ -1,0 +1,14 @@
+{
+  "case": "modules/ambient-module.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "ambient-module.ts",
+      "line": 2,
+      "column": 16,
+      "code": 2664,
+      "category": "error",
+      "message": "Invalid module name in augmentation, module 'vendor' cannot be found."
+    }
+  ]
+}

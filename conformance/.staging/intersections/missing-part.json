@@ -1,0 +1,14 @@
+{
+  "case": "intersections/missing-part.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "missing-part.ts",
+      "line": 4,
+      "column": 14,
+      "code": 2322,
+      "category": "error",
+      "message": "Type '{ a: number; }' is not assignable to type 'A & B'.\nProperty 'b' is missing in type '{ a: number; }' but required in type 'B'."
+    }
+  ]
+}

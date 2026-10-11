@@ -1,0 +1,129 @@
+"""Orchestrates runner -> parser -> results."""
+
+from __future__ import annotations
+
+import tempfile
+from pathlib import Path
+
+from .config import CompilerOptions, find_tsconfig, validate_project_root
+from .exceptions import CompilerExecutionError, ConfigurationError
+from .models import Diagnostic, Result, SourceFile
+from .options import options_to_argv
+from .protocol import parse_or_raise
+from .results import build_result
+from .runner import run
+from .version import COMPILER_VERSION
+
+
+def _run_tsgo_on_args(
+    argv_tail: list[str],
+    *,
+    compiler_version: str = COMPILER_VERSION,
+    keep_raw: bool = False,
+    cwd: Path | None = None,
+) -> Result:
+    r = run(argv_tail, cwd=cwd)
+    output = r.stdout + ("\n" + r.stderr if r.stderr else "")
+
+    if r.returncode != 0 and not output.strip():
+        raise CompilerExecutionError(
+            f"tsgo exited with code {r.returncode} and produced no output",
+            returncode=r.returncode,
+            stdout=r.stdout,
+            stderr=r.stderr,
+        )
+
+    diagnostics: tuple[Diagnostic, ...] = ()
+    if output.strip():
+        diagnostics = parse_or_raise(output, allow_unparsed=False)
+
+    return build_result(
+        list(diagnostics),
+        compiler_version=compiler_version,
+        elapsed_seconds=r.elapsed_seconds,
+        raw_output=output if keep_raw else None,
+    )
+
+
+def check_source(
+    source: str,
+    *,
+    filename: str = "input.ts",
+    options: CompilerOptions | None = None,
+    keep_raw: bool = False,
+) -> Result:
+    options = options or CompilerOptions()
+    with tempfile.TemporaryDirectory(prefix="pytscheck-") as tmp:
+        tmp_path = Path(tmp)
+        target = tmp_path / filename
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(source, encoding="utf-8")
+
+        argv_tail = [*options_to_argv(options), str(target)]
+        return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=tmp_path)
+
+
+def check_file(
+    path: str | Path,
+    *,
+    options: CompilerOptions | None = None,
+    keep_raw: bool = False,
+) -> Result:
+    options = options or CompilerOptions()
+    target = Path(path).expanduser().resolve()
+    if not target.exists():
+        raise ConfigurationError(f"file does not exist: {target}")
+
+    argv_tail = [*options_to_argv(options), str(target)]
+    return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=target.parent)
+
+
+
+
+def check_sources_virtual(
+    sources: tuple[SourceFile, ...],
+    *,
+    options: CompilerOptions | None = None,
+    keep_raw: bool = False,
+) -> Result:
+    """Check a set of virtual SourceFiles (used by the adapter path).
+
+    Writes each source into a private temp directory, invokes tsgo once
+    against the directory, and returns diagnostics whose ``file`` values
+    are the *virtual* paths (remapping happens in the adapter layer).
+    """
+    options = options or CompilerOptions()
+    if not sources:
+        raise ConfigurationError("adapter returned no sources to check")
+
+    with tempfile.TemporaryDirectory(prefix="pytscheck-adapter-") as tmp:
+        tmp_path = Path(tmp)
+        for src in sources:
+            dest = tmp_path / src.path
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(src.text, encoding="utf-8")
+
+        argv_tail = [*options_to_argv(options), str(tmp_path)]
+        return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=tmp_path)
+
+
+def check_project(
+    project_root: str | Path,
+    *,
+    options: CompilerOptions | None = None,
+    keep_raw: bool = False,
+) -> Result:
+    options = options or CompilerOptions()
+    root = validate_project_root(Path(project_root).expanduser().resolve())
+
+    argv_tail = [*options_to_argv(options)]
+    tsconfig = find_tsconfig(root)
+    if tsconfig is not None:
+        argv_tail += ["-p", str(tsconfig)]
+    else:
+        argv_tail.append(str(root))
+
+    return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=root)
+
+
+__all__ = ["check_source", "check_file", "check_project"]

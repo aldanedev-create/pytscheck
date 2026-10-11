@@ -1,0 +1,1250 @@
+{
+  "generator": "scripts/generate_benchmark_fixtures.py",
+  "version": 1,
+  "fixture_count": 207,
+  "total_bytes": 1158217,
+  "fixtures": [
+    {
+      "path": "tiny.ts",
+      "size_bytes": 390,
+      "description": "~300 bytes, 10 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "medium.ts",
+      "size_bytes": 32848,
+      "description": "~40 KB, 1,000 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large.ts",
+      "size_bytes": 347848,
+      "description": "~400 KB, 10,000 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "errors-100.ts",
+      "size_bytes": 3937,
+      "description": "100 type errors",
+      "generated": true
+    },
+    {
+      "path": "errors-1000.ts",
+      "size_bytes": 39938,
+      "description": "1,000 type errors",
+      "generated": true
+    },
+    {
+      "path": "mixed.ts",
+      "size_bytes": 20222,
+      "description": "500 valid + 100 errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/tsconfig.json",
+      "size_bytes": 144,
+      "description": "tsconfig for the large project benchmark",
+      "generated": false
+    },
+    {
+      "path": "large-project/file_000.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_001.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_002.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_003.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_004.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_005.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_006.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_007.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_008.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_009.ts",
+      "size_bytes": 3418,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_010.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_011.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_012.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_013.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_014.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_015.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_016.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_017.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_018.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_019.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_020.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_021.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_022.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_023.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_024.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_025.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_026.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_027.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_028.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_029.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_030.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_031.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_032.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_033.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_034.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_035.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_036.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_037.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_038.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_039.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_040.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_041.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_042.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_043.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_044.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_045.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_046.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_047.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_048.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_049.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_050.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_051.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_052.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_053.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_054.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_055.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_056.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_057.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_058.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_059.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_060.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_061.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_062.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_063.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_064.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_065.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_066.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_067.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_068.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_069.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_070.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_071.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_072.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_073.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_074.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_075.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_076.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_077.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_078.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_079.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_080.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_081.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_082.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_083.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_084.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_085.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_086.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_087.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_088.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_089.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_090.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_091.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_092.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_093.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_094.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_095.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_096.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_097.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_098.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_099.ts",
+      "size_bytes": 3519,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_100.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_101.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_102.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_103.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_104.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_105.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_106.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_107.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_108.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_109.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_110.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_111.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_112.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_113.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_114.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_115.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_116.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_117.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_118.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_119.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_120.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_121.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_122.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_123.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_124.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_125.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_126.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_127.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_128.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_129.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_130.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_131.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_132.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_133.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_134.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_135.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_136.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_137.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_138.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_139.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_140.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_141.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_142.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_143.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_144.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_145.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_146.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_147.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_148.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_149.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_150.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_151.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_152.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_153.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_154.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_155.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_156.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_157.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_158.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_159.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_160.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_161.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_162.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_163.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_164.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_165.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_166.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_167.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_168.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_169.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_170.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_171.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_172.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_173.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_174.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_175.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_176.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_177.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_178.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_179.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_180.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_181.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_182.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_183.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_184.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_185.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_186.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_187.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_188.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_189.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_190.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_191.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_192.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_193.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_194.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_195.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_196.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_197.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_198.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    },
+    {
+      "path": "large-project/file_199.ts",
+      "size_bytes": 3620,
+      "description": "100 declarations, no errors",
+      "generated": true
+    }
+  ]
+}

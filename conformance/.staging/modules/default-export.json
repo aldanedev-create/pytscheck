@@ -1,0 +1,5 @@
+{
+  "case": "modules/default-export.ts",
+  "success": true,
+  "diagnostics": []
+}

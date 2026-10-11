@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+*.py text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+
+# Bundled binaries — do not attempt text conversion
+src/pytscheck/bin/**/tsgo binary
+src/pytscheck/bin/**/tsgo.exe binary
+
+# Exclude bundled files from GitHub language stats
+src/pytscheck/bin/** linguist-vendored

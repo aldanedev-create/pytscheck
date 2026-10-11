@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Testing / coverage
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Type checking / linting caches
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Bundled binaries fetched at build time (do not commit)
+/src/pytscheck/bin/*/lib/tsgo*
+/src/pytscheck/bin/*/lib/*.d.ts
+
+# Keep the manifest so the pinned version is tracked
+!/src/pytscheck/bin/manifest.json
+
+# Build archives
+*.whl
+*.tar.gz

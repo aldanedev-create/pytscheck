@@ -1,0 +1,228 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly run to catch upstream rot (compiler fetch, dependency updates)
+    - cron: "0 6 * * 1"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONUNBUFFERED: "1"
+  FORCE_COLOR: "1"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Fast checks -- lint, type, and unit tests. Fails the whole build on
+  # the first problem so we don't waste time on a broken commit.
+  # ---------------------------------------------------------------------------
+  fast:
+    name: Lint, type check, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install package with dev extras
+        run: pip install -e ".[dev]"
+
+      - name: Verify fixture drift
+        run: |
+          python scripts/verify_fixtures.py --quiet --strict
+          python scripts/verify_benchmark_fixtures.py --quiet
+          python scripts/verify_conformance_cases.py --quiet
+
+      - name: Lint
+        run: ruff check src tests scripts conformance benchmarks
+
+      - name: Check formatting
+        run: ruff format --check src tests scripts conformance benchmarks
+
+      - name: Type check
+        run: mypy src/pytscheck
+
+      - name: Unit tests
+        run: pytest tests --ignore=tests/integration --ignore=tests/compatibility -q
+
+      - name: Upload coverage (3.11 only)
+        if: matrix.python == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-3.11
+          path: .coverage*
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # Compiler-dependent checks -- run on one Python version, on one OS,
+  # with the bundled binary. Integration, conformance, and packaging.
+  # ---------------------------------------------------------------------------
+  full:
+    name: Integration, conformance, packaging
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: fast
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install package with dev extras
+        run: pip install -e ".[dev]"
+
+      - name: Fetch bundled compiler
+        run: python scripts/build_binaries.py linux-x64
+
+      - name: Verify bundled compiler
+        run: python scripts/verify_binaries.py
+
+      - name: Check license + platform consistency
+        run: |
+          python scripts/check_licenses.py --quiet
+          python scripts/check_platforms.py --quiet
+
+      - name: Verify manifest matches on-disk binaries
+        run: python scripts/generate_manifest.py --check
+
+      - name: Integration tests
+        run: pytest tests/integration -q
+
+      - name: Compatibility tests
+        run: pytest tests/compatibility -q
+
+      - name: Security tests
+        run: pytest tests/security -q
+
+      - name: Fuzz tests
+        run: pytest tests/fuzz -q
+
+      - name: Conformance suite
+        run: python conformance/run.py
+
+      - name: Run benchmarks (informational)
+        run: python benchmarks/run.py --json > benchmarks.json || true
+
+      - name: Upload benchmark report
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmarks
+          path: benchmarks.json
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # Release gate -- runs on every PR and push to main, plus on a weekly
+  # schedule. Builds sdist and wheel, installs in a clean venv, verifies
+  # the wheel's contents.
+  # ---------------------------------------------------------------------------
+  release-check:
+    name: Release gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: fast
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install build tooling
+        run: |
+          pip install --upgrade pip build
+          pip install -e ".[dev]"
+
+      - name: Fetch bundled compiler
+        run: python scripts/build_binaries.py linux-x64
+
+      - name: Release check
+        run: python scripts/release_check.py --json > release-check.json
+
+      - name: Upload release report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-check
+          path: release-check.json
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # Cross-platform install -- confirms the wheel installs and imports
+  # on macOS and Windows. Uses the wheels produced by release-check.
+  # ---------------------------------------------------------------------------
+  cross-platform:
+    name: Cross-platform install (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    needs: release-check
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip build
+          pip install -e ".[dev]"
+
+      - name: Fetch bundled compiler for this platform
+        shell: bash
+        run: |
+          case "${{ runner.os }}" in
+            Linux)   PLATFORM=linux-x64 ;;
+            macOS)   PLATFORM=darwin-arm64 ;;
+            Windows) PLATFORM=win32-x64 ;;
+          esac
+          python scripts/build_binaries.py "$PLATFORM"
+
+      - name: Sanity check -- package imports and binary runs
+        shell: bash
+        run: |
+          python -c "import pytscheck; print(pytscheck.__version__)"
+          python -m pytscheck --version
+          python -c "
+          from pytscheck import check
+          r = check('export const x: number = 1;')
+          assert r.success, [d.message for d in r.errors]
+          print('ok')
+          "
