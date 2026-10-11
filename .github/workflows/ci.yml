@@ -67,7 +67,7 @@ jobs:
 
       - name: Upload coverage (3.11 only)
         if: matrix.python == '3.11'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-3.11
           path: .coverage*
@@ -129,7 +129,7 @@ jobs:
         run: python benchmarks/run.py --json > benchmarks.json || true
 
       - name: Upload benchmark report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: benchmarks
           path: benchmarks.json
@@ -169,7 +169,7 @@ jobs:
 
       - name: Upload release report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-check
           path: release-check.json
