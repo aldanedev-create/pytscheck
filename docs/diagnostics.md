@@ -19,7 +19,7 @@ Compiler file locations use 1-based line and column values. `file=None` identifi
 
 `end_line`, `end_column`, and `related` are optional. Text parsing does not promise the complete structured diagnostic metadata available from a compiler API.
 
-With an adapter, matching virtual filenames can become `origin_path`, and `origin_file` records the virtual path. Full source-map position translation is not implemented; remapped filenames do not prove that generated line/column values identify the original source.
+With an adapter, matching virtual filenames can become `origin_path`, and `origin_file` records the virtual path. With a source-map v3 map, mapped positions are translated to original coordinates. Without a map, positions remain generated; unmapped map segments also retain generated locations. See [project-aware adapters](adapter-projects.md).
 
 ## JSON from Python
 

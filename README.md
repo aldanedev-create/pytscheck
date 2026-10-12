@@ -91,7 +91,7 @@ result = check_project(".", adapter=GeneratedAdapter())
 assert result.success
 ```
 
-Adapters live in consuming packages; core does not ship framework integrations. Original filenames can be remapped, but **full source-map position translation is not implemented**. Read the [adapter guide](https://github.com/aldanedev-create/pytscheck/blob/main/docs/adapters.md) before integrating a component compiler.
+Adapters live in consuming packages; core does not ship framework integrations. Source-map v3 positions can be translated back to original files. Optional `ProjectContext` adds inherited settings, real-project imports, and declarations bundled in Python packages. Read the [adapter guide](https://github.com/aldanedev-create/pytscheck/blob/main/docs/adapters.md) before integrating a component compiler.
 
 ## Scope and compatibility
 

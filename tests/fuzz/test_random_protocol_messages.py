@@ -278,7 +278,7 @@ def test_source_map_with_control_chars() -> None:
 
 
 def test_source_map_with_unicode() -> None:
-    payload = json.dumps({"version": 3, "mappings": "日本語", "sources": ["フ.ts"]})
+    payload = json.dumps({"version": 3, "mappings": "AAAA", "sources": ["フ.ts"]})
     src = SourceFile(
         path="a.ts",
         text="",

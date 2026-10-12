@@ -52,3 +52,5 @@ The `extra` mapping follows similar rules: `True` emits a bare flag, `False`/`No
 The wrapper rejects a string `extends` target that resolves outside the supplied project root. Ordinary configurations extending `../tsconfig.json` can therefore fail. Choose a root containing the configuration you intend to check and keep extension targets inside it; do not assume arbitrary shared-parent layouts are supported.
 
 The compiler handles resolution of accepted configuration contents. This API does not run build mode for referenced projects. See [project checking](project-checking.md) before checking a monorepo.
+
+Context-aware adapters use a separate precedence rule: inherited tsconfig settings, then `ProjectContext.compiler_options`, then explicitly supplied check options. A partial options dictionary preserves unspecified inherited settings. See [project-aware adapters](adapter-projects.md).

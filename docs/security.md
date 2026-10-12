@@ -30,3 +30,5 @@ POSIX cleanup terminates the compiler process group. Windows cleanup targets the
 No source is sent to a hosted checker by this API. Source-build downloads and dependency installation are separate network operations. Raw diagnostics may contain private paths and source excerpts; avoid publishing them without review.
 
 Report vulnerabilities through the repository's [security policy](../SECURITY.md).
+
+Context-aware adapters create a bounded temporary snapshot inside a writable project root and remove it after success, compiler errors, or timeouts. Original files are never replaced. Directory symlinks are not traversed; source symlinks escaping the root and declaration resource symlinks are rejected. This is filesystem isolation for checking, not an operating-system sandbox. See [project-aware adapters](adapter-projects.md) for limits.

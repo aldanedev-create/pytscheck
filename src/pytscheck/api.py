@@ -70,6 +70,7 @@ def _check_adapter(
     *,
     options: CompilerOptions,
     keep_raw: bool,
+    project_options: CompilerOptions | dict[str, Any] | None = None,
 ) -> Result:
     """Run the adapter-aware project path.
 
@@ -90,6 +91,12 @@ def _check_adapter(
     try:
         check_protocol_version(adapter)
         sources = collect_sources(adapter, str(project_root))
+        get_context = getattr(adapter, "get_context", None)
+        if get_context is not None and not callable(get_context):
+            raise AdapterProtocolError("adapter.get_context must be callable")
+        context = get_context(str(project_root)) if get_context is not None else None
+        if get_context is not None and context is None:
+            raise AdapterProtocolError("adapter.get_context must return ProjectContext")
     except AdapterError:
         raise
     except Exception as exc:  # pragma: no cover - defensive
@@ -97,13 +104,16 @@ def _check_adapter(
             f"adapter {type(adapter).__name__!r} raised during source collection: {exc}"
         ) from exc
 
-    result = check_sources_virtual(
-        sources,
-        options=options,
-        keep_raw=keep_raw,
-    )
+    if context is not None:
+        from .adapters.project import check_project_sources
 
-    if any(s.origin_path is not None for s in sources):
+        result = check_project_sources(
+            project_root, sources, context, options=project_options, keep_raw=keep_raw
+        )
+    else:
+        result = check_sources_virtual(sources, options=options, keep_raw=keep_raw)
+
+    if any(s.origin_path is not None or s.source_map is not None for s in sources):
         remapped = remap_diagnostics(result.diagnostics, sources)
         # Rebuild the Result with remapped diagnostics preserving everything else.
         from .diagnostics import count_errors
@@ -261,6 +271,7 @@ def check_project(
             root,
             options=opts,
             keep_raw=keep_raw,
+            project_options=options,
         )
 
     from .checker import check_project as _check_project

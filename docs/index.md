@@ -15,6 +15,7 @@ PyTSCheck exposes a Python API and CLI over a bundled native TypeScript compiler
 | [Compiler options](compiler-options.md) | Every `CompilerOptions` field and extra flags |
 | [Project checking](project-checking.md) | Imports, declarations, aliases, project references |
 | [Diagnostics](diagnostics.md) | Error codes, positions, raw output, JSON serialization |
+| [Project-aware adapters](adapter-projects.md) | Project settings, imports, PyPI declarations and mapped positions |
 | [Adapters](adapters.md) | Generated sources, registration, mapping limitations |
 | [Compatibility](compatibility.md) | Python versions, pinned compiler, unsupported features |
 | [Supported platforms](supported-platforms.md) | Platform identifiers and wheel tags |

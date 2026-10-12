@@ -12,6 +12,7 @@ Install the package and compiler using [development setup](../docs/development.m
 | [diagnostic_reporting.py](diagnostic_reporting.py) | Human/machine reports |
 | [ci_validation.py](ci_validation.py) | Build failure from a real project check |
 | [editor_integration.py](editor_integration.py) | Editor-style reporting, not a language server |
+| [adapter_project.py](adapter_project.py) | Component/schema consumers with project context and v3 mapping |
 | [custom_adapter.py](custom_adapter.py) | Toy component extraction into virtual TypeScript |
 
 ```bash
@@ -22,6 +23,7 @@ python examples/check_project.py
 python examples/custom_options.py
 python examples/diagnostic_reporting.py
 python examples/editor_integration.py tests/fixtures/projects/minimal/main.ts
+python examples/adapter_project.py
 python examples/custom_adapter.py
 python examples/ci_validation.py tests/fixtures/projects/minimal
 ```

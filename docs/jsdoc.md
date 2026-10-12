@@ -108,3 +108,5 @@ python examples/check_jsdoc.py
 It detects a JSDoc-typed function's invalid string argument, then checks the corrected JavaScript project successfully. JSDoc checking validates types; it does not execute your code, guarantee runtime behavior, or generate documentation pages.
 
 See [compiler options](compiler-options.md), [project checking](project-checking.md), and [diagnostics](diagnostics.md).
+
+Adapters generating JavaScript can inherit `allowJs` and `checkJs` through optional `ProjectContext`, including imports of real project declarations. See [project-aware adapters](adapter-projects.md) and the real-compiler JSDoc test in `tests/adapters/test_project_context.py`.
