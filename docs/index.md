@@ -9,6 +9,7 @@ PyTSCheck exposes a Python API and CLI over a bundled native TypeScript compiler
 | [Installation](installation.md) | Wheels, source checkouts, offline installs, Windows setup |
 | [Quick start](quickstart.md) | Check strings, files, projects, and handle failures |
 | [Python API](python-api.md) | Public functions, models, exceptions, version constants |
+| [JavaScript and JSDoc](jsdoc.md) | Check JavaScript types using JSDoc annotations |
 | [CLI](cli.md) | Commands, JSON output, exit codes |
 | [Configuration](configuration.md) | Defaults, tsconfig discovery, precedence |
 | [Compiler options](compiler-options.md) | Every `CompilerOptions` field and extra flags |

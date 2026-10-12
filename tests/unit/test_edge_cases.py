@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import pytest
+
 from pytscheck import diagnostics as dg
 from pytscheck.config import CompilerOptions
+from pytscheck.exceptions import ConfigurationError
 from pytscheck.models import Diagnostic, Result
 from pytscheck.options import options_to_argv
 from pytscheck.paths import normalize
@@ -108,10 +111,8 @@ def test_options_empty_tuple_flags() -> None:
 
 
 def test_options_empty_string_values() -> None:
-    argv = options_to_argv(CompilerOptions(target="", module=""))
-    # Empty strings produce flags with empty args; not crash
-    assert "--target" in argv
-    assert "--module" in argv
+    with pytest.raises(ConfigurationError, match="non-empty string"):
+        options_to_argv(CompilerOptions(target="", module=""))
 
 
 # --- path edge cases -------------------------------------------------------

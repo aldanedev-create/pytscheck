@@ -11,7 +11,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import checker
+from . import api, checker
 from .config import CompilerOptions
 from .models import Result
 from .runner import RunResult
@@ -36,7 +36,8 @@ class Client:
         options: CompilerOptions | None = None,
         keep_raw: bool = False,
     ) -> Result:
-        return checker.check_source(source, filename=filename, options=options, keep_raw=keep_raw)
+        with checker._use_runner(self.runner):
+            return api.check(source, filename=filename, options=options, keep_raw=keep_raw)
 
     def check_file(
         self,
@@ -45,7 +46,8 @@ class Client:
         options: CompilerOptions | None = None,
         keep_raw: bool = False,
     ) -> Result:
-        return checker.check_file(path, options=options, keep_raw=keep_raw)
+        with checker._use_runner(self.runner):
+            return api.check_file(path, options=options, keep_raw=keep_raw)
 
     def check_project(
         self,
@@ -54,7 +56,8 @@ class Client:
         options: CompilerOptions | None = None,
         keep_raw: bool = False,
     ) -> Result:
-        return checker.check_project(project_root, options=options, keep_raw=keep_raw)
+        with checker._use_runner(self.runner):
+            return api.check_project(project_root, options=options, keep_raw=keep_raw)
 
 
 __all__ = ["Client", "RunnerFn"]

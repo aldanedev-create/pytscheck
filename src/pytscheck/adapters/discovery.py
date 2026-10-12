@@ -26,12 +26,12 @@ def discover_adapters(
     for ep in eps:
         try:
             obj = ep.load()
+            adapter = obj() if isinstance(obj, type) else obj
         except Exception as exc:
             raise AdapterDiscoveryError(
                 f"failed to load adapter entry point {ep.name!r}: {exc}"
             ) from exc
 
-        adapter = obj() if isinstance(obj, type) else obj
         if not isinstance(adapter, CompilerAdapter):
             raise AdapterDiscoveryError(f"entry point {ep.name!r} did not yield a CompilerAdapter")
         register_adapter(adapter)

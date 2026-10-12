@@ -37,7 +37,7 @@ assert result.success
 | `kind` | `source` or `generated` metadata |
 | `options` | Metadata; currently not serialized as per-file compiler flags |
 
-Absolute paths, drive-qualified paths, `..` traversal, NUL-containing paths, and exact duplicate paths are rejected. Preserve relative directory relationships for generated imports. Return required generated declarations as additional sources.
+Paths are normalized before duplicate checking, so `a.ts` and `./a.ts` cannot overwrite one another. Absolute paths, drive-qualified paths, `..` traversal, NUL bytes, directory/file conflicts, and non-portable Windows names are rejected. Case collisions are rejected on Windows/macOS; Linux preserves case-sensitive paths. Source text must be valid UTF-8 without NUL bytes, limited to 8 MiB per source and 20,000 sources per collection. Preserve relative directory relationships for generated imports. Return required generated declarations as additional sources.
 
 The sources are written into a private temporary directory and checked together. The original root's tsconfig and `node_modules` are not copied into that directory. Supply global `CompilerOptions` and the declarations required by the virtual project. Empty sources raise `ConfigurationError`; callers can skip invoking the checker when there is nothing to check.
 
@@ -45,7 +45,7 @@ The sources are written into a private temporary directory and checked together.
 
 For a diagnostic whose filename matches `SourceFile.path`, `origin_path` replaces the reported filename and `origin_file` stores the virtual filename. Line and column remain generated coordinates.
 
-When applicable mapping metadata is present, it is validated as a JSON object containing `mappings`. **VLQ decoding and original line/column lookup are not implemented.** A valid source-map string does not enable position translation. Do not advertise accurate component positions unless your adapter preserves line/column layout and verifies the reported paths and positions in real tests.
+Mapping metadata is validated before compilation as a JSON object with a string `mappings` field, including on sources with no diagnostics. Maps must be valid UTF-8 and are limited to 8 MiB. **VLQ decoding and original line/column lookup are not implemented.** A valid source-map string does not enable position translation. Do not advertise accurate component positions unless your adapter preserves line/column layout and verifies the reported paths and positions in real tests.
 
 ## Explicit registration
 

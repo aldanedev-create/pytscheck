@@ -9,7 +9,9 @@ from pytscheck import check_project
 
 def test_allow_js_project_checks(tsgo_binary, project_with_js: Path) -> None:
     r = check_project(project_with_js)
-    assert r.success or not r.success  # no crash
+    # The fixture enables checkJs and leaves its function parameter untyped.
+    assert not r.success
+    assert any(d.code == 7006 for d in r.errors)
 
 
 def test_check_js_reports_error(tsgo_binary, tmp_path: Path) -> None:
@@ -24,6 +26,7 @@ def test_check_js_reports_error(tsgo_binary, tmp_path: Path) -> None:
     )
     r = check_project(tmp_path)
     assert not r.success
+    assert any(d.code == 2322 for d in r.errors)
 
 
 def test_mixed_ts_js_project(tsgo_binary, tmp_path: Path) -> None:

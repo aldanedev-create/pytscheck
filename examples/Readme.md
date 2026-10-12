@@ -4,6 +4,7 @@ Install the package and compiler using [development setup](../docs/development.m
 
 | Script | Demonstration |
 | --- | --- |
+| [check_jsdoc.py](check_jsdoc.py) | JavaScript/JSDoc string and project checks |
 | [check_string.py](check_string.py) | Source-string checks |
 | [check_file.py](check_file.py) | A TypeScript file on disk |
 | [check_project.py](check_project.py) | A configured project |
@@ -14,6 +15,7 @@ Install the package and compiler using [development setup](../docs/development.m
 | [custom_adapter.py](custom_adapter.py) | Toy component extraction into virtual TypeScript |
 
 ```bash
+python examples/check_jsdoc.py
 python examples/check_string.py
 python examples/check_file.py
 python examples/check_project.py

@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import tempfile
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 
 from .config import CompilerOptions, find_tsconfig, validate_project_root
 from .defaults import DEFAULT_MAX_SOURCE_BYTES
-from .exceptions import CompilerExecutionError, ConfigurationError
+from .exceptions import AdapterExtractionError, CompilerExecutionError, ConfigurationError
 from .models import Diagnostic, Result, SourceFile
 from .options import options_to_argv
 from .paths import assert_no_null_bytes, normalize
@@ -15,8 +18,20 @@ from .project import iter_typescript_files
 from .protocol import parse_or_raise
 from .resolver import resolve_project
 from .results import build_result
-from .runner import run
+from .runner import RunResult, run
 from .version import COMPILER_VERSION
+
+_Runner = Callable[..., RunResult]
+_runner_override: ContextVar[_Runner | None] = ContextVar("pytscheck_runner", default=None)
+
+
+@contextmanager
+def _use_runner(runner: _Runner | None) -> Iterator[None]:
+    token = _runner_override.set(runner)
+    try:
+        yield
+    finally:
+        _runner_override.reset(token)
 
 
 def _run_tsgo_on_args(
@@ -26,7 +41,8 @@ def _run_tsgo_on_args(
     keep_raw: bool = False,
     cwd: Path | None = None,
 ) -> Result:
-    r = run(argv_tail, cwd=cwd)
+    invoke = _runner_override.get() or run
+    r = invoke(argv_tail, cwd=cwd)
     output = r.stdout + ("\n" + r.stderr if r.stderr else "")
 
     if r.returncode not in (0, 1, 2):
@@ -73,6 +89,8 @@ def check_source(
     keep_raw: bool = False,
 ) -> Result:
     options = options or CompilerOptions()
+    if len(source) > DEFAULT_MAX_SOURCE_BYTES:
+        raise ConfigurationError(f"source exceeds {DEFAULT_MAX_SOURCE_BYTES} bytes")
     try:
         size = len(source.encode("utf-8"))
     except UnicodeError as exc:
@@ -92,7 +110,7 @@ def check_source(
         except (OSError, UnicodeError) as exc:
             raise ConfigurationError(f"cannot write source {filename!r}: {exc}") from exc
 
-        argv_tail = [*options_to_argv(options), str(target)]
+        argv_tail = [*options_to_argv(options), "--ignoreConfig", str(target)]
         return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=tmp_path)
 
 
@@ -118,7 +136,7 @@ def check_file(
                     raise ConfigurationError("source contains a NUL byte")
     except OSError as exc:
         raise ConfigurationError(f"cannot read source {target}: {exc}") from exc
-    argv_tail = [*options_to_argv(options), str(target)]
+    argv_tail = [*options_to_argv(options), "--ignoreConfig", str(target)]
     return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=target.parent)
 
 
@@ -134,7 +152,10 @@ def check_sources_virtual(
     against the directory, and returns diagnostics whose ``file`` values
     are the *virtual* paths (remapping happens in the adapter layer).
     """
+    from .adapters.sources import _validate_sources
+
     options = options or CompilerOptions()
+    sources = _validate_sources(sources)
     if not sources:
         raise ConfigurationError("adapter returned no sources to check")
 
@@ -142,8 +163,13 @@ def check_sources_virtual(
         tmp_path = Path(tmp)
         for src in sources:
             dest = tmp_path / src.path
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            dest.write_text(src.text, encoding="utf-8")
+            try:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(src.text, encoding="utf-8")
+            except (OSError, UnicodeError) as exc:
+                raise AdapterExtractionError(
+                    f"cannot write virtual source {src.path!r}: {exc}"
+                ) from exc
 
         argv_tail = [*options_to_argv(options), *(str(tmp_path / src.path) for src in sources)]
         return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=tmp_path)

@@ -24,7 +24,7 @@ All three functions return `Result`. Unknown function keyword arguments are reje
 
 ## CompilerOptions
 
-A frozen dataclass with `strict`, `no_emit`, `skip_lib_check`, `types`, `lib`, `target`, `module`, `module_resolution`, and `extra`. See the full [field table](compiler-options.md). Dataclass freezing is shallow; avoid mutating a shared `extra` dictionary.
+Malformed option containers and values raise `ConfigurationError`. A frozen dataclass with `strict`, `no_emit`, `skip_lib_check`, `types`, `lib`, `target`, `module`, `module_resolution`, and `extra`. See the full [field table](compiler-options.md). Dataclass freezing is shallow; avoid mutating a shared `extra` dictionary.
 
 ## Result
 

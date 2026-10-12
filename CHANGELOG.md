@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- JavaScript/JSDoc guide and a runnable string/project example with real compiler regressions.
+
 - `scripts/publish.py` builds and validates all six wheels plus the source archive, then uploads through Twine; supports TestPyPI and build-only runs.
 
 - Complete user/maintainer documentation, CLI reference, adapter limitations, and PyPI publishing guide.
@@ -19,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default constants in `pytscheck.defaults`.
 
 ### Changed
+
+- Normalize adapter input paths before duplicate checks; reject directory/file collisions, invalid text, and oversized virtual sources.
+- Run standalone file/string checks with `--ignoreConfig` to avoid incidental tsconfig errors.
+- Validate compiler options and preserve configuration/adapter exception types for malformed inputs.
+- Honor internal client runner overrides with per-context isolation and restore them after each call.
 
 - Nothing yet.
 

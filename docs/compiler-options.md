@@ -38,7 +38,7 @@ result = check(
 assert result.success
 ```
 
-Keys may be `noUnusedLocals` or `--noUnusedLocals`. Values are serialized individually; no shell is involved. `True` emits a flag; `False` and `None` omit it; strings and other values are converted to text. Provide compiler list values as comma-separated strings when using `extra`.
+Keys may be `noUnusedLocals` or `--noUnusedLocals`. Values are serialized individually; no shell is involved. `True` emits a flag; `False` and `None` omit it; strings and finite numbers are converted to text. Invalid keys, containers, and values raise `ConfigurationError`. Provide compiler list values as comma-separated strings when using `extra`.
 
 The runner always appends `--pretty false` so diagnostics stay machine-readable even when a project or terminal enables color. Pretty output cannot be enabled through `extra`.
 

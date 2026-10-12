@@ -126,9 +126,9 @@ def test_collect_preserves_origin_path() -> None:
 
 
 def test_collect_preserves_source_map() -> None:
-    s = SourceFile(path="App.ts", text="", source_map='{"version":3}')
+    s = SourceFile(path="App.ts", text="", source_map='{"version":3,"mappings":""}')
     out = collect_sources(_Adapter([s]), "/")
-    assert out[0].source_map == '{"version":3}'
+    assert out[0].source_map == '{"version":3,"mappings":""}'
 
 
 def test_collect_preserves_kind() -> None:

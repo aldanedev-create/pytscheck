@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from .config import CompilerOptions
+from .config import CompilerOptions, validate_options
+from .exceptions import ConfigurationError
 from .paths import assert_no_null_bytes
 
 
 def options_to_argv(options: CompilerOptions) -> list[str]:
     """Convert compiler options into an argv fragment (no shell quoting)."""
+    validate_options(options)
     argv: list[str] = []
 
     if options.no_emit:
@@ -41,8 +43,12 @@ def options_to_argv(options: CompilerOptions) -> list[str]:
         elif value is False or value is None:
             continue
         else:
-            assert_no_null_bytes(str(value), what=f"value for {key}")
-            argv += [flag, str(value)]
+            try:
+                serialized = str(value)
+            except ValueError as exc:
+                raise ConfigurationError(f"cannot serialize value for {key}") from exc
+            assert_no_null_bytes(serialized, what=f"value for {key}")
+            argv += [flag, serialized]
 
     return argv
 
