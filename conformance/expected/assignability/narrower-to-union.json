@@ -1,0 +1,5 @@
+{
+  "case": "assignability/narrower-to-union.ts",
+  "success": true,
+  "diagnostics": []
+}

@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -75,7 +76,9 @@ class Report:
         self.checks.append(check)
 
 
-def _run(cmd: list[str], *, cwd: Path = REPO_ROOT, timeout: float = 600.0) -> subprocess.CompletedProcess[str]:
+def _run(
+    cmd: list[str], *, cwd: Path = REPO_ROOT, timeout: float = 600.0
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
         cwd=str(cwd),
@@ -292,6 +295,14 @@ def check_wheel_contents(wheel: Path) -> Check:
     if any(n.startswith("tests/") for n in names):
         problems.append("contains tests/")
 
+    binaries = [n for n in names if n.endswith(("/tsgo", "/tsgo.exe"))]
+    if len(binaries) != 1:
+        problems.append(f"expected exactly one native compiler, found {len(binaries)}")
+    if not any(n.endswith(".d.ts") for n in names):
+        problems.append("missing bundled TypeScript libraries")
+    if "py3-none-any" in wheel.name:
+        problems.append("native compiler wheel must carry a platform tag")
+
     if problems:
         return Check(
             "wheel-contents",
@@ -337,7 +348,20 @@ def check_clean_install(wheel: Path) -> Check:
             )
 
         proc = subprocess.run(
-            [str(py), "-c", "import pytscheck; print(pytscheck.__version__)"],
+            [
+                str(py),
+                "-c",
+                (
+                    "import pytscheck; from pytscheck import check; "
+                    "r=check('export const x: number = 1;'); "
+                    "assert r.success, r.diagnostics; "
+                    "r=check('export const x: number = \"bad\";'); "
+                    "assert any(d.code == 2322 for d in r.errors), r.diagnostics; "
+                    "print(pytscheck.__version__)"
+                ),
+            ],
+            cwd=tmp_path,
+            env={k: ("" if k == "PATH" else v) for k, v in os.environ.items() if k != "PYTHONPATH"},
             capture_output=True,
             text=True,
             timeout=30.0,

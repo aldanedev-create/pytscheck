@@ -1,4 +1,5 @@
 {
+  "generator": "scripts/generate_conformance_cases.py",
   "version": 1,
   "case_count": 63,
   "categories": {
@@ -16,68 +17,320 @@
     "unions": 4
   },
   "cases": [
-    "assignability/literal-mismatch.ts",
-    "assignability/literal-to-primitive.ts",
-    "assignability/missing-property.ts",
-    "assignability/narrower-to-union.ts",
-    "assignability/structural-compat.ts",
-    "assignability/union-to-narrower.ts",
-    "classes/abstract-not-implemented.ts",
-    "classes/abstract.ts",
-    "classes/basic.ts",
-    "classes/implements.ts",
-    "classes/inheritance.ts",
-    "classes/wrong-return.ts",
-    "compiler-options/es2022-target.ts",
-    "compiler-options/no-implicit-any.ts",
-    "compiler-options/non-strict.ts",
-    "compiler-options/strict-mode.ts",
-    "declarations/augment.d.ts",
-    "declarations/const.d.ts",
-    "declarations/function.d.ts",
-    "declarations/interface.d.ts",
-    "functions/basic.ts",
-    "functions/default-param.ts",
-    "functions/missing-arg.ts",
-    "functions/optional-param.ts",
-    "functions/rest-param.ts",
-    "functions/wrong-arg-type.ts",
-    "generics/class-stack.ts",
-    "generics/constraint-violation.ts",
-    "generics/constraint.ts",
-    "generics/default-param.ts",
-    "generics/identity.ts",
-    "generics/wrong-return.ts",
-    "inference/array.ts",
-    "inference/contextual.ts",
-    "inference/implicit-any-param.ts",
-    "inference/literal.ts",
-    "inference/object.ts",
-    "inference/return.ts",
-    "intersections/basic.ts",
-    "intersections/function.ts",
-    "intersections/missing-part.ts",
-    "modules/ambient-module.ts",
-    "modules/default-export.ts",
-    "modules/named-exports.ts",
-    "modules/reexport.ts",
-    "modules/star-export.ts",
-    "modules/type-only.ts",
-    "narrowing/discriminated.ts",
-    "narrowing/equality.ts",
-    "narrowing/in-operator.ts",
-    "narrowing/instanceof.ts",
-    "narrowing/not-narrowed.ts",
-    "narrowing/typeof.ts",
-    "nullability/non-null.ts",
-    "nullability/nullish.ts",
-    "nullability/optional-chain.ts",
-    "nullability/optional-undefined.ts",
-    "nullability/possibly-null.ts",
-    "nullability/strict-null-error.ts",
-    "unions/discriminated.ts",
-    "unions/invalid-literal.ts",
-    "unions/literal.ts",
-    "unions/primitive.ts"
+    {
+      "path": "assignability/literal-to-primitive.ts",
+      "description": "literals assignable to their primitives",
+      "generated": true
+    },
+    {
+      "path": "assignability/literal-mismatch.ts",
+      "description": "string literal to number: TS2322",
+      "generated": true
+    },
+    {
+      "path": "assignability/structural-compat.ts",
+      "description": "structural compatibility",
+      "generated": true
+    },
+    {
+      "path": "assignability/missing-property.ts",
+      "description": "missing property: TS2741",
+      "generated": true
+    },
+    {
+      "path": "assignability/union-to-narrower.ts",
+      "description": "union not assignable to member: TS2322",
+      "generated": true
+    },
+    {
+      "path": "assignability/narrower-to-union.ts",
+      "description": "member assignable to union",
+      "generated": true
+    },
+    {
+      "path": "inference/literal.ts",
+      "description": "literal inference",
+      "generated": true
+    },
+    {
+      "path": "inference/array.ts",
+      "description": "array element inference",
+      "generated": true
+    },
+    {
+      "path": "inference/object.ts",
+      "description": "object literal inference",
+      "generated": true
+    },
+    {
+      "path": "inference/return.ts",
+      "description": "return type inference",
+      "generated": true
+    },
+    {
+      "path": "inference/contextual.ts",
+      "description": "contextual parameter inference",
+      "generated": true
+    },
+    {
+      "path": "inference/implicit-any-param.ts",
+      "description": "implicit any under strict: TS7006",
+      "generated": true
+    },
+    {
+      "path": "generics/identity.ts",
+      "description": "identity function",
+      "generated": true
+    },
+    {
+      "path": "generics/constraint.ts",
+      "description": "constrained type parameter",
+      "generated": true
+    },
+    {
+      "path": "generics/class-stack.ts",
+      "description": "generic class",
+      "generated": true
+    },
+    {
+      "path": "generics/default-param.ts",
+      "description": "default type parameter",
+      "generated": true
+    },
+    {
+      "path": "generics/wrong-return.ts",
+      "description": "generic return violation: TS2322",
+      "generated": true
+    },
+    {
+      "path": "generics/constraint-violation.ts",
+      "description": "constraint violation: TS2345",
+      "generated": true
+    },
+    {
+      "path": "functions/basic.ts",
+      "description": "typed function",
+      "generated": true
+    },
+    {
+      "path": "functions/optional-param.ts",
+      "description": "optional parameter",
+      "generated": true
+    },
+    {
+      "path": "functions/default-param.ts",
+      "description": "default parameter value",
+      "generated": true
+    },
+    {
+      "path": "functions/rest-param.ts",
+      "description": "rest parameter",
+      "generated": true
+    },
+    {
+      "path": "functions/wrong-arg-type.ts",
+      "description": "wrong argument type: TS2345",
+      "generated": true
+    },
+    {
+      "path": "functions/missing-arg.ts",
+      "description": "missing argument: TS2554",
+      "generated": true
+    },
+    {
+      "path": "classes/basic.ts",
+      "description": "basic class with parameter properties",
+      "generated": true
+    },
+    {
+      "path": "classes/inheritance.ts",
+      "description": "class inheritance",
+      "generated": true
+    },
+    {
+      "path": "classes/abstract.ts",
+      "description": "abstract class",
+      "generated": true
+    },
+    {
+      "path": "classes/implements.ts",
+      "description": "implements interface",
+      "generated": true
+    },
+    {
+      "path": "classes/wrong-return.ts",
+      "description": "wrong return type in method: TS2322",
+      "generated": true
+    },
+    {
+      "path": "classes/abstract-not-implemented.ts",
+      "description": "abstract member not implemented: TS2515",
+      "generated": true
+    },
+    {
+      "path": "unions/literal.ts",
+      "description": "literal union",
+      "generated": true
+    },
+    {
+      "path": "unions/primitive.ts",
+      "description": "primitive union",
+      "generated": true
+    },
+    {
+      "path": "unions/discriminated.ts",
+      "description": "discriminated union",
+      "generated": true
+    },
+    {
+      "path": "unions/invalid-literal.ts",
+      "description": "literal not in union: TS2322",
+      "generated": true
+    },
+    {
+      "path": "intersections/basic.ts",
+      "description": "basic intersection",
+      "generated": true
+    },
+    {
+      "path": "intersections/function.ts",
+      "description": "intersection with generics",
+      "generated": true
+    },
+    {
+      "path": "intersections/missing-part.ts",
+      "description": "missing intersection part: TS2739",
+      "generated": true
+    },
+    {
+      "path": "narrowing/typeof.ts",
+      "description": "typeof narrowing",
+      "generated": true
+    },
+    {
+      "path": "narrowing/instanceof.ts",
+      "description": "instanceof narrowing",
+      "generated": true
+    },
+    {
+      "path": "narrowing/in-operator.ts",
+      "description": "in-operator narrowing",
+      "generated": true
+    },
+    {
+      "path": "narrowing/equality.ts",
+      "description": "equality narrowing",
+      "generated": true
+    },
+    {
+      "path": "narrowing/discriminated.ts",
+      "description": "discriminated union narrowing",
+      "generated": true
+    },
+    {
+      "path": "narrowing/not-narrowed.ts",
+      "description": "not narrowed: TS18047",
+      "generated": true
+    },
+    {
+      "path": "nullability/optional-chain.ts",
+      "description": "optional chaining",
+      "generated": true
+    },
+    {
+      "path": "nullability/nullish.ts",
+      "description": "nullish coalescing",
+      "generated": true
+    },
+    {
+      "path": "nullability/non-null.ts",
+      "description": "non-null assertion",
+      "generated": true
+    },
+    {
+      "path": "nullability/strict-null-error.ts",
+      "description": "null to non-nullable: TS2322",
+      "generated": true
+    },
+    {
+      "path": "nullability/possibly-null.ts",
+      "description": "possibly null access: TS18047",
+      "generated": true
+    },
+    {
+      "path": "nullability/optional-undefined.ts",
+      "description": "possibly undefined access: TS18048",
+      "generated": true
+    },
+    {
+      "path": "modules/named-exports.ts",
+      "description": "named exports",
+      "generated": true
+    },
+    {
+      "path": "modules/default-export.ts",
+      "description": "default export",
+      "generated": true
+    },
+    {
+      "path": "modules/type-only.ts",
+      "description": "type-only exports",
+      "generated": true
+    },
+    {
+      "path": "modules/reexport.ts",
+      "description": "re-export",
+      "generated": true
+    },
+    {
+      "path": "modules/star-export.ts",
+      "description": "star export",
+      "generated": true
+    },
+    {
+      "path": "modules/ambient-module.ts",
+      "description": "ambient module declaration",
+      "generated": true
+    },
+    {
+      "path": "declarations/function.d.ts",
+      "description": "ambient function declaration",
+      "generated": true
+    },
+    {
+      "path": "declarations/const.d.ts",
+      "description": "ambient const declaration",
+      "generated": true
+    },
+    {
+      "path": "declarations/interface.d.ts",
+      "description": "exported interface",
+      "generated": true
+    },
+    {
+      "path": "declarations/augment.d.ts",
+      "description": "global augmentation",
+      "generated": true
+    },
+    {
+      "path": "compiler-options/strict-mode.ts",
+      "description": "strict null checks enabled",
+      "generated": true
+    },
+    {
+      "path": "compiler-options/no-implicit-any.ts",
+      "description": "noImplicitAny enabled: TS7006",
+      "generated": true
+    },
+    {
+      "path": "compiler-options/non-strict.ts",
+      "description": "relaxed typing context",
+      "generated": true
+    },
+    {
+      "path": "compiler-options/es2022-target.ts",
+      "description": "ES2022 target features",
+      "generated": true
+    }
   ]
 }

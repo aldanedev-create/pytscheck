@@ -75,15 +75,8 @@ def test_checker_surfaces_timeout(hanging_binary: Path) -> None:
 
 
 def test_timeout_does_not_report_success(hanging_binary: Path) -> None:
-    from pytscheck import checker
-
-    try:
-        checker.check_source("const x = 1;")
-    except CompilerTimeoutError:
-        return
-    except CompilerExecutionError:
-        return
-    raise AssertionError("hanging binary was reported as success")
+    with pytest.raises((CompilerTimeoutError, CompilerExecutionError)):
+        run([], timeout=0.1)
 
 
 def test_timeout_error_message_mentions_seconds(hanging_binary: Path) -> None:

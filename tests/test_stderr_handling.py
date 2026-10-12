@@ -84,22 +84,18 @@ def test_stderr_preserved_when_stdout_is_large(tmp_path: Path) -> None:
     assert result.stderr == "ERR!"
 
 
-def test_runner_does_not_merge_streams(tmp_path: Path) -> None:
-    """stderr=subprocess.PIPE and stdout=subprocess.PIPE must be separate."""
-    from pytscheck.exceptions import CompilerNotFoundError
-    from pytscheck.runner import binary_path as real_binary_path
+@pytest.mark.skipif(__import__("os").name != "posix", reason="POSIX executable-script test")
+def test_runner_does_not_merge_streams(tmp_path: Path, tsgo_binary: Path) -> None:
+    import shutil
 
-    try:
-        real_binary_path()
-    except CompilerNotFoundError:
-        pytest.skip("no bundled binary present")
-    # Runner signature enforces separate capture; this is a compile-time
-    # guarantee verified by inspecting the runner's source contract.
-    import inspect
+    from pytscheck.runner import run
+    from tests.helpers import hide_file
 
-    from pytscheck import runner
-
-    source = inspect.getsource(runner.run)
-    assert "capture_output=True" in source or (
-        "stdout=subprocess.PIPE" in source and "stderr=subprocess.PIPE" in source
-    )
+    executable = tmp_path / "streams"
+    executable.write_text("#!/bin/sh\nprintf 'OUT'\nprintf 'ERR' >&2\n")
+    executable.chmod(0o755)
+    with hide_file(tsgo_binary):
+        shutil.copy2(executable, tsgo_binary)
+        result = run([])
+    assert result.stdout == "OUT"
+    assert result.stderr == "ERR"

@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sys
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
@@ -88,10 +87,7 @@ def _check_pyproject() -> list[Finding]:
         return findings
     data = tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))
     license_field = data.get("project", {}).get("license")
-    if isinstance(license_field, dict):
-        value = license_field.get("text")
-    else:
-        value = license_field
+    value = license_field.get("text") if isinstance(license_field, dict) else license_field
     if value != EXPECTED_SPDX:
         findings.append(
             Finding(
@@ -114,17 +110,13 @@ def _check_bundled_binaries() -> list[Finding]:
         if not platform_dir.is_dir():
             continue
         # Skip the manifest file's sibling behavior
-        binaries = list(platform_dir.rglob("tsgo")) + list(
-            platform_dir.rglob("tsgo.exe")
-        )
+        binaries = list(platform_dir.rglob("tsgo")) + list(platform_dir.rglob("tsgo.exe"))
         if not binaries:
             continue
         license_files = list(platform_dir.rglob("LICENSE")) + list(
             platform_dir.rglob("LICENSE.txt")
         )
-        notice_files = list(platform_dir.rglob("NOTICE.txt")) + list(
-            platform_dir.rglob("NOTICE")
-        )
+        notice_files = list(platform_dir.rglob("NOTICE.txt")) + list(platform_dir.rglob("NOTICE"))
         rel = platform_dir.relative_to(REPO_ROOT).as_posix()
         if not license_files:
             findings.append(
@@ -191,8 +183,7 @@ def main(argv: list[str] | None = None) -> int:
                     "clean": not findings,
                     "finding_count": len(findings),
                     "findings": [
-                        {"kind": f.kind, "path": f.path, "detail": f.detail}
-                        for f in findings
+                        {"kind": f.kind, "path": f.path, "detail": f.detail} for f in findings
                     ],
                 },
                 indent=2,

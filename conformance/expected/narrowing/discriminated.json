@@ -1,0 +1,5 @@
+{
+  "case": "narrowing/discriminated.ts",
+  "success": true,
+  "diagnostics": []
+}

@@ -28,7 +28,7 @@ def test_supports_optional_chaining(tsgo_binary: Path) -> None:
 
 
 def test_supports_nullish_coalescing(tsgo_binary: Path) -> None:
-    src = "export const x: number = null ?? 1;"
+    src = "export function value(x: number | null): number { return x ?? 1; }"
     r = checker.check_source(src)
     assert r.success, [d.message for d in r.errors]
 
@@ -63,11 +63,10 @@ def test_supports_using_declarations(tsgo_binary: Path) -> None:
         "class R { [Symbol.dispose](): void {} }\n"
         "export function f(): void { using r = new R(); void r; }\n"
     )
-    r = checker.check_source(src)
-    # If the compiler is older, it will fail. We assert the outcome matches
-    # a documented feature: either accepted (modern) or rejected with a
-    # syntax error (older). Either way, no crash.
-    assert r.success or any(d.code in {1005, 2304} for d in r.errors)
+    from pytscheck.config import CompilerOptions
+
+    r = checker.check_source(src, options=CompilerOptions(target="es2022", lib=("esnext",)))
+    assert r.success, [d.message for d in r.errors]
 
 
 def test_rejects_invalid_syntax(tsgo_binary: Path) -> None:

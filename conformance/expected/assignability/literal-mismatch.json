@@ -1,0 +1,14 @@
+{
+  "case": "assignability/literal-mismatch.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "literal-mismatch.ts",
+      "line": 2,
+      "column": 14,
+      "code": 2322,
+      "category": "error",
+      "message": "Type 'string' is not assignable to type 'number'."
+    }
+  ]
+}

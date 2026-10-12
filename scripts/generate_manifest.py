@@ -87,6 +87,7 @@ def _scan_platform(platform_dir: Path) -> dict | None:
 
 def build_manifest() -> dict:
     """Inspect disk and construct a manifest dict."""
+    existing = _load_existing().get("platforms", {})
     platforms: dict[str, dict] = {}
     for npm_platform, dirname in _PLATFORM_DIRS.items():
         entry = _scan_platform(BIN_ROOT / dirname)
@@ -101,6 +102,11 @@ def build_manifest() -> dict:
             # tarball is filled in by build_binaries.py; blank here
             "tarball": "",
         }
+        old = existing.get(npm_platform, {})
+        if old.get("integrity") == entry["integrity"]:
+            entry["tarball"] = old.get("tarball", "")
+            if "tarball_integrity" in old:
+                entry["tarball_integrity"] = old["tarball_integrity"]
         platforms[npm_platform] = entry
     return {
         "compiler_version": COMPILER_VERSION,
@@ -164,9 +170,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.write:
         MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-        MANIFEST_PATH.write_text(
-            json.dumps(current, indent=2) + "\n", encoding="utf-8"
-        )
+        MANIFEST_PATH.write_text(json.dumps(current, indent=2) + "\n", encoding="utf-8")
         print(f"wrote {MANIFEST_PATH}")
         return 0
 
@@ -188,8 +192,7 @@ def _print_diff(old: dict, new: dict) -> None:
             print(f"  ~ {p} (changed)")
     if old.get("compiler_version") != new.get("compiler_version"):
         print(
-            f"  ~ compiler_version: "
-            f"{old.get('compiler_version')} -> {new.get('compiler_version')}"
+            f"  ~ compiler_version: {old.get('compiler_version')} -> {new.get('compiler_version')}"
         )
 
 

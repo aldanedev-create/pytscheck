@@ -17,12 +17,11 @@ def options_to_argv(options: CompilerOptions) -> list[str]:
     if options.skip_lib_check:
         argv.append("--skipLibCheck")
 
-    for t in options.types:
-        assert_no_null_bytes(t, what="type name")
-        argv += ["--types", t]
-    for lib in options.lib:
-        assert_no_null_bytes(lib, what="lib name")
-        argv += ["--lib", lib]
+    for names, flag in ((options.types, "--types"), (options.lib, "--lib")):
+        if names:
+            for name in names:
+                assert_no_null_bytes(name, what=f"{flag} name")
+            argv += [flag, ",".join(names)]
     if options.target is not None:
         assert_no_null_bytes(options.target, what="target")
         argv += ["--target", options.target]

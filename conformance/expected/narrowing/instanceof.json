@@ -1,0 +1,5 @@
+{
+  "case": "narrowing/instanceof.ts",
+  "success": true,
+  "diagnostics": []
+}

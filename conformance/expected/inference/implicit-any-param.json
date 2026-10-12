@@ -1,0 +1,14 @@
+{
+  "case": "inference/implicit-any-param.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "implicit-any-param.ts",
+      "line": 2,
+      "column": 19,
+      "code": 7006,
+      "category": "error",
+      "message": "Parameter 'x' implicitly has an 'any' type."
+    }
+  ]
+}

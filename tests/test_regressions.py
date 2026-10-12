@@ -146,10 +146,10 @@ def test_regression_ts2322_code_stable(tsgo_binary: Path) -> None:
     assert any(d.code == 2322 for d in r.errors)
 
 
-def test_regression_ts1005_code_stable(tsgo_binary: Path) -> None:
+def test_regression_ts1109_code_stable(tsgo_binary: Path) -> None:
     src = "const x: number = ;"
     r = checker.check_source(src)
-    assert any(d.code == 1005 for d in r.errors), [(d.code, d.message) for d in r.errors]
+    assert any(d.code == 1109 for d in r.errors), [(d.code, d.message) for d in r.errors]
 
 
 # --- no-emit behavior --------------------------------------------------------

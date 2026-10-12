@@ -108,10 +108,13 @@ def test_concurrent_checks_do_not_leak_fds(tsgo_binary: Path) -> None:
     assert after - before < 10
 
 
-def test_concurrent_checks_do_not_leak_tempdirs(tsgo_binary: Path) -> None:
+def test_concurrent_checks_do_not_leak_tempdirs(
+    tsgo_binary: Path, tmp_path: Path, monkeypatch
+) -> None:
     import glob
     import tempfile
 
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     before = set(glob.glob(tempfile.gettempdir() + "/pytscheck-*"))
     for i in range(10):
         check(f"export const x{i}: number = {i};")

@@ -8,6 +8,10 @@ from pathlib import Path
 from pytscheck import checker
 
 
+def _process_check(project: Path) -> bool:
+    return checker.check_project(project).success
+
+
 def _make_project(root: Path, i: int, bad: bool) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     (root / "tsconfig.json").write_text(
@@ -37,13 +41,8 @@ def test_thread_parallel_projects(tsgo_binary: Path, tmp_path: Path) -> None:
 def test_process_parallel_projects(tsgo_binary: Path, tmp_path: Path) -> None:
     projects = [_make_project(tmp_path / f"p{i}", i, bad=(i % 2 == 1)) for i in range(4)]
 
-    def do_check(p: Path) -> bool:
-        from pytscheck import checker as _checker
-
-        return _checker.check_project(p).success
-
     with ProcessPoolExecutor(max_workers=2) as pool:
-        results = list(pool.map(do_check, projects))
+        results = list(pool.map(_process_check, projects))
 
     assert results == [True, False, True, False]
 

@@ -222,7 +222,9 @@ def test_registered_adapter_is_discoverable(registered_vel_adapter) -> None:
     assert get_adapter("vel-test") is registered_vel_adapter
 
 
-def test_registered_adapter_used_via_instance(tsgo_binary: Path, vel_project_clean: Path) -> None:
+def test_registered_adapter_used_via_instance(
+    tsgo_binary: Path, vel_project_clean: Path, registered_vel_adapter
+) -> None:
     r = check_project(vel_project_clean, adapter=registered_vel_adapter)
     assert r.success
 

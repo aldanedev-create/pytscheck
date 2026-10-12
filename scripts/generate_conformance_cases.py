@@ -23,10 +23,9 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CASES_ROOT = REPO_ROOT / "conformance" / "cases"
@@ -122,8 +121,7 @@ def cases_assignability() -> list[Case]:
         Case(
             relpath=f"{base}/missing-property.ts",
             content=ts(
-                "interface A { a: number; b: string; }\n"
-                "export const x: A = { a: 1 };\n",
+                "interface A { a: number; b: string; }\nexport const x: A = { a: 1 };\n",
                 description="missing property: TS2741",
             ),
             description="missing property: TS2741",
@@ -131,9 +129,7 @@ def cases_assignability() -> list[Case]:
         Case(
             relpath=f"{base}/union-to-narrower.ts",
             content=ts(
-                "export function f(x: string | number): string {\n"
-                "  return x;\n"
-                "}\n",
+                "export function f(x: string | number): string {\n  return x;\n}\n",
                 description="union not assignable to member: TS2322",
             ),
             description="union not assignable to member: TS2322",
@@ -141,9 +137,7 @@ def cases_assignability() -> list[Case]:
         Case(
             relpath=f"{base}/narrower-to-union.ts",
             content=ts(
-                "export function f(x: string): string | number {\n"
-                "  return x;\n"
-                "}\n",
+                "export function f(x: string): string | number {\n  return x;\n}\n",
                 description="member assignable to union",
             ),
             description="member assignable to union",
@@ -157,8 +151,7 @@ def cases_inference() -> list[Case]:
         Case(
             relpath=f"{base}/literal.ts",
             content=ts(
-                "export const x = 1;\n"
-                "export const s = 'a';\n",
+                "export const x = 1;\nexport const s = 'a';\n",
                 description="literal inference",
             ),
             description="literal inference",
@@ -259,8 +252,7 @@ def cases_generics() -> list[Case]:
         Case(
             relpath=f"{base}/constraint-violation.ts",
             content=ts(
-                "export function first<T extends { length: number }>(x: T) {}\n"
-                "first(42);\n",
+                "export function first<T extends { length: number }>(x: T) {}\nfirst(42);\n",
                 description="constraint violation: TS2345",
             ),
             description="constraint violation: TS2345",
@@ -274,9 +266,7 @@ def cases_functions() -> list[Case]:
         Case(
             relpath=f"{base}/basic.ts",
             content=ts(
-                "export function add(a: number, b: number): number {\n"
-                "  return a + b;\n"
-                "}\n",
+                "export function add(a: number, b: number): number {\n  return a + b;\n}\n",
                 description="typed function",
             ),
             description="typed function",
@@ -323,8 +313,7 @@ def cases_functions() -> list[Case]:
         Case(
             relpath=f"{base}/missing-arg.ts",
             content=ts(
-                "export function add(a: number, b: number): number { return a + b; }\n"
-                "add(1);\n",
+                "export function add(a: number, b: number): number { return a + b; }\nadd(1);\n",
                 description="missing argument: TS2554",
             ),
             description="missing argument: TS2554",
@@ -408,8 +397,7 @@ def cases_unions() -> list[Case]:
         Case(
             relpath=f"{base}/literal.ts",
             content=ts(
-                "export type T = 'a' | 'b' | 'c';\n"
-                "export const t: T = 'b';\n",
+                "export type T = 'a' | 'b' | 'c';\nexport const t: T = 'b';\n",
                 description="literal union",
             ),
             description="literal union",
@@ -441,8 +429,7 @@ def cases_unions() -> list[Case]:
         Case(
             relpath=f"{base}/invalid-literal.ts",
             content=ts(
-                "export type T = 'a' | 'b';\n"
-                "export const t: T = 'z';\n",
+                "export type T = 'a' | 'b';\nexport const t: T = 'z';\n",
                 description="literal not in union: TS2322",
             ),
             description="literal not in union: TS2322",
@@ -548,9 +535,7 @@ def cases_narrowing() -> list[Case]:
         Case(
             relpath=f"{base}/not-narrowed.ts",
             content=ts(
-                "export function f(x: string | null): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x: string | null): number {\n  return x.length;\n}\n",
                 description="not narrowed: TS18047",
             ),
             description="not narrowed: TS18047",
@@ -582,9 +567,7 @@ def cases_nullability() -> list[Case]:
         Case(
             relpath=f"{base}/non-null.ts",
             content=ts(
-                "export function f(x: string | null): number {\n"
-                "  return x!.length;\n"
-                "}\n",
+                "export function f(x: string | null): number {\n  return x!.length;\n}\n",
                 description="non-null assertion",
             ),
             description="non-null assertion",
@@ -592,9 +575,7 @@ def cases_nullability() -> list[Case]:
         Case(
             relpath=f"{base}/strict-null-error.ts",
             content=ts(
-                "export function f(x: string | null): string {\n"
-                "  return x;\n"
-                "}\n",
+                "export function f(x: string | null): string {\n  return x;\n}\n",
                 description="null to non-nullable: TS2322",
             ),
             description="null to non-nullable: TS2322",
@@ -602,9 +583,7 @@ def cases_nullability() -> list[Case]:
         Case(
             relpath=f"{base}/possibly-null.ts",
             content=ts(
-                "export function f(x: string | null): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x: string | null): number {\n  return x.length;\n}\n",
                 description="possibly null access: TS18047",
             ),
             description="possibly null access: TS18047",
@@ -612,9 +591,7 @@ def cases_nullability() -> list[Case]:
         Case(
             relpath=f"{base}/optional-undefined.ts",
             content=ts(
-                "export function f(x?: string): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x?: string): number {\n  return x.length;\n}\n",
                 description="possibly undefined access: TS18048",
             ),
             description="possibly undefined access: TS18048",
@@ -628,8 +605,7 @@ def cases_modules() -> list[Case]:
         Case(
             relpath=f"{base}/named-exports.ts",
             content=ts(
-                "export const a: number = 1;\n"
-                "export const b: string = 'x';\n",
+                "export const a: number = 1;\nexport const b: string = 'x';\n",
                 description="named exports",
             ),
             description="named exports",
@@ -637,8 +613,7 @@ def cases_modules() -> list[Case]:
         Case(
             relpath=f"{base}/default-export.ts",
             content=ts(
-                "const value: number = 1;\n"
-                "export default value;\n",
+                "const value: number = 1;\nexport default value;\n",
                 description="default export",
             ),
             description="default export",
@@ -646,8 +621,7 @@ def cases_modules() -> list[Case]:
         Case(
             relpath=f"{base}/type-only.ts",
             content=ts(
-                "export interface User { name: string; }\n"
-                "export type Alias = User;\n",
+                "export interface User { name: string; }\nexport type Alias = User;\n",
                 description="type-only exports",
             ),
             description="type-only exports",
@@ -712,10 +686,7 @@ def cases_declarations() -> list[Case]:
         Case(
             relpath=f"{base}/augment.d.ts",
             content=ts(
-                "declare global {\n"
-                "  interface Window { custom: string; }\n"
-                "}\n"
-                "export {};\n",
+                "declare global {\n  interface Window { custom: string; }\n}\nexport {};\n",
                 description="global augmentation",
             ),
             description="global augmentation",
@@ -729,9 +700,7 @@ def cases_compiler_options() -> list[Case]:
         Case(
             relpath=f"{base}/strict-mode.ts",
             content=ts(
-                "export function f(x: string | null): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x: string | null): number {\n  return x.length;\n}\n",
                 description="strict null checks enabled",
             ),
             description="strict null checks enabled",
@@ -747,8 +716,7 @@ def cases_compiler_options() -> list[Case]:
         Case(
             relpath=f"{base}/non-strict.ts",
             content=ts(
-                "export const x = undefined;\n"
-                "export const y: number = x;\n",
+                "export const x = undefined;\nexport const y: number = x;\n",
                 description="relaxed typing context",
             ),
             description="relaxed typing context",
@@ -788,8 +756,7 @@ CASE_SETS: list[CaseSet] = [
 
 def all_cases() -> Iterable[Case]:
     for cs in CASE_SETS:
-        for case in cs.cases:
-            yield case
+        yield from cs.cases
 
 
 # ---------------------------------------------------------------------------
@@ -842,12 +809,13 @@ def main(argv: list[str] | None = None) -> int:
         prog="generate_conformance_cases",
         description="Generate conformance/cases/ from a declarative spec.",
     )
-    parser.add_argument("--force", action="store_true",
-                        help="overwrite hand-edited case files")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="report what would change, write nothing")
-    parser.add_argument("--manifest", action="store_true",
-                        help="write/update conformance/manifest.json")
+    parser.add_argument("--force", action="store_true", help="overwrite hand-edited case files")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="report what would change, write nothing"
+    )
+    parser.add_argument(
+        "--manifest", action="store_true", help="write/update conformance/manifest.json"
+    )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
@@ -882,10 +850,15 @@ def main(argv: list[str] | None = None) -> int:
         changes.append(f"wrote {MANIFEST_PATH.relative_to(REPO_ROOT)}")
 
     if args.json:
-        print(json.dumps({
-            "changes": changes,
-            "counts": counts,
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "changes": changes,
+                    "counts": counts,
+                },
+                indent=2,
+            )
+        )
     else:
         for line in changes:
             print(line)

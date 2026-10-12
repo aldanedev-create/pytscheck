@@ -1,0 +1,14 @@
+{
+  "case": "nullability/nullish.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "nullish.ts",
+      "line": 2,
+      "column": 26,
+      "code": 2871,
+      "category": "error",
+      "message": "This expression is always nullish."
+    }
+  ]
+}

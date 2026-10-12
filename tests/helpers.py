@@ -336,13 +336,20 @@ def hide_file(path: Path):
     Used by tests that need to verify behavior when a real file is missing
     (e.g., the bundled binary). The file is restored even if the block raises.
     """
-    hidden = path.with_suffix(path.suffix + ".hidden-by-test")
-    if hidden.exists():
-        raise RuntimeError(f"refusing to hide: {hidden} already exists")
-    if path.exists():
-        path.rename(hidden)
-    try:
-        yield hidden
-    finally:
-        if hidden.exists():
-            hidden.rename(path)
+    import tempfile
+
+    original_bytes = path.read_bytes() if path.exists() else None
+    original_mode = path.stat().st_mode if path.exists() else None
+    with tempfile.TemporaryDirectory(prefix="pytscheck-backup-") as backup_dir:
+        hidden = Path(backup_dir) / path.name
+        if original_bytes is not None:
+            hidden.write_bytes(original_bytes)
+            path.unlink()
+        try:
+            yield hidden
+        finally:
+            if original_bytes is not None:
+                path.write_bytes(original_bytes)
+                path.chmod(original_mode)
+            else:
+                path.unlink(missing_ok=True)

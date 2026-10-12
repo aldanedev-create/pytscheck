@@ -20,7 +20,7 @@ import argparse
 import json
 import sys
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -94,9 +94,7 @@ def discover_cases() -> list[Case]:
             continue
         rel = src.relative_to(CASES_DIR).as_posix()
         expected = (EXPECTED_DIR / rel).with_suffix(".json")
-        cases.append(
-            Case(name=rel, source_path=src, expected_path=expected)
-        )
+        cases.append(Case(name=rel, source_path=src, expected_path=expected))
 
     # Project directories (identified by a tsconfig.json inside them)
     seen_dirs: set[Path] = set()
@@ -110,9 +108,7 @@ def discover_cases() -> list[Case]:
             continue
         rel = d.relative_to(CASES_DIR).as_posix() + "/"
         expected = (EXPECTED_DIR / rel.rstrip("/")).with_suffix(".json")
-        cases.append(
-            Case(name=rel, source_path=tsconfig, expected_path=expected)
-        )
+        cases.append(Case(name=rel, source_path=tsconfig, expected_path=expected))
 
     return cases
 
@@ -170,9 +166,7 @@ def _normalize_expected(payload: dict) -> list[dict]:
     return out
 
 
-def _diff_diagnostics(
-    expected: list[dict], actual: list[dict]
-) -> tuple[list[dict], list[dict]]:
+def _diff_diagnostics(expected: list[dict], actual: list[dict]) -> tuple[list[dict], list[dict]]:
     """Return (missing, extra) diagnostics as multiset differences.
 
     Compare as multisets so ordering differences do not cause failures.
@@ -233,9 +227,7 @@ def run_case(case: Case) -> CaseResult:
         )
 
     try:
-        expected_payload = json.loads(
-            case.expected_path.read_text(encoding="utf-8")
-        )
+        expected_payload = json.loads(case.expected_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         return CaseResult(
             case=case,
@@ -384,10 +376,7 @@ def _print_summary(results: list[CaseResult]) -> None:
         print("  By category:")
         width = max(len(c) for c in s["by_category"])
         for cat, counts in s["by_category"].items():
-            print(
-                f"    {cat:<{width}}  "
-                f"pass={counts['pass']:<4}  fail={counts['fail']}"
-            )
+            print(f"    {cat:<{width}}  pass={counts['pass']:<4}  fail={counts['fail']}")
 
 
 def _to_json(results: list[CaseResult]) -> dict:
@@ -478,11 +467,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.case:
         wanted = set(args.case)
-        cases = [
-            c
-            for c in cases
-            if c.name in wanted or c.name.rstrip("/") in wanted
-        ]
+        cases = [c for c in cases if c.name in wanted or c.name.rstrip("/") in wanted]
         if not cases:
             print(
                 f"no cases matched: {sorted(wanted)}",

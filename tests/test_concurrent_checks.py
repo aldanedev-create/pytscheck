@@ -76,11 +76,12 @@ def test_concurrent_file_checks(tsgo_binary: Path, tmp_path: Path) -> None:
     assert all(results)
 
 
-def test_concurrent_checks_release_tempdirs(tsgo_binary: Path) -> None:
+def test_concurrent_checks_release_tempdirs(tsgo_binary: Path, tmp_path: Path, monkeypatch) -> None:
     """No temp directories should leak after concurrent checks."""
     import glob
     import tempfile
 
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     before = set(glob.glob(tempfile.gettempdir() + "/pytscheck-*"))
 
     with ThreadPoolExecutor(max_workers=4) as pool:

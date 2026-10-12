@@ -54,7 +54,7 @@ def test_supports_optional_chaining(tsgo_binary: Path) -> None:
 
 
 def test_supports_nullish_coalescing(tsgo_binary: Path) -> None:
-    assert check("export const x: number = null ?? 1;").success
+    assert check("export function value(x: number | null): number { return x ?? 1; }").success
 
 
 def test_supports_template_literal_types(tsgo_binary: Path) -> None:

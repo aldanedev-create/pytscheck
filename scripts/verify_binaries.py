@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Re-verify on-disk binaries against bin/manifest.json."""
+
 from __future__ import annotations
 
 import base64
@@ -14,14 +15,17 @@ MANIFEST_PATH = BIN_ROOT / "manifest.json"
 
 
 def verify_platform(platform: str, entry: dict) -> bool:
-    dest = BIN_ROOT / {
-        "win32-x64": "windows-amd64",
-        "win32-arm64": "windows-arm64",
-        "linux-x64": "linux-amd64",
-        "linux-arm64": "linux-arm64",
-        "darwin-x64": "darwin-amd64",
-        "darwin-arm64": "darwin-arm64",
-    }[platform]
+    dest = (
+        BIN_ROOT
+        / {
+            "win32-x64": "windows-amd64",
+            "win32-arm64": "windows-arm64",
+            "linux-x64": "linux-amd64",
+            "linux-arm64": "linux-arm64",
+            "darwin-x64": "darwin-amd64",
+            "darwin-arm64": "darwin-arm64",
+        }[platform]
+    )
 
     binary = dest / entry["binary_relpath"]
     if not binary.exists():
@@ -29,16 +33,23 @@ def verify_platform(platform: str, entry: dict) -> bool:
         return False
     print(f"  binary present: {binary} ({binary.stat().st_size:,} bytes)")
 
+    actual = "sha512-" + base64.b64encode(hashlib.sha512(binary.read_bytes()).digest()).decode()
+    if actual != entry.get("integrity") or binary.stat().st_size != entry.get("size_bytes"):
+        print("  CHECKSUM/SIZE MISMATCH")
+        return False
+
     # Count .d.ts files
     dts = list(dest.rglob("*.d.ts"))
     print(f"  .d.ts files: {len(dts)}")
+    ok = bool(dts)
 
     # License / notice present?
     for name in ("LICENSE", "NOTICE.txt"):
         found = list(dest.rglob(name))
         print(f"  {name}: {'found' if found else 'MISSING'}")
+        ok = ok and bool(found)
 
-    return True
+    return ok
 
 
 def main() -> int:

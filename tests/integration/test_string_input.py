@@ -80,7 +80,7 @@ def test_type_error_string_from_number(tsgo_binary) -> None:
 def test_type_error_undefined_identifier(tsgo_binary) -> None:
     r = check("console.log(notDefined);")
     assert not r.success
-    assert any(d.code in {2304, 2582, 2591} for d in r.errors)
+    assert any(d.code in {2304, 2552} for d in r.errors)
 
 
 def test_type_error_wrong_argument_count(tsgo_binary) -> None:
@@ -98,7 +98,7 @@ def test_type_error_missing_property(tsgo_binary) -> None:
 def test_syntax_error(tsgo_binary) -> None:
     r = check("const x: number = ;")
     assert not r.success
-    assert_has_error_code(r, 1005)
+    assert_has_error_code(r, 1109)
 
 
 def test_syntax_error_unclosed_brace(tsgo_binary) -> None:

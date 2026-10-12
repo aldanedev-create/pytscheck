@@ -1,0 +1,14 @@
+{
+  "case": "unions/invalid-literal.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "invalid-literal.ts",
+      "line": 3,
+      "column": 14,
+      "code": 2322,
+      "category": "error",
+      "message": "Type '\"z\"' is not assignable to type 'T'."
+    }
+  ]
+}

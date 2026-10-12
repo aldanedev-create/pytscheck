@@ -26,8 +26,7 @@ try:
         build_manifest,
     )
 except ImportError as exc:
-    print(f"error: cannot import generate_benchmark_fixtures: {exc}",
-          file=sys.stderr)
+    print(f"error: cannot import generate_benchmark_fixtures: {exc}", file=sys.stderr)
     raise SystemExit(2) from exc
 
 
@@ -65,14 +64,10 @@ def check_files(report: Report) -> None:
         p = FIXTURES_ROOT / relpath
         if not p.exists():
             report.drifts.append(
-                Drift("missing", relpath,
-                      "run scripts/generate_benchmark_fixtures.py --manifest")
+                Drift("missing", relpath, "run scripts/generate_benchmark_fixtures.py --manifest")
             )
         elif p.read_text(encoding="utf-8") != expected:
-            report.drifts.append(
-                Drift("modified", relpath,
-                      "content differs from generator spec")
-            )
+            report.drifts.append(Drift("modified", relpath, "content differs from generator spec"))
 
 
 def check_unexpected(report: Report) -> None:
@@ -86,24 +81,23 @@ def check_unexpected(report: Report) -> None:
         rel = p.relative_to(FIXTURES_ROOT).as_posix()
         if rel in spec or rel in allowed:
             continue
-        report.drifts.append(
-            Drift("unexpected", rel, "not declared by the generator")
-        )
+        report.drifts.append(Drift("unexpected", rel, "not declared by the generator"))
 
 
 def check_manifest(report: Report) -> None:
     if not MANIFEST_PATH.exists():
         report.drifts.append(
-            Drift("manifest_missing", "MANIFEST.json",
-                  "run scripts/generate_benchmark_fixtures.py --manifest")
+            Drift(
+                "manifest_missing",
+                "MANIFEST.json",
+                "run scripts/generate_benchmark_fixtures.py --manifest",
+            )
         )
         return
     try:
         actual = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        report.drifts.append(
-            Drift("manifest_mismatch", "MANIFEST.json", f"invalid JSON: {exc}")
-        )
+        report.drifts.append(Drift("manifest_mismatch", "MANIFEST.json", f"invalid JSON: {exc}"))
         return
     expected = build_manifest()
     if actual.get("fixture_count") != expected["fixture_count"]:
@@ -111,8 +105,7 @@ def check_manifest(report: Report) -> None:
             Drift(
                 "manifest_mismatch",
                 "MANIFEST.json",
-                f"fixture_count={actual.get('fixture_count')} "
-                f"expected {expected['fixture_count']}",
+                f"fixture_count={actual.get('fixture_count')} expected {expected['fixture_count']}",
             )
         )
 
@@ -132,16 +125,20 @@ def main(argv: list[str] | None = None) -> int:
     check_manifest(report)
 
     if args.json:
-        print(json.dumps({
-            "clean": report.clean,
-            "checked": report.checked,
-            "on_disk_total": report.on_disk_total,
-            "drift_count": len(report.drifts),
-            "drifts": [
-                {"kind": d.kind, "path": d.path, "detail": d.detail}
-                for d in report.drifts
-            ],
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "clean": report.clean,
+                    "checked": report.checked,
+                    "on_disk_total": report.on_disk_total,
+                    "drift_count": len(report.drifts),
+                    "drifts": [
+                        {"kind": d.kind, "path": d.path, "detail": d.detail} for d in report.drifts
+                    ],
+                },
+                indent=2,
+            )
+        )
     elif not args.quiet:
         if report.clean:
             print(

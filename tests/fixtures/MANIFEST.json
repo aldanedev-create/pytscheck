@@ -1,0 +1,911 @@
+{
+  "generator": "scripts/generate_fixtures.py",
+  "version": 1,
+  "fixture_count": 154,
+  "fixtures": [
+    {
+      "path": "typescript/valid/const-number.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "minimal valid numeric constant"
+    },
+    {
+      "path": "typescript/valid/const-string.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "minimal valid string constant"
+    },
+    {
+      "path": "typescript/valid/function-basic.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "typed function declaration"
+    },
+    {
+      "path": "typescript/valid/interface-basic.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "interface declaration and usage"
+    },
+    {
+      "path": "typescript/valid/class-basic.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "class with parameter properties"
+    },
+    {
+      "path": "typescript/valid/type-alias-basic.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "generic-free type alias"
+    },
+    {
+      "path": "typescript/valid/empty.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "empty file is valid TypeScript"
+    },
+    {
+      "path": "typescript/valid/comment-only.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "comment-only file is valid"
+    },
+    {
+      "path": "typescript/valid/unicode-content.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "Unicode string literal"
+    },
+    {
+      "path": "typescript/valid/export-default.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "export default function"
+    },
+    {
+      "path": "typescript/invalid/TS2322-type-mismatch-number.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS2322-type-mismatch-string.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS1005-missing-semicolon.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        1005
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS2304-undefined-identifier.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2304,
+        2582,
+        2591
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS2554-wrong-arg-count.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2554
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS2741-missing-property.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2741
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS2322-null-to-string.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS1005-unterminated-string.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        1002,
+        1005
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS1005-unterminated-comment.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        1010
+      ]
+    },
+    {
+      "path": "typescript/invalid/TS1109-unexpected-token.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        1109,
+        1005
+      ]
+    },
+    {
+      "path": "typescript/generics/function-identity.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "basic generic function"
+    },
+    {
+      "path": "typescript/generics/class-stack.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "generic class"
+    },
+    {
+      "path": "typescript/generics/constraint.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "generic with constraint"
+    },
+    {
+      "path": "typescript/generics/default-type-param.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "generic with default type parameter"
+    },
+    {
+      "path": "typescript/generics/TS2322-error-return.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/generics/TS2344-error-constraint.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2345,
+        2344
+      ]
+    },
+    {
+      "path": "typescript/narrowing/typeof.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "typeof narrowing"
+    },
+    {
+      "path": "typescript/narrowing/instanceof.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "instanceof narrowing"
+    },
+    {
+      "path": "typescript/narrowing/in-operator.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "in-operator narrowing"
+    },
+    {
+      "path": "typescript/narrowing/discriminated-union.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "discriminated union narrowing"
+    },
+    {
+      "path": "typescript/narrowing/equality-narrowing.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "null check narrowing"
+    },
+    {
+      "path": "typescript/narrowing/TS18047-error-not-narrowed.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        18047,
+        2531
+      ]
+    },
+    {
+      "path": "typescript/unions/basic.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "basic literal union"
+    },
+    {
+      "path": "typescript/unions/with-primitives.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/unions/TS2322-error.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/unions/narrowed-access.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/intersections/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/intersections/function-composition.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/intersections/TS2322-error-missing-part.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2739
+      ]
+    },
+    {
+      "path": "typescript/intersections/merged-interface.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/conditional-types/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/conditional-types/infer.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/conditional-types/distributive.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/conditional-types/TS2322-error.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/mapped-types/readonly.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/mapped-types/optional.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/mapped-types/key-remapping.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/mapped-types/TS2322-error-readonly.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2540
+      ]
+    },
+    {
+      "path": "typescript/template-literal-types/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/template-literal-types/union-expansion.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/template-literal-types/TS2322-error.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/template-literal-types/intrinsic-uppercase.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/overloads/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/overloads/constructor.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/overloads/TS2769-error-no-overload.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2769
+      ]
+    },
+    {
+      "path": "typescript/overloads/optional-param.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/classes/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/classes/inheritance.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/classes/abstract.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/classes/implements.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/classes/private-field.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/classes/TS2322-error-return.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/interfaces/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/interfaces/optional.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/interfaces/extends.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/interfaces/TS2322-error-missing.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2741
+      ]
+    },
+    {
+      "path": "typescript/enums/numeric.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/enums/string.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/enums/const-enum.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/enums/TS2322-error.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/namespaces/basic.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/namespaces/nested.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/namespaces/usage.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/namespaces/TS2339-error.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2339
+      ]
+    },
+    {
+      "path": "typescript/modules/named-export.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/modules/default-export.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/modules/reexport.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "re-export pattern; may need a resolution context"
+    },
+    {
+      "path": "typescript/modules/namespace-import.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/modules/type-only-export.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/modules/side-effect-import.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/async/async-function.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/async/await.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/async/promise-chain.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/async/async-arrow.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/async/TS2322-error-return-type.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/async/for-await.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/decorators/method-decorator.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "method decorator (may require experimentalDecorators)"
+    },
+    {
+      "path": "typescript/decorators/class-decorator.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/decorators/property-decorator.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/decorators/no-decorators.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "control: same shape without decorators"
+    },
+    {
+      "path": "typescript/jsx/element.tsx",
+      "expect": "pass",
+      "generated": true,
+      "note": "basic JSX element"
+    },
+    {
+      "path": "typescript/jsx/props.tsx",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/jsx/fragment.tsx",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/jsx/conditional.tsx",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/tsx/component.tsx",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/tsx/list.tsx",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/tsx/generic-component.tsx",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/tsx/error-unknown-component.tsx",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2304,
+        2339,
+        7026
+      ]
+    },
+    {
+      "path": "typescript/declaration-files/global.d.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "ambient global declarations"
+    },
+    {
+      "path": "typescript/declaration-files/module.d.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "ambient module declaration"
+    },
+    {
+      "path": "typescript/declaration-files/types-only.d.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/declaration-files/augment.d.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/declaration-files/consumer.ts",
+      "expect": "pass",
+      "generated": true,
+      "note": "consumes global.d.ts"
+    },
+    {
+      "path": "typescript/declaration-files/no-implicit-any.d.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/strict-mode/null-checked.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/strict-mode/undefined-checked.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/strict-mode/no-implicit-any-ok.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/strict-mode/strict-null-checks.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "typescript/strict-mode/implicit-any-error.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        7006
+      ]
+    },
+    {
+      "path": "typescript/strict-mode/strict-property-init.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2564
+      ]
+    },
+    {
+      "path": "typescript/nullability/optional-chain.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/nullability/nullish-coalesce.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/nullability/non-null-assertion.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/nullability/undefined-union.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/nullability/TS2531-error-object-null.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        18047,
+        2531
+      ]
+    },
+    {
+      "path": "typescript/nullability/TS2532-error-object-undefined.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        18048,
+        2532
+      ]
+    },
+    {
+      "path": "typescript/inference/literal-inference.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/inference/array-inference.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/inference/object-inference.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/inference/return-inference.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/standard-library/array.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/standard-library/map.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/standard-library/set.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/standard-library/promise.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/standard-library/json.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/standard-library/regexp.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "typescript/regressions/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/minimal/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/minimal/tsconfig.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/minimal/main.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/monorepo/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/monorepo/tsconfig.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/monorepo/packages/a/package.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/monorepo/packages/a/index.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/monorepo/packages/b/package.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/monorepo/packages/b/index.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/path-aliases/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/path-aliases/tsconfig.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/path-aliases/src/lib/math.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/path-aliases/src/main.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/path-aliases/src/broken.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2307
+      ]
+    },
+    {
+      "path": "projects/references/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/references/tsconfig.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/references/lib/util.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/references/app/tsconfig.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/references/app/main.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/references/app/broken.ts",
+      "expect": "fail",
+      "generated": true,
+      "codes": [
+        2322
+      ]
+    },
+    {
+      "path": "projects/custom-types/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/custom-types/tsconfig.json",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/custom-types/types.d.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/custom-types/main.ts",
+      "expect": "pass",
+      "generated": true
+    },
+    {
+      "path": "projects/broken-config/README.md",
+      "expect": "pass",
+      "generated": false
+    },
+    {
+      "path": "projects/broken-config/tsconfig.json",
+      "expect": "pass",
+      "generated": true,
+      "note": "unterminated object; the loader must raise ConfigurationError"
+    },
+    {
+      "path": "projects/broken-config/main.ts",
+      "expect": "pass",
+      "generated": true
+    }
+  ]
+}

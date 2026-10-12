@@ -1,0 +1,14 @@
+{
+  "case": "compiler-options/non-strict.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "non-strict.ts",
+      "line": 3,
+      "column": 14,
+      "code": 2322,
+      "category": "error",
+      "message": "Type 'undefined' is not assignable to type 'number'."
+    }
+  ]
+}

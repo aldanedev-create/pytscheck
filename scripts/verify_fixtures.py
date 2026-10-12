@@ -38,8 +38,7 @@ MANIFEST_PATH = FIXTURES_ROOT / "MANIFEST.json"
 # write to disk at import time, and its main() is guarded by __main__.
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 try:
-    from generate_fixtures import (  # type: ignore[import-not-found]
-        MANIFEST_PATH as GENERATOR_MANIFEST_PATH,
+    from generate_fixtures import (
         all_fixtures,
         build_manifest,
     )
@@ -92,10 +91,7 @@ class Report:
             "on_disk_total": self.on_disk_total,
             "manifest_present": self.manifest_present,
             "drift_count": len(self.drifts),
-            "drifts": [
-                {"kind": d.kind, "path": d.path, "detail": d.detail}
-                for d in self.drifts
-            ],
+            "drifts": [{"kind": d.kind, "path": d.path, "detail": d.detail} for d in self.drifts],
         }
 
 
@@ -286,10 +282,7 @@ def _diff_summary(expected: str, actual: str) -> str:
         )
     for i, (e, a) in enumerate(zip(exp_lines, act_lines, strict=False), start=1):
         if e != a:
-            return (
-                f"first difference at line {i}: "
-                f"expected {e!r}, actual {a!r}"
-            )
+            return f"first difference at line {i}: expected {e!r}, actual {a!r}"
     # Same lines, different bytes (trailing newline)
     if expected != actual:
         return "content differs (trailing bytes); run scripts/generate_fixtures.py"
@@ -322,10 +315,7 @@ def verify(*, strict: bool = False) -> Report:
 
 def _print_human(report: Report) -> None:
     if report.clean:
-        print(
-            f"OK: {report.checked} fixtures verified "
-            f"({report.on_disk_total} files on disk)"
-        )
+        print(f"OK: {report.checked} fixtures verified ({report.on_disk_total} files on disk)")
         return
 
     print(f"DRIFT DETECTED: {len(report.drifts)} issue(s)")
@@ -333,10 +323,11 @@ def _print_human(report: Report) -> None:
     for d in report.drifts:
         print(str(d))
     print()
-    print("Run `python scripts/generate_fixtures.py --manifest` to fix "
-          "generated-file drift.")
-    print("Hand-authored files must be added to scripts/generate_fixtures.py "
-          "or moved out of generated directories.")
+    print("Run `python scripts/generate_fixtures.py --manifest` to fix generated-file drift.")
+    print(
+        "Hand-authored files must be added to scripts/generate_fixtures.py "
+        "or moved out of generated directories."
+    )
 
 
 def _build_parser() -> argparse.ArgumentParser:

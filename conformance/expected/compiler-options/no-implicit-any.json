@@ -1,0 +1,14 @@
+{
+  "case": "compiler-options/no-implicit-any.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "no-implicit-any.ts",
+      "line": 2,
+      "column": 19,
+      "code": 7006,
+      "category": "error",
+      "message": "Parameter 'x' implicitly has an 'any' type."
+    }
+  ]
+}

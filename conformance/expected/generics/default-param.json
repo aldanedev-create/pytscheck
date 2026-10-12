@@ -1,0 +1,5 @@
+{
+  "case": "generics/default-param.ts",
+  "success": true,
+  "diagnostics": []
+}

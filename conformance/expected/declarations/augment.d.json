@@ -1,0 +1,5 @@
+{
+  "case": "declarations/augment.d.ts",
+  "success": true,
+  "diagnostics": []
+}

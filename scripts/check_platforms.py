@@ -20,9 +20,8 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import ast
 import json
-import re
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -69,26 +68,16 @@ def _parse_platform_dirs_from_generator(path: Path) -> dict[str, str] | None:
     """
     if not path.exists():
         return None
-    text = path.read_text(encoding="utf-8")
-    match = re.search(
-        r"_PLATFORM_DIRS\s*:\s*dict\[str,\s*str\]\s*=\s*\{(?P<body>.*?)\}",
-        text,
-        re.DOTALL,
-    )
-    if match is None:
-        # Try without type annotation
-        match = re.search(
-            r"_PLATFORM_DIRS\s*=\s*\{(?P<body>.*?)\}",
-            text,
-            re.DOTALL,
-        )
-    if match is None:
-        return None
-    body = match.group("body")
-    out: dict[str, str] = {}
-    for m in re.finditer(r'"([^"]+)"\s*:\s*"([^"]+)"', body):
-        out[m.group(1)] = m.group(2)
-    return out
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            if node.target.id == "_PLATFORM_DIRS":
+                return ast.literal_eval(node.value)
+        elif isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "_PLATFORM_DIRS" for t in node.targets
+        ):
+            return ast.literal_eval(node.value)
+    return None
 
 
 def _parse_docs_platforms(path: Path) -> set[str] | None:
@@ -109,46 +98,22 @@ def run_checks() -> list[Finding]:
     gen_map = _parse_platform_dirs_from_generator(GENERATOR)
     if gen_map is None:
         findings.append(
-            Finding("parse_error", f"{GENERATOR.relative_to(REPO_ROOT)}: "
-                    "_PLATFORM_DIRS not found")
+            Finding("parse_error", f"{GENERATOR.relative_to(REPO_ROOT)}: _PLATFORM_DIRS not found")
         )
         gen_map = {}
 
     runner_map = _parse_platform_dirs_from_generator(RUNNER)
     if runner_map is None:
         findings.append(
-            Finding("parse_error", f"{RUNNER.relative_to(REPO_ROOT)}: "
-                    "_PLATFORM_DIRS not found")
+            Finding("parse_error", f"{RUNNER.relative_to(REPO_ROOT)}: _PLATFORM_DIRS not found")
         )
         runner_map = {}
 
-    # 1. Both maps must exist and have the same values
-    if gen_map and runner_map and gen_map != runner_map:
-        only_gen = set(gen_map) - set(runner_map)
-        only_run = set(runner_map) - set(gen_map)
-        for key in sorted(only_gen):
-            findings.append(
-                Finding(
-                    "map_mismatch",
-                    f"{key} present in generate_manifest.py but not runner.py",
-                )
-            )
-        for key in sorted(only_run):
-            findings.append(
-                Finding(
-                    "map_mismatch",
-                    f"{key} present in runner.py but not generate_manifest.py",
-                )
-            )
-        for key in sorted(set(gen_map) & set(runner_map)):
-            if gen_map[key] != runner_map[key]:
-                findings.append(
-                    Finding(
-                        "map_mismatch",
-                        f"{key}: generator={gen_map[key]!r}, "
-                        f"runner={runner_map[key]!r}",
-                    )
-                )
+    # Runtime keys include OS/architecture aliases; compare their destination set.
+    if gen_map and runner_map and set(gen_map.values()) != set(runner_map.values()):
+        findings.append(
+            Finding("map_mismatch", "generator and runtime platform directories differ")
+        )
 
     # 2. The set of directory names must equal EXPECTED_TARGETS
     all_dirs = set(gen_map.values()) | set(runner_map.values())
@@ -156,19 +121,13 @@ def run_checks() -> list[Finding]:
         extra = all_dirs - EXPECTED_TARGETS
         missing = EXPECTED_TARGETS - all_dirs
         for d in sorted(extra):
-            findings.append(
-                Finding("unexpected_target", f"{d} is not in EXPECTED_TARGETS")
-            )
+            findings.append(Finding("unexpected_target", f"{d} is not in EXPECTED_TARGETS"))
         for d in sorted(missing):
-            findings.append(
-                Finding("missing_target", f"{d} is missing from the maps")
-            )
+            findings.append(Finding("missing_target", f"{d} is missing from the maps"))
 
     # 3. Check the deferred platform is documented as deferred
-    deferred = EXPECTED_TARGETS - INITIAL_TARGETS
-    if "windows-arm64" in all_dirs and "windows-arm64" not in (
-        "windows-arm64",
-    ):
+    EXPECTED_TARGETS - INITIAL_TARGETS
+    if "windows-arm64" in all_dirs and "windows-arm64" not in ("windows-arm64",):
         pass  # keep it listed; it's fine to include even if deferred
 
     # 4. If docs exists, it must mention every expected target
@@ -203,9 +162,7 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "clean": not findings,
                     "finding_count": len(findings),
-                    "findings": [
-                        {"kind": f.kind, "detail": f.detail} for f in findings
-                    ],
+                    "findings": [{"kind": f.kind, "detail": f.detail} for f in findings],
                 },
                 indent=2,
             )

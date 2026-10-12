@@ -42,8 +42,7 @@ def tsconfig_paths_alias(tmp_path: Path) -> Path:
         '  "compilerOptions": {\n'
         '    "strict": true,\n'
         '    "noEmit": true,\n'
-        '    "baseUrl": ".",\n'
-        '    "paths": { "@lib/*": ["src/lib/*"] }\n'
+        '    "paths": { "@lib/*": ["./src/lib/*"] }\n'
         "  },\n"
         '  "include": ["**/*.ts"]\n'
         "}\n",

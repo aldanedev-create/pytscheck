@@ -1,0 +1,14 @@
+{
+  "case": "nullability/strict-null-error.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "strict-null-error.ts",
+      "line": 3,
+      "column": 3,
+      "code": 2322,
+      "category": "error",
+      "message": "Type 'string | null' is not assignable to type 'string'.\nType 'null' is not assignable to type 'string'."
+    }
+  ]
+}

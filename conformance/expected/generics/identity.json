@@ -1,0 +1,5 @@
+{
+  "case": "generics/identity.ts",
+  "success": true,
+  "diagnostics": []
+}
