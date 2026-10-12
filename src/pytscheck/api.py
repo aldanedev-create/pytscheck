@@ -55,7 +55,10 @@ def _coerce_options(
     if isinstance(options, CompilerOptions):
         return options
     if isinstance(options, dict):
-        return CompilerOptions(**options)
+        try:
+            return CompilerOptions(**options)
+        except TypeError as exc:
+            raise ConfigurationError(f"invalid compiler options: {exc}") from exc
     raise ConfigurationError(
         f"options must be CompilerOptions, dict, or None; got {type(options).__name__}"
     )
@@ -73,22 +76,25 @@ def _check_adapter(
     Kept in a helper so `import pytscheck` does not eagerly pull adapter
     modules when the caller never uses them.
     """
+    from .adapters.base import CompilerAdapter
     from .adapters.compatibility import check_protocol_version
-    from .adapters.errors import AdapterError, AdapterExtractionError
+    from .adapters.errors import AdapterError, AdapterExtractionError, AdapterProtocolError
     from .adapters.source_maps import remap_diagnostics
     from .adapters.sources import collect_sources
     from .checker import check_sources_virtual
 
-    check_protocol_version(adapter)
+    if not isinstance(adapter, CompilerAdapter):
+        raise AdapterProtocolError("adapter does not satisfy CompilerAdapter")
 
     # Adapter failures must not be confused with type errors.
     try:
+        check_protocol_version(adapter)
         sources = collect_sources(adapter, str(project_root))
     except AdapterError:
         raise
     except Exception as exc:  # pragma: no cover - defensive
         raise AdapterExtractionError(
-            f"adapter {adapter.name!r} raised during source collection: {exc}"
+            f"adapter {type(adapter).__name__!r} raised during source collection: {exc}"
         ) from exc
 
     result = check_sources_virtual(
@@ -156,6 +162,8 @@ def check(
         >>> bool(result.errors)
         True
     """
+    if not isinstance(source, str) or not isinstance(filename, str):
+        raise ConfigurationError("source and filename must be strings")
     if "\x00" in source:
         raise ConfigurationError("source contains a NUL byte")
     if "\x00" in filename:

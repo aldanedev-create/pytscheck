@@ -33,6 +33,8 @@ If a project unexpectedly checks in strict mode, the default command-line `--str
 
 ## Compiler diagnostics
 
+Single-file checks use `--ignoreConfig` to avoid TS5112 from an incidental tsconfig; use project mode to apply that configuration.
+
 Missing imports often mean project declarations/packages are absent or module resolution is misconfigured. The compiler bundles standard-library declarations, not every external package. `types` selects installed declarations and does not install them.
 
 An invalid compiler option returns a compiler diagnostic if parseable. The pinned native compiler may have removed an option present in older TypeScript versions. An adapter's virtual project cannot automatically see the original root's dependencies or tsconfig.

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 import pytest
 
 from pytscheck.adapters.errors import AdapterProtocolError
@@ -91,13 +93,16 @@ def test_empty_paths_are_rejected_before_duplicates() -> None:
 
 
 def test_case_sensitive_duplicates() -> None:
-    """Different case = different path in the check; the adapter is responsible
-    for canonicalization if its platform is case-insensitive."""
+    """Preserve distinct Linux paths, but reject case collisions on Windows/macOS."""
     a = _Adapter(
         [
             SourceFile(path="App.ts", text=""),
             SourceFile(path="app.ts", text=""),
         ]
     )
-    out = collect_sources(a, "/")
-    assert len(out) == 2
+    if sys.platform in {"win32", "darwin"}:
+        with pytest.raises(AdapterProtocolError, match="duplicate"):
+            collect_sources(a, "/")
+    else:
+        out = collect_sources(a, "/")
+        assert len(out) == 2

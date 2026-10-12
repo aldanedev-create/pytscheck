@@ -5,8 +5,8 @@ PyTSCheck checks code locally using a bundled executable. Checking a project giv
 ## Existing protections
 
 - Subprocess arguments use a list and `shell=False`.
-- Source-string and single-file checks reject NUL bytes and input above 8 MiB.
-- Adapter source paths reject absolute/drive-qualified paths, `..`, NUL bytes, and exact duplicates.
+- Source-string, single-file, and adapter checks reject NUL bytes and input above 8 MiB per source.
+- Adapter source paths reject absolute/drive-qualified paths, `..`, NUL bytes, normalized duplicates, directory/file conflicts, and non-portable Windows names.
 - A string tsconfig `extends` path resolving outside the supplied root is rejected.
 - Compiler downloads and on-disk binaries are checked against recorded SHA-512 values.
 - Temporary source/output files are cleaned up, and output is read within bounded limits.
@@ -16,10 +16,10 @@ PyTSCheck checks code locally using a bundled executable. Checking a project giv
 | Timeout | 60 seconds | Each runner invocation |
 | Stdout limit | 32 MiB | Captured compiler stdout |
 | Stderr limit | 4 MiB | Captured compiler stderr |
-| Source limit | 8 MiB | `check()` and `check_file()` prevalidation |
-| Input count | 20,000 files | Project scan without a tsconfig |
+| Source limit | 8 MiB | `check()`, `check_file()`, and adapter prevalidation |
+| Input count | 20,000 files | Project scan without a tsconfig and adapter collection |
 
-Output limits are detected by polling temporary-file sizes; a fast producer can briefly write beyond a limit before termination. These are wrapper defaults, not public `CompilerOptions` fields or guarantees of total memory/CPU/disk use. Configured projects and adapter sources do not receive the same per-source prevalidation as single-source entry points.
+Output limits are detected by polling temporary-file sizes; a fast producer can briefly write beyond a limit before termination. These are wrapper defaults, not public `CompilerOptions` fields or guarantees of total memory/CPU/disk use. Configured projects do not receive the same per-source prevalidation as single-source and adapter entry points.
 
 ## Trust boundaries
 

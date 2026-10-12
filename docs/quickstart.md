@@ -50,6 +50,8 @@ with TemporaryDirectory() as directory:
     assert check_project(root).success
 ```
 
+For JavaScript annotated with JSDoc, see the [JSDoc guide](jsdoc.md).
+
 Read [project checking](project-checking.md) for imports, aliases, declarations, and references.
 
 ## Set compiler options

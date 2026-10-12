@@ -56,6 +56,12 @@ project_result = check_project(
 
 Project checking uses the root `tsconfig.json` when present. Without one, it checks discovered `.ts`, `.tsx`, `.mts`, and `.cts` files, excluding `node_modules`. The defaults enable strict checking and disable emission. See [configuration](https://github.com/aldanedev-create/pytscheck/blob/main/docs/configuration.md) for option precedence and project limitations.
 
+## JavaScript and JSDoc
+
+Check JSDoc-typed JavaScript using a project tsconfig with `allowJs`, `checkJs`, and `noEmit` enabled, then run `pytscheck project .`. Strings and individual `.js` files can also be checked through `CompilerOptions(extra={"allowJs": True, "checkJs": True})`.
+
+See the [JSDoc guide](https://github.com/aldanedev-create/pytscheck/blob/main/docs/jsdoc.md) and `examples/check_jsdoc.py` for working examples.
+
 ## Command line
 
 ```bash

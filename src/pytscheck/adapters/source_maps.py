@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
+from pathlib import PurePosixPath
 
 from ..models import Diagnostic, SourceFile
 from .errors import AdapterMappingError
@@ -21,15 +22,18 @@ def remap_diagnostics(
 ) -> tuple[Diagnostic, ...]:
     """Rewrite diagnostic file/line/column to original files where possible."""
     # Map virtual path -> SourceFile
-    by_path: dict[str, SourceFile] = {s.path: s for s in sources}
+    by_path: dict[str, SourceFile] = {
+        PurePosixPath(s.path.replace("\\", "/")).as_posix(): s for s in sources
+    }
 
     remapped: list[Diagnostic] = []
     for d in diagnostics:
-        if d.file is None or d.file not in by_path:
+        key = PurePosixPath(d.file.replace("\\", "/")).as_posix() if d.file else None
+        if key is None or key not in by_path:
             remapped.append(d)
             continue
 
-        src = by_path[d.file]
+        src = by_path[key]
         if src.origin_path is None:
             remapped.append(d)
             continue
@@ -54,12 +58,16 @@ def remap_diagnostics(
 def _validate_source_map(raw: str, virtual_path: str) -> None:
     try:
         data = json.loads(raw)
-    except json.JSONDecodeError as exc:
+    except (json.JSONDecodeError, RecursionError, TypeError) as exc:
         raise AdapterMappingError(
-            f"source map for {virtual_path!r} is not valid JSON: {exc.msg}"
+            f"source map for {virtual_path!r} is not valid JSON: {exc}"
         ) from exc
     if not isinstance(data, dict) or "mappings" not in data:
         raise AdapterMappingError(f"source map for {virtual_path!r} is missing 'mappings'")
+    if not isinstance(data["mappings"], str):
+        raise AdapterMappingError(
+            f"source map for {virtual_path!r} requires a string 'mappings' field"
+        )
 
 
 __all__ = ["remap_diagnostics"]

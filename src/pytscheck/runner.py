@@ -73,10 +73,18 @@ def binary_path() -> Path:
     platform_dir = _platform_dir()
     exe_name = "tsgo.exe" if sys.platform == "win32" else "tsgo"
     candidate = here / "bin" / platform_dir / "lib" / exe_name
-    if not candidate.exists():
+    if not candidate.is_file():
+        download_target = {
+            "linux-amd64": "linux-x64",
+            "linux-arm64": "linux-arm64",
+            "darwin-amd64": "darwin-x64",
+            "darwin-arm64": "darwin-arm64",
+            "windows-amd64": "win32-x64",
+            "windows-arm64": "win32-arm64",
+        }[platform_dir]
         raise CompilerNotFoundError(
             f"bundled tsgo not found at {candidate}. "
-            f"Run `python scripts/build_binaries.py {platform_dir.replace('-', '_')}` "
+            f"Run `python scripts/build_binaries.py {download_target}` "
             f"or reinstall pytscheck."
         )
     if sys.platform != "win32" and not os.access(candidate, os.X_OK):
