@@ -115,26 +115,23 @@ def test_shebang_not_required(tsgo_binary: Path) -> None:
     assert magic == b"\x7fELF", f"unexpected magic: {magic!r}"
 
 
-def test_binary_architecture_matches_kernel(tsgo_binary: Path) -> None:
+def test_binary_architecture_matches_interpreter_cpu(tsgo_binary: Path) -> None:
     import platform
-    import subprocess
+    import struct
 
-    result = subprocess.run(
-        ["file", str(tsgo_binary)],
-        capture_output=True,
-        text=True,
-        timeout=10,
-        check=False,
-        shell=False,
-    )
-    if result.returncode != 0:
-        pytest.skip("`file` command not available")
+    with tsgo_binary.open("rb") as reader:
+        header = reader.read(20)
+    assert header[:4] == b"\x7fELF"
+    endian = "<" if header[5] == 1 else ">"
     machine = platform.machine().lower()
-    info = result.stdout.lower()
-    if machine in {"x86_64", "amd64"}:
-        assert "x86-64" in info or "x86_64" in info
-    elif machine in {"aarch64", "arm64"}:
-        assert "aarch64" in info or "arm" in info
+    bits = struct.calcsize("P") * 8
+    actual_cpu = struct.unpack_from(endian + "H", header, 18)[0]
+    if machine in {"x86_64", "amd64", "i386", "i686", "x86"}:
+        assert actual_cpu == (3 if bits == 32 else 62)
+    elif machine in {"aarch64", "arm64", "armv7l", "armv8l"}:
+        assert actual_cpu == (40 if bits == 32 else 183)
+    else:
+        pytest.fail(f"unlisted CPU: {machine}")
 
 
 # --- environment ------------------------------------------------------------
