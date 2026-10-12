@@ -1,59 +1,27 @@
 # Examples
 
-Runnable examples of every public API. Each file is a standalone script that produces real output when run.
+Install the package and compiler using [development setup](../docs/development.md). Run scripts from the repository root. Most create temporary demonstration inputs; `editor_integration.py` accepts a file path and `ci_validation.py` accepts a real project path and exits according to its result.
 
-## Running
-
-From the repository root, with the package installed:
+| Script | Demonstration |
+| --- | --- |
+| [check_string.py](check_string.py) | Source-string checks |
+| [check_file.py](check_file.py) | A TypeScript file on disk |
+| [check_project.py](check_project.py) | A configured project |
+| [custom_options.py](custom_options.py) | Strictness, target, module and libraries |
+| [diagnostic_reporting.py](diagnostic_reporting.py) | Human/machine reports |
+| [ci_validation.py](ci_validation.py) | Build failure from a real project check |
+| [editor_integration.py](editor_integration.py) | Editor-style reporting, not a language server |
+| [custom_adapter.py](custom_adapter.py) | Toy component extraction into virtual TypeScript |
 
 ```bash
-pip install -e .
-
-# Fetch the bundled compiler once (Phase 0)
-python scripts/build_binaries.py linux-x64   # or win32-x64, darwin-arm64, ...
-
-# Run any example
 python examples/check_string.py
+python examples/check_file.py
+python examples/check_project.py
+python examples/custom_options.py
+python examples/diagnostic_reporting.py
+python examples/editor_integration.py tests/fixtures/projects/minimal/main.ts
+python examples/custom_adapter.py
+python examples/ci_validation.py tests/fixtures/projects/minimal
 ```
 
-Each example prints something useful and exits 0 on success. None requires arguments. Several accept optional ones for exploration.
-
-## Index
-
-| File | What it shows |
-| --- | --- |
-| `check_string.py` | Check an in-memory TypeScript source string |
-| `check_file.py` | Check a single `.ts` file on disk |
-| `check_project.py` | Check a project directory via `tsconfig.json` |
-| `custom_options.py` | Pass `CompilerOptions` to control strictness, target, module |
-| `diagnostic_reporting.py` | Format diagnostics for humans and machines |
-| `ci_validation.py` | Fail a build on type errors (suitable for CI) |
-| `editor_integration.py` | Minimal editor-style diagnostics pipeline |
-| `custom_adapter.py` | Write an adapter for a custom TypeScript-generating format |
-
-## What the examples are not
-
-They are **not tests.** Tests live under `tests/` and assert behavior. Examples demonstrate usage and print output a human can read.
-
-They are **not exhaustive.** They cover the common cases — the API has more surface, documented in `docs/python-api.md`.
-
-They are **not tutorials.** Each file is self-contained and short, with comments explaining what and why. Read the source.
-
-## Example: the smallest useful script
-
-```python
-from pytscheck import check
-
-result = check('const age: number = "twenty";')
-print(result.success)                 # False
-for d in result.errors:
-    print(d.line, d.column, d.code, d.message)
-```
-
-That's it. Everything else in this directory is a variation on this pattern.
-
-## Adapter example
-
-`custom_adapter.py` is different from the others: it shows how a consuming tool integrates with PyTSCheck. If you maintain a Python tool that generates or transforms TypeScript, this is the example to read first.
-
-For the full adapter guide, see `src/pytscheck/integrations/README.md`.
+Examples demonstrate API use and may deliberately print type errors; a demonstration can exit `1` for those expected diagnostics. They do not replace tests. The toy adapter is not a production component parser or a source-map implementation; see [adapters](../docs/adapters.md) for current limits.

@@ -1,109 +1,39 @@
 # Contributing to PyTSCheck
 
-Thanks for your interest in contributing! This document explains how to set up a development environment, run checks, and submit changes.
+Start with [development setup](docs/development.md) and [testing](docs/testing.md). Contributions should preserve the documented public API and keep operational failures distinct from compiler errors.
 
-## Development setup
-
-Clone the repository and enter its directory. Replace `<repository-url>` with the actual GitHub clone URL:
+## Setup and checks
 
 ```bash
-git clone <repository-url> pytscheck
+git clone https://github.com/aldanedev-create/pytscheck.git
 cd pytscheck
 python -m venv .venv
-```
-
-Activate the virtual environment:
-
-```bash
-# Linux / macOS
-source .venv/bin/activate
-```
-
-```powershell
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-```
-
-Install development dependencies and Git hooks:
-
-```bash
+# Activate for your shell, then:
 python -m pip install -e ".[dev]"
-pre-commit install
-```
-
-Fetch the bundled compiler for your platform:
-
-```bash
-# Replace linux-x64 with your platform, such as win32-x64 or darwin-arm64.
 python scripts/build_binaries.py linux-x64
-python scripts/verify_binaries.py
+python -m ruff check src tests scripts conformance benchmarks
+python -m ruff format --check src tests scripts conformance benchmarks
+python -m mypy src/pytscheck
+python -m pytest tests
+python conformance/run.py
 ```
 
-## Running checks
+Replace `linux-x64` with your [platform identifier](docs/supported-platforms.md). Run compiler-mutating tests serially with no other suite/build using that checkout.
 
-```bash
-# Full test suite
-pytest
+## Change conventions
 
-# Fast subset
-pytest -m "not slow"
+- Keep the PR focused and describe the problem, resulting behavior, and validation.
+- Test observable behavior with real files/compiler executions when applicable.
+- Do not disguise compiler crashes, adapter extraction failures, or unparsed output as successful checks.
+- Update documentation and `CHANGELOG.md` for user-visible changes.
+- Change generators before regenerating their fixtures; review fixture and conformance diffs.
+- Keep consumer adapters in their own packages; do not import frameworks into core.
+- Follow the existing typing and Ruff style. Do not change public exports or exception taxonomy casually.
 
-# Lint
-ruff check src tests scripts
+Use concise commit messages such as `fix: bound compiler output` or `docs: explain project checking`. Submit PRs against `main` and wait for all CI checks. Compiler pin/platform changes require the [compiler-upgrade procedure](docs/compiler-upgrade.md).
 
-# Check formatting without changing files
-ruff format --check src tests scripts
+## Reports
 
-# Apply formatting
-ruff format src tests scripts
+Report bugs through [GitHub issues](https://github.com/aldanedev-create/pytscheck/issues) with versions, OS/architecture, the smallest reproduction, and relevant sanitized output. Report security concerns using [SECURITY.md](SECURITY.md).
 
-# Strict type checking
-mypy --strict src/pytscheck
-
-# Run all pre-commit hooks
-pre-commit run --all-files
-```
-
-If configured, you can also use the task runners:
-
-```bash
-make test
-task test
-nox -s tests
-```
-
-## Project conventions
-
-- **Minimum Python version:** 3.11. Modern syntax such as `X | Y`, `match`, and `slots=True` is welcome.
-- **Typing:** `mypy --strict` must pass for `src/pytscheck`.
-- **Formatting:** use `ruff format`, with a configured line length of 100.
-- **Tests:** use one test file per module when practical. New behavior requires tests.
-- **Public API:** anything exported from `pytscheck/__init__.py` is public and requires a docstring.
-- **Adapters:** the core must not import consumer tools. Adapters live in the consuming package and register through the `pytscheck.adapters` entry-point group.
-
-## Commit messages
-
-Conventional Commits are preferred:
-
-```text
-feat(runner): add timeout handling
-fix(protocol): correctly parse multi-line diagnostics
-docs(adapters): document source-map contract
-```
-
-## Pull requests
-
-- Keep each pull request focused on one logical change.
-- Update `CHANGELOG.md` under `[Unreleased]`.
-- Add or update tests. Test coverage must not decrease.
-- Ensure CI passes on all supported Python versions and platforms.
-
-## Reporting bugs
-
-Use the issue templates under `.github/ISSUE_TEMPLATE/`.
-
-For compiler incompatibilities, use the `compiler_compatibility.yml` template. Include reproduction steps, your platform, and relevant version information.
-
-## Code of conduct
-
-By participating, you agree to follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+Participation follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). See [publishing](docs/publishing.md) for maintainer release steps.

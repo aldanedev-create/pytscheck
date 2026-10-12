@@ -1,229 +1,29 @@
 # Benchmarks
 
-Measures the performance characteristics of PyTSCheck. Not a test suite —
-correctness lives in `tests/` and `conformance/`. This directory answers
-questions like:
+The benchmark runner measures real bundled compiler invocations. Correctness lives in `tests/` and `conformance/`; timing measurements do not replace them.
 
-- How long does a single check take?
-- How does throughput scale with input size?
-- How much memory does a check use?
-- How does the library behave under concurrent load?
-
-The answers are **measurements**, not assertions. Benchmarks report numbers;
-they don't fail on a threshold unless a `--baseline` is passed.
-
-## Layout
-
-```text
-benchmarks/
-├── README.md              # this file
-├── run.py                 # runs every benchmark, reports, compares to baseline
-├── startup.py             # time-to-first-diagnostic
-├── throughput.py          # diagnostics / second on large inputs
-├── memory.py              # peak RSS per check
-├── concurrency.py         # wall-clock under N-way parallelism
-├── fixtures/              # generated inputs of known size
-│   ├── MANIFEST.json
-│   ├── tiny.ts
-│   ├── medium.ts
-│   ├── large.ts
-│   ├── errors-100.ts
-│   ├── errors-1000.ts
-│   ├── mixed.ts
-│   └── large-project/
-│       ├── tsconfig.json
-│       └── file_000.ts ... file_199.ts
-└── baselines/             # optional recorded baselines (JSON)
-```
-
-Fixtures under `benchmarks/fixtures/` are produced by
-`scripts/generate_benchmark_fixtures.py` and committed to git. See
-"How fixtures are managed" below.
-
-## Running
+## Run
 
 ```bash
-# Everything
-python benchmarks/run.py
-
-# One benchmark
-python benchmarks/run.py --only startup
-python benchmarks/run.py --only throughput
-python benchmarks/run.py --only memory
-python benchmarks/run.py --only concurrency
-
-# JSON for tooling
-python benchmarks/run.py --json
-
-# Compare against a recorded baseline; exit 1 if slower by more than --tolerance
-python benchmarks/run.py --baseline benchmarks/baselines/main.json --tolerance 0.10
-
-# Save a baseline
-python benchmarks/run.py --save-baseline benchmarks/baselines/main.json
+python benchmarks/run.py --list
+python benchmarks/run.py --json > benchmarks.json
+python benchmarks/run.py --json --save-baseline baseline.json
+python benchmarks/run.py --baseline baseline.json --tolerance 0.10
 ```
 
-Requires the bundled compiler. If it's not present, benchmarks skip with a
-clear message.
+Install the package and compiler first. `--json` keeps stdout machine-readable and sends progress to stderr. Use the runner's `--help` for selecting benchmark families.
 
-## What each benchmark measures
+## Families
 
-### `startup.py` — time to first diagnostic
+| Family | Measures |
+| --- | --- |
+| `startup` | Time to first diagnostic |
+| `throughput` | Diagnostic production/processing throughput |
+| `memory` | Python-side peak memory per check |
+| `concurrency` | Scaling with parallel checks |
 
-Runs a single check on `fixtures/tiny.ts` and reports the wall-clock time,
-broken into:
+Memory observations do not represent all native compiler child-process memory. Concurrent checks launch separate compiler processes. Compare baselines on the same machine with comparable Python/compiler versions and environment; absolute ranges or promised speedups are not inferred from CI.
 
-- **import pytscheck** — Python import cost
-- **locate binary** — the platform-detection + path-resolution step
-- **subprocess spawn + run** — the actual compiler invocation
-- **parse output** — the parser cost
-- **total**
+Generated benchmark fixtures and their manifest must pass `python scripts/verify_benchmark_fixtures.py`. To modify inputs, change `scripts/generate_benchmark_fixtures.py`, regenerate, and review the diff. The runner's registered benchmark specification owns the family list.
 
-The interesting number is **spawn + run**, because that's what every
-individual `check()` call pays. Everything else is amortized or avoided.
-
-A repeated-run mode measures the second, third, and fourth checks to
-distinguish first-call cost from steady-state cost.
-
-### `throughput.py` — diagnostics per second
-
-Runs the checker on fixtures of increasing size (`tiny`, `medium`,
-`large`, `errors-100`, `errors-1000`) and reports:
-
-- total wall time
-- number of diagnostics produced
-- diagnostics per second
-- bytes of source per second
-
-The goal is to spot super-linear scaling. If a 10× larger file takes 100×
-longer, something is quadratic and worth investigating.
-
-### `memory.py` — peak RSS per check
-
-Uses `resource.getrusage` on POSIX (or `tracemalloc` on all platforms) to
-measure peak memory during a check. Reports:
-
-- baseline Python process memory before any check
-- peak memory during each fixture's check
-- bytes per source byte
-
-Note: this measures the Python process only. The `tsgo` subprocess has
-its own memory footprint, which the OS reports separately and this
-benchmark does not attempt to attribute.
-
-### `concurrency.py` — parallel check scaling
-
-Runs N checks in a thread pool with varying worker counts (1, 2, 4, 8) and
-reports wall-clock time for each. Ideal scaling is linear; real scaling
-depends on how much work is CPU-bound (the compiler subprocess) vs. I/O-bound
-(the Python side).
-
-Reports:
-
-- total wall time per worker count
-- speedup relative to 1 worker
-- efficiency (speedup / workers)
-
-## How fixtures are managed
-
-Fixtures are generated by `scripts/generate_benchmark_fixtures.py` from a
-declarative spec. This keeps sizes consistent across runs — a benchmark that
-compares `large.ts` today against `large.ts` from six months ago should be
-comparing inputs of identical byte count.
-
-To regenerate:
-
-```bash
-python scripts/generate_benchmark_fixtures.py --manifest
-```
-
-To verify they haven't drifted:
-
-```bash
-python scripts/verify_benchmark_fixtures.py
-```
-
-The sizes are declared in the generator:
-
-| Fixture         | Approximate size      | Content                    |
-| --------------- | --------------------- | -------------------------- |
-| `tiny.ts`       | ~300 B                | 10 declarations            |
-| `medium.ts`     | ~40 KB                | 1,000 declarations         |
-| `large.ts`      | ~400 KB               | 10,000 declarations        |
-| `errors-100.ts` | ~3 KB                 | 100 type errors            |
-| `errors-1000.ts`| ~30 KB                | 1,000 type errors          |
-| `mixed.ts`      | ~25 KB                | 500 valid + 100 errors     |
-| `large-project/`| ~2 MB, 200 files      | 100 declarations each      |
-
-Changing a fixture's size means updating the generator and re-running it.
-Every change is a diff in the committed output.
-
-## Baselines
-
-A baseline is a JSON snapshot of a benchmark run. `--save-baseline PATH`
-writes one; `--baseline PATH` compares the current run against it.
-
-Baselines are not committed by default — they're noisy across machines and
-Python versions. Use them for local regression detection:
-
-```bash
-# On main, before a change
-python benchmarks/run.py --save-baseline /tmp/before.json
-
-# Make the change
-
-# After the change
-python benchmarks/run.py --baseline /tmp/before.json --tolerance 0.10
-```
-
-The `--tolerance` is a fraction (`0.10` = 10%). The benchmark fails only if the
-new run is slower by more than the tolerance. Individual noise is expected;
-consistent slowdowns are not.
-
-A future CI job may publish baseline numbers to the repository under
-`benchmarks/baselines/` for a specific (OS, Python version) combination.
-That is deferred until the numbers stabilize.
-
-## What benchmarks do not do
-
-- **Assert thresholds by default.** A benchmark that fails on > 100 ms is
-  flaky across machines. Run without a baseline and it just reports.
-- **Run in the default test suite.** `pytest` does not invoke benchmarks.
-  They live behind `python benchmarks/run.py`.
-- **Mock the compiler.** Every measurement is real: real subprocess, real
-  files, real diagnostics. A mocked runner would measure the mock.
-- **Claim cross-machine comparability.** Absolute numbers depend on CPU,
-  OS, disk speed, and background load. Only ratios and same-machine deltas
-  are meaningful.
-
-## Interpreting the numbers
-
-Rule of thumb for a modern laptop with the pinned compiler:
-
-| Metric                    | Expected range      |
-| ------------------------- | ------------------- |
-| Python import             | 30–80 ms            |
-| Locate binary             | < 1 ms              |
-| Single tiny check         | 40–100 ms           |
-| Single medium check       | 100–300 ms          |
-| Single large check        | 500–1500 ms         |
-| Concurrency, 4 workers    | ~2.5–3.5× speedup   |
-| Peak memory on 1 MB input | ~30–60 MB           |
-
-These are guidance, not contracts. If a number is outside the range,
-something is worth investigating — but the benchmark itself doesn't fail.
-
-## Adding a benchmark
-
-1. Create a new file, e.g. `benchmarks/newthing.py`.
-2. Expose a `def run() -> dict:` that returns a results dict.
-3. Register it in `benchmarks/run.py`'s `BENCHMARKS` dict.
-4. Update this README's "What each benchmark measures" section.
-
-The results dict shape is free-form; `run.py` just relays it.
-
-## Further reading
-
-- `docs/performance.md` — user-facing performance notes
-- `scripts/generate_benchmark_fixtures.py` — the fixture generator
-- `tests/test_large_files.py`, `tests/test_large_projects.py` — the
-  correctness side of large inputs
+See [performance](../docs/performance.md), [testing](../docs/testing.md), and the dated [benchmark audit](audit-2026-10-12.md). Historical audit observations describe their recorded checkout and do not replace current runs.

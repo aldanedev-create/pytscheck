@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Complete user/maintainer documentation, CLI reference, adapter limitations, and PyPI publishing guide.
+
 - Repository scaffold: `pyproject.toml`, packaging, linting, typing, testing config.
 - Phase-0 scripts: `scripts/build_binaries.py`, `scripts/verify_binaries.py`.
 - Public exception hierarchy in `pytscheck.exceptions`.

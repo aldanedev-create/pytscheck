@@ -20,8 +20,9 @@ PyTSCheck is a small, focused developer tool. Governance is deliberately light.
 ## Releases
 
 Releases are cut from `main` by a maintainer, tagged `vX.Y.Z`, and published
-to PyPI. Platform wheels are built in CI. Release validation must pass before
-publishing (see `.github/workflows/release.yml` and `scripts/release_check.py`).
+to PyPI. Platform wheels are built in `.github/workflows/distributions.yml`;
+there is no automatic PyPI publishing job. Release validation must pass before
+publishing; see [publishing](docs/publishing.md) and `scripts/release_check.py`.
 
 ## Compatibility policy
 

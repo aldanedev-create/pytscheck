@@ -1,55 +1,23 @@
-# Security Policy
+# Security policy
 
 ## Supported versions
 
-PyTSCheck is in pre-alpha. Until 1.0, only the latest commit on `main` is
-supported for security fixes.
+The project is in development. Security fixes target the latest code on `main`; no long-term maintenance policy for older development releases is promised.
 
-## Reporting a vulnerability
+## Report privately
 
-Please do **not** open a public issue for security problems.
+Use [GitHub private vulnerability reporting](https://github.com/aldanedev-create/pytscheck/security/advisories/new) when available. Do not publish exploit details or private source in a public issue. If the private reporting form is unavailable, contact the repository maintainer through an established private channel; there is no configured security email address in this repository.
 
-Report privately via GitHub Security Advisories:
-https://github.com/your-org/pytscheck/security/advisories/new
-
-Or email `security@example.invalid` with:
-
-- A description of the issue and its impact
-- A minimal reproduction
-- Affected versions
-- Any suggested mitigation
-
-We aim to acknowledge reports within 3 business days and to provide a
-resolution timeline within 10 business days.
+Include the issue's impact, affected version, OS/architecture, minimal reproduction, and any suggested mitigation. Avoid unverified promises about acknowledgment/resolution times.
 
 ## Threat model
 
-PyTSCheck:
+The wrapper accepts source strings, paths, projects, and third-party adapter output; invokes a pinned native compiler; and parses its output. Relevant concerns include argument handling, temporary paths, source traversal, output/input exhaustion, process cleanup, and binary provenance.
 
-- invokes a bundled native binary as a subprocess
-- never uses a shell for that invocation
-- parses untrusted compiler output
-- accepts source strings, file paths, and project directories from callers
-- optionally accepts adapter output from third-party packages
-
-The following are considered in scope:
-
-- Subprocess argument injection
-- Path traversal, symlink escape, or writes outside designated temp dirs
-- Denial of service via oversized inputs, output bombs, or hangs
-- Parser crashes or infinite loops on hostile output
-- Privilege escalation through bundled binary replacement
-
-The following are out of scope:
-
-- Vulnerabilities in the upstream TypeScript compiler itself
-  (report those to Microsoft)
-- Attacks requiring an already-compromised Python environment
-- Social engineering
+The existing checks are described in [security and limits](docs/security.md). They do not create a sandbox around project filesystem access or plugin code. Use OS isolation for hostile input. Vulnerabilities in the bundled upstream compiler should also be reported to its upstream maintainers.
 
 ## Supply chain
 
-- Bundled `tsgo` binaries are pinned to an exact npm version and verified
-  against the registry's SHA-512 integrity value at build time.
-- Dependencies are audited in CI (`pip-audit`).
-- Builds are reproducible; see `.github/workflows/reproducible-build.yml`.
+Compiler archives are pinned and verified using upstream SHA-512 values; manifests record binary hashes and sizes. Wheels retain upstream licenses/notices. Source builds can download compiler archives. Passing integrity checks establishes correspondence to recorded bytes, not a guarantee that upstream code is free of vulnerabilities.
+
+The implemented CI and distribution workflows are in `.github/workflows/ci.yml` and `.github/workflows/distributions.yml`. This policy does not claim a dedicated reproducible-build or automatic publishing workflow.
