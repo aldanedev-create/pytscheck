@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check_project
-
 
 _STRICT = (
     '{"compilerOptions": {"strict": true, "noEmit": true, '
@@ -30,9 +27,7 @@ def test_react_style_component(tsgo_binary, tmp_path: Path) -> None:
     _setup(
         tmp_path,
         {
-            "types.ts": (
-                "export interface Props { name: string; onClick: () => void; }\n"
-            ),
+            "types.ts": ("export interface Props { name: string; onClick: () => void; }\n"),
             "Button.ts": (
                 "import type { Props } from './types';\n"
                 "export function Button(props: Props): string {\n"
@@ -106,9 +101,7 @@ def test_discriminated_union(tsgo_binary, tmp_path: Path) -> None:
     assert r.success, [d.message for d in r.errors]
 
 
-def test_discriminated_union_exhaustiveness_error(
-    tsgo_binary, tmp_path: Path
-) -> None:
+def test_discriminated_union_exhaustiveness_error(tsgo_binary, tmp_path: Path) -> None:
     _setup(
         tmp_path,
         {
@@ -213,8 +206,6 @@ def test_commonjs_style(tsgo_binary, tmp_path: Path) -> None:
         '"esModuleInterop": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
-    (tmp_path / "main.ts").write_text(
-        "export = { hello: 'world' };\n", encoding="utf-8"
-    )
+    (tmp_path / "main.ts").write_text("export = { hello: 'world' };\n", encoding="utf-8")
     r = check_project(tmp_path)
     assert r.success, [d.message for d in r.errors]

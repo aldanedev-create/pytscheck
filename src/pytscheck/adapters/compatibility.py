@@ -17,9 +17,7 @@ def check_protocol_version(adapter: CompilerAdapter) -> None:
     if declared is None:
         return
     if not isinstance(declared, str):
-        raise AdapterProtocolError(
-            f"adapter {adapter.name!r} has non-string protocol_version"
-        )
+        raise AdapterProtocolError(f"adapter {adapter.name!r} has non-string protocol_version")
     if declared.split(".")[0] != ADAPTER_PROTOCOL_VERSION.split(".")[0]:
         raise AdapterProtocolError(
             f"adapter {adapter.name!r} speaks protocol {declared}, "

@@ -31,7 +31,7 @@ def test_extends_absolute_escape_rejected(tmp_path: Path) -> None:
         check_project(tmp_path)
 
 
-def test_extends_inside_allowed(tmp_path: Path) -> None:
+def test_extends_inside_allowed(tmp_path: Path, tsgo_binary: Path) -> None:
     (tmp_path / "base.json").write_text("{}", encoding="utf-8")
     (tmp_path / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     _write(tmp_path, '{"extends": "./base.json"}')
@@ -86,8 +86,7 @@ def test_tsconfig_with_hostile_include_pattern(tmp_path: Path) -> None:
     (tmp_path / "a.ts").write_text("export const x = 1;\n", encoding="utf-8")
     _write(
         tmp_path,
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["../../**/*"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["../../**/*"]}',
     )
     try:
         r = check_project(tmp_path)
@@ -96,7 +95,7 @@ def test_tsconfig_with_hostile_include_pattern(tmp_path: Path) -> None:
     assert isinstance(r.success, bool)
 
 
-def test_tsconfig_with_hostile_exclude(tmp_path: Path) -> None:
+def test_tsconfig_with_hostile_exclude(tmp_path: Path, tsgo_binary: Path) -> None:
     (tmp_path / "a.ts").write_text("export const x = 1;\n", encoding="utf-8")
     _write(
         tmp_path,
@@ -111,8 +110,7 @@ def test_tsconfig_with_non_object_extras(tmp_path: Path) -> None:
     (tmp_path / "a.ts").write_text("export const x = 1;\n", encoding="utf-8")
     _write(
         tmp_path,
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": "not an array"}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": "not an array"}',
     )
     try:
         r = check_project(tmp_path)
@@ -121,21 +119,21 @@ def test_tsconfig_with_non_object_extras(tmp_path: Path) -> None:
     assert isinstance(r.success, bool)
 
 
-def test_tsconfig_with_null_extends(tmp_path: Path) -> None:
+def test_tsconfig_with_null_extends(tmp_path: Path, tsgo_binary: Path) -> None:
     (tmp_path / "a.ts").write_text("export const x = 1;\n", encoding="utf-8")
     _write(tmp_path, '{"extends": null, "include": ["**/*.ts"]}')
     r = check_project(tmp_path)
     assert isinstance(r.success, bool)
 
 
-def test_tsconfig_with_number_extends(tmp_path: Path) -> None:
+def test_tsconfig_with_number_extends(tmp_path: Path, tsgo_binary: Path) -> None:
     (tmp_path / "a.ts").write_text("export const x = 1;\n", encoding="utf-8")
     _write(tmp_path, '{"extends": 42, "include": ["**/*.ts"]}')
     r = check_project(tmp_path)
     assert isinstance(r.success, bool)
 
 
-def test_tsconfig_as_directory(tmp_path: Path) -> None:
+def test_tsconfig_as_directory(tmp_path: Path, tsgo_binary: Path) -> None:
     """A tsconfig.json directory must not be treated as a config file."""
     (tmp_path / "tsconfig.json").mkdir()
     (tmp_path / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")

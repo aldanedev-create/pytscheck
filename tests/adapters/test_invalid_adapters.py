@@ -13,7 +13,6 @@ from pytscheck.adapters.registry import register_adapter
 from pytscheck.adapters.sources import collect_sources
 from pytscheck.models import SourceFile
 
-
 # --- registration-time validation -------------------------------------------
 
 

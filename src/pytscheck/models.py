@@ -92,10 +92,10 @@ class SourceFile:
 
 
 __all__ = [
-    "DiagnosticCategory",
-    "SourceKind",
-    "RelatedInformation",
     "Diagnostic",
+    "DiagnosticCategory",
+    "RelatedInformation",
     "Result",
     "SourceFile",
+    "SourceKind",
 ]

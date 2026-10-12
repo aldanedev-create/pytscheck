@@ -45,15 +45,13 @@ def load_tsconfig(path: Path) -> dict[str, Any]:
     """
     try:
         text = path.read_text(encoding="utf-8")
-    except OSError as exc:
+    except (OSError, UnicodeError) as exc:
         raise ConfigurationError(f"cannot read {path}: {exc}") from exc
 
     try:
         data = json.loads(text)
-    except json.JSONDecodeError as exc:
-        raise ConfigurationError(
-            f"invalid JSON in {path}: {exc.msg} (line {exc.lineno}, col {exc.colno})"
-        ) from exc
+    except (json.JSONDecodeError, RecursionError) as exc:
+        raise ConfigurationError(f"invalid JSON in {path}: {exc}") from exc
 
     if not isinstance(data, dict):
         raise ConfigurationError(f"{path}: top-level value must be an object")
@@ -62,6 +60,7 @@ def load_tsconfig(path: Path) -> dict[str, Any]:
 
 def validate_project_root(path: Path) -> Path:
     """Ensure a project directory exists and is a directory."""
+    path = path.expanduser().resolve()
     if not path.exists():
         raise ConfigurationError(f"project path does not exist: {path}")
     if not path.is_dir():

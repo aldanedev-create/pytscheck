@@ -19,7 +19,6 @@ from pytscheck.config import CompilerOptions, load_tsconfig
 from pytscheck.exceptions import ConfigurationError
 from pytscheck.options import options_to_argv
 
-
 # ---------------------------------------------------------------------------
 # Property-based: options construction
 # ---------------------------------------------------------------------------
@@ -32,11 +31,10 @@ from pytscheck.options import options_to_argv
 @settings(
     max_examples=200,
     deadline=None,
-    suppress_health_check=[HealthCheck.too_slow],
+    # Each example overwrites the same temporary file completely.
+    suppress_health_check=[HealthCheck.too_slow, HealthCheck.function_scoped_fixture],
 )
-def test_options_to_argv_never_crashes(
-    types: list[str], lib: list[str]
-) -> None:
+def test_options_to_argv_never_crashes(types: list[str], lib: list[str]) -> None:
     try:
         argv = options_to_argv(CompilerOptions(types=tuple(types), lib=tuple(lib)))
     except ConfigurationError:
@@ -47,11 +45,18 @@ def test_options_to_argv_never_crashes(
         assert "\x00" not in a
 
 
-@given(st.dictionaries(st.text(max_size=10), st.one_of(st.text(), st.integers(), st.booleans(), st.none()), max_size=10))
+@given(
+    st.dictionaries(
+        st.text(max_size=10),
+        st.one_of(st.text(), st.integers(), st.booleans(), st.none()),
+        max_size=10,
+    )
+)
 @settings(
     max_examples=200,
     deadline=None,
-    suppress_health_check=[HealthCheck.too_slow],
+    # Each example overwrites the same temporary file completely.
+    suppress_health_check=[HealthCheck.too_slow, HealthCheck.function_scoped_fixture],
 )
 def test_options_extra_never_crashes(extra: dict) -> None:
     try:
@@ -73,7 +78,8 @@ def test_options_extra_never_crashes(extra: dict) -> None:
 @settings(
     max_examples=300,
     deadline=None,
-    suppress_health_check=[HealthCheck.too_slow],
+    # Each example overwrites the same temporary file completely.
+    suppress_health_check=[HealthCheck.too_slow, HealthCheck.function_scoped_fixture],
 )
 def test_load_tsconfig_never_crashes_on_text(tmp_path: Path, text: str) -> None:
     p = tmp_path / "tsconfig.json"
@@ -89,7 +95,8 @@ def test_load_tsconfig_never_crashes_on_text(tmp_path: Path, text: str) -> None:
 @settings(
     max_examples=200,
     deadline=None,
-    suppress_health_check=[HealthCheck.too_slow],
+    # Each example overwrites the same temporary file completely.
+    suppress_health_check=[HealthCheck.too_slow, HealthCheck.function_scoped_fixture],
 )
 def test_load_tsconfig_never_crashes_on_bytes(tmp_path: Path, data: bytes) -> None:
     p = tmp_path / "tsconfig.json"
@@ -115,16 +122,14 @@ def _random_json_value(rng: random.Random, depth: int = 0) -> object:
     if choice == 1:
         return rng.choice([True, False])
     if choice == 2:
-        return rng.randint(-10**9, 10**9)
+        return rng.randint(-(10**9), 10**9)
     if choice == 3:
         return "".join(rng.choices(string.printable, k=rng.randint(0, 20)))
     if choice == 4:
         return [_random_json_value(rng, depth + 1) for _ in range(rng.randint(0, 5))]
     if choice == 5:
         return {
-            "".join(rng.choices(string.ascii_letters, k=5)): _random_json_value(
-                rng, depth + 1
-            )
+            "".join(rng.choices(string.ascii_letters, k=5)): _random_json_value(rng, depth + 1)
             for _ in range(rng.randint(0, 5))
         }
     return {"compilerOptions": _random_json_value(rng, depth + 1)}
@@ -146,20 +151,22 @@ def test_random_tsconfig_objects(tmp_path: Path, rng: random.Random) -> None:
 
 def test_random_tsconfig_extends_values(tmp_path: Path, rng: random.Random) -> None:
     for _ in range(100):
-        extends = rng.choice([
-            None,
-            42,
-            True,
-            [],
-            {},
-            "",
-            "./base.json",
-            "../../escape",
-            "/etc/passwd",
-            "..\\escape",
-            "a" * 10_000,
-            "\x00",
-        ])
+        extends = rng.choice(
+            [
+                None,
+                42,
+                True,
+                [],
+                {},
+                "",
+                "./base.json",
+                "../../escape",
+                "/etc/passwd",
+                "..\\escape",
+                "a" * 10_000,
+                "\x00",
+            ]
+        )
         p = tmp_path / "tsconfig.json"
         p.write_text(json.dumps({"extends": extends}), encoding="utf-8")
         from pytscheck.resolver import resolve_project

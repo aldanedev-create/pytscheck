@@ -17,7 +17,9 @@ def clean_venv_python(built_wheel: Path, tmp_path_factory) -> Path:
     return installed_in_clean_venv(built_wheel, tmp)
 
 
-def _run(py: Path, code: str, *, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    py: Path, code: str, *, env: dict[str, str] | None = None
+) -> subprocess.CompletedProcess[str]:
     import os
 
     base_env = os.environ.copy()

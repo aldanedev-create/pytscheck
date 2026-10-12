@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
 import pytest
 
 from pytscheck import check, check_file, check_project
-
 
 pytestmark = pytest.mark.linux
 
@@ -32,8 +30,7 @@ def test_check_file_works(tsgo_binary: Path, tmp_path: Path) -> None:
 
 def test_check_project_works(tsgo_binary: Path, tmp_path: Path) -> None:
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     (tmp_path / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
@@ -94,7 +91,7 @@ def test_binary_through_symlink(tmp_path: Path) -> None:
 # --- case sensitivity -------------------------------------------------------
 
 
-def test_case_sensitive_paths(tmp_path: Path) -> None:
+def test_case_sensitive_paths(tmp_path: Path, tsgo_binary: Path) -> None:
     """Linux filesystems are case-sensitive."""
     a = tmp_path / "a.ts"
     a.write_text("export const A: number = 1;\n", encoding="utf-8")
@@ -120,7 +117,6 @@ def test_shebang_not_required(tsgo_binary: Path) -> None:
 
 def test_binary_architecture_matches_kernel(tsgo_binary: Path) -> None:
     import platform
-
     import subprocess
 
     result = subprocess.run(

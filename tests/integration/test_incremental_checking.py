@@ -4,16 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check_project
 
 
 def test_repeated_project_checks_consistent(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "main.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     results = [check_project(tmp_path) for _ in range(3)]
@@ -24,8 +21,7 @@ def test_fixing_error_makes_check_pass(tsgo_binary, tmp_path: Path) -> None:
     f = tmp_path / "main.ts"
     f.write_text('export const x: number = "s";\n', encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     assert not check_project(tmp_path).success
@@ -37,8 +33,7 @@ def test_fixing_error_makes_check_pass(tsgo_binary, tmp_path: Path) -> None:
 def test_adding_error_changes_result(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "main.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     assert check_project(tmp_path).success
@@ -52,8 +47,7 @@ def test_no_caching_staleness(tsgo_binary, tmp_path: Path) -> None:
     f = tmp_path / "main.ts"
     f.write_text("export const x: number = 1;\n", encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     assert check_project(tmp_path).success
@@ -66,13 +60,10 @@ def test_no_caching_staleness(tsgo_binary, tmp_path: Path) -> None:
     assert check_project(tmp_path).success
 
 
-def test_no_leftover_files_from_incremental_checks(
-    tsgo_binary, tmp_path: Path
-) -> None:
+def test_no_leftover_files_from_incremental_checks(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "main.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     before = set(p.name for p in tmp_path.iterdir())

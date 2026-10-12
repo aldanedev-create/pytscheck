@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from tests.helpers import list_wheel_members, read_license_from_wheel
 
 
@@ -57,9 +55,7 @@ def test_bundled_license_if_binary_present(bin_root: Path) -> None:
     for platform_dir in bin_root.glob("*-*"):
         if not platform_dir.is_dir():
             continue
-        binaries = list(platform_dir.rglob("tsgo")) + list(
-            platform_dir.rglob("tsgo.exe")
-        )
+        binaries = list(platform_dir.rglob("tsgo")) + list(platform_dir.rglob("tsgo.exe"))
         if not binaries:
             continue
         license_candidates = list(platform_dir.rglob("LICENSE")) + list(
@@ -72,23 +68,16 @@ def test_bundled_notice_if_binary_present(bin_root: Path) -> None:
     for platform_dir in bin_root.glob("*-*"):
         if not platform_dir.is_dir():
             continue
-        binaries = list(platform_dir.rglob("tsgo")) + list(
-            platform_dir.rglob("tsgo.exe")
-        )
+        binaries = list(platform_dir.rglob("tsgo")) + list(platform_dir.rglob("tsgo.exe"))
         if not binaries:
             continue
-        notice = list(platform_dir.rglob("NOTICE.txt")) + list(
-            platform_dir.rglob("NOTICE")
-        )
+        notice = list(platform_dir.rglob("NOTICE.txt")) + list(platform_dir.rglob("NOTICE"))
         assert notice, f"no NOTICE bundled in {platform_dir}"
 
 
-def test_pyproject_declares_license(pyproject: dict) -> None:
-    # The pyproject fixture is defined in test_package_metadata.py; keep
-    # this test independent.
+def test_pyproject_declares_license(repo_root: Path) -> None:
     import tomllib
 
-    repo_root = Path(__file__).resolve().parent.parent
     data = tomllib.loads((repo_root / "pyproject.toml").read_text(encoding="utf-8"))
     license_field = data["project"].get("license")
     if isinstance(license_field, dict):

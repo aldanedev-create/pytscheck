@@ -14,7 +14,7 @@ import pytest
 
 from pytscheck.exceptions import CompilerNotFoundError, UnsupportedPlatformError
 from pytscheck.runner import _platform_dir, binary_path
-from tests.helpers import file_has_executable_bit, make_fake_tsgo
+from tests.helpers import file_has_executable_bit
 
 
 def test_platform_dir_matches_running_machine() -> None:
@@ -121,6 +121,7 @@ def test_unsupported_platform_raises_clear_error(
     """A bogus (sys.platform, machine) must raise UnsupportedPlatformError."""
     from pytscheck import runner
 
-    monkeypatch.setattr(sys, "platform", "plan9")
+    if sys.platform in {"linux", "darwin", "win32"}:
+        pytest.skip("unsupported-platform check requires a real unsupported OS; no platform mocks")
     with pytest.raises(UnsupportedPlatformError):
         runner._platform_dir()

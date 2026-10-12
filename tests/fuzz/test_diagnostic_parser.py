@@ -15,14 +15,12 @@ from __future__ import annotations
 import random
 import string
 
-import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
 from pytscheck.exceptions import OutputParseError
 from pytscheck.models import Diagnostic
 from pytscheck.protocol import ParseReport, parse, parse_or_raise
-
 
 # ---------------------------------------------------------------------------
 # Invariants (property-based)
@@ -89,7 +87,11 @@ def _random_diagnostic_line(rng: random.Random) -> str:
     col = rng.randint(1, 500)
     category = rng.choice(["error", "warning", "suggestion", "message"])
     code = rng.randint(1000, 9999)
-    message = "".join(rng.choices(string.printable.replace("\n", " "), k=rng.randint(1, 100)))
+    message = "".join(
+        rng.choices(
+            string.ascii_letters + string.digits + string.punctuation + " \t", k=rng.randint(1, 100)
+        )
+    )
     return f"{file}({line},{col}): {category} TS{code}: {message}"
 
 
@@ -124,7 +126,7 @@ def test_multiline_continuation_fuzz(rng: random.Random) -> None:
             "  " + "".join(rng.choices(string.ascii_letters + " ", k=rng.randint(1, 50)))
             for _ in range(n_cont)
         ]
-        text = "\n".join([header] + conts)
+        text = "\n".join([header, *conts])
         report = parse(text)
         assert len(report.diagnostics) == 1
         assert all(c.strip() in report.diagnostics[0].message for c in conts)
@@ -245,11 +247,7 @@ def test_rtl_override_in_header() -> None:
 
 
 def test_header_without_leading_whitespace_after_blank() -> None:
-    text = (
-        "file.ts(1,1): error TS2322: first\n"
-        "\n"
-        "file.ts(2,1): error TS2322: second\n"
-    )
+    text = "file.ts(1,1): error TS2322: first\n\nfile.ts(2,1): error TS2322: second\n"
     report = parse(text)
     assert len(report.diagnostics) == 2
 

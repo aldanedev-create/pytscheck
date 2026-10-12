@@ -17,7 +17,6 @@ from pytscheck.adapters.sources import collect_sources
 from pytscheck.checker import check_sources_virtual
 from pytscheck.models import SourceFile
 
-
 # ---------------------------------------------------------------------------
 # A tiny DSL that transpiles to TypeScript
 # ---------------------------------------------------------------------------
@@ -87,8 +86,7 @@ class _DslAdapter:
 
 def test_dsl_transpiles_clean(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "a.dsl").write_text(
-        "let x: number = 1\n"
-        "fn add(a: number, b: number): number => a + b\n",
+        "let x: number = 1\nfn add(a: number, b: number): number => a + b\n",
         encoding="utf-8",
     )
     sources = collect_sources(_DslAdapter(), str(tmp_path))

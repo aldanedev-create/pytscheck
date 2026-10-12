@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
+from pytscheck.exceptions import PyTSCheckError
 from pytscheck.runner import run
 
 
@@ -119,7 +119,6 @@ def test_subprocess_run_uses_argument_list(tmp_path: Path) -> None:
 
 def test_runner_error_includes_argv(tsgo_binary: Path, tmp_path: Path) -> None:
     """When the runner raises an execution error, argv is not lost."""
-    from pytscheck.exceptions import CompilerExecutionError
     from pytscheck.runner import binary_path
     from tests.helpers import hide_file
 
@@ -128,6 +127,5 @@ def test_runner_error_includes_argv(tsgo_binary: Path, tmp_path: Path) -> None:
     except Exception:
         pytest.skip("no binary")
 
-    with hide_file(original):
-        with pytest.raises(Exception):
-            run(["--version"])
+    with hide_file(original), pytest.raises(PyTSCheckError):
+        run(["--version"])

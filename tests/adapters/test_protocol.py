@@ -9,7 +9,6 @@ import pytest
 from pytscheck.adapters.base import CompilerAdapter
 from pytscheck.models import SourceFile
 
-
 # --- structural conformance -------------------------------------------------
 
 
@@ -55,7 +54,11 @@ def test_adapter_without_get_sources_does_not_satisfy_protocol() -> None:
 
 def test_adapter_with_method_name_not_property_fails() -> None:
     """`name` must be a property, not a method."""
-    assert not isinstance(_NameIsMethodNotProperty(), CompilerAdapter)
+    from pytscheck.adapters.registry import register_adapter
+    from pytscheck.exceptions import AdapterRegistrationError
+
+    with pytest.raises(AdapterRegistrationError, match="non-empty string"):
+        register_adapter(_NameIsMethodNotProperty())
 
 
 # --- explicit subclassing ---------------------------------------------------

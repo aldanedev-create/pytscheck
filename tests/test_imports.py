@@ -5,8 +5,6 @@ from __future__ import annotations
 import subprocess
 import sys
 
-import pytest
-
 
 def _run_isolated(code: str, *, timeout: int = 30) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
@@ -21,15 +19,12 @@ def _run_isolated(code: str, *, timeout: int = 30) -> subprocess.CompletedProces
 
 def test_import_does_not_launch_subprocess() -> None:
     code = (
-        "import subprocess\n"
-        "called = []\n"
-        "real_run = subprocess.run\n"
-        "def spy(*a, **k):\n"
-        "    called.append((a, k))\n"
-        "    return real_run(*a, **k)\n"
-        "subprocess.run = spy\n"
+        "import sys\n"
+        "def audit(event, args):\n"
+        "    if event == 'subprocess.Popen':\n"
+        "        raise AssertionError('subprocess launched during import')\n"
+        "sys.addaudithook(audit)\n"
         "import pytscheck\n"
-        "assert not called, f'subprocess.run called during import: {called}'\n"
         "print('ok')\n"
     )
     result = _run_isolated(code)
@@ -91,7 +86,6 @@ def test_import_does_not_create_temp_files() -> None:
 
 def test_import_is_fast() -> None:
     """Import must not be dominated by subprocess or filesystem work."""
-    import time
 
     code = (
         "import time\n"

@@ -5,16 +5,13 @@ from __future__ import annotations
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 
-import pytest
-
 from pytscheck import checker
 
 
 def _make_project(root: Path, i: int, bad: bool) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     (root / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     value = '"bad"' if bad else str(i)
@@ -26,9 +23,7 @@ def _make_project(root: Path, i: int, bad: bool) -> Path:
 
 
 def test_thread_parallel_projects(tsgo_binary: Path, tmp_path: Path) -> None:
-    projects = [
-        _make_project(tmp_path / f"p{i}", i, bad=(i % 2 == 1)) for i in range(4)
-    ]
+    projects = [_make_project(tmp_path / f"p{i}", i, bad=(i % 2 == 1)) for i in range(4)]
 
     def do_check(p: Path) -> bool:
         return checker.check_project(p).success
@@ -40,9 +35,7 @@ def test_thread_parallel_projects(tsgo_binary: Path, tmp_path: Path) -> None:
 
 
 def test_process_parallel_projects(tsgo_binary: Path, tmp_path: Path) -> None:
-    projects = [
-        _make_project(tmp_path / f"p{i}", i, bad=(i % 2 == 1)) for i in range(4)
-    ]
+    projects = [_make_project(tmp_path / f"p{i}", i, bad=(i % 2 == 1)) for i in range(4)]
 
     def do_check(p: Path) -> bool:
         from pytscheck import checker as _checker
@@ -72,10 +65,7 @@ def test_parallel_projects_do_not_share_state(tsgo_binary: Path, tmp_path: Path)
     p_bad = _make_project(tmp_path / "bad", 1, bad=True)
 
     with ThreadPoolExecutor(max_workers=2) as pool:
-        futures = [
-            pool.submit(checker.check_project, p)
-            for p in (p_ok, p_bad) * 4
-        ]
+        futures = [pool.submit(checker.check_project, p) for p in (p_ok, p_bad) * 4]
         results = [f.result() for f in futures]
 
     successes = [r.success for r in results]

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check_project
 
 
@@ -16,9 +14,7 @@ def test_allow_js_project_checks(tsgo_binary, project_with_js: Path) -> None:
 
 def test_check_js_reports_error(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "script.js").write_text(
-        "// @ts-check\n"
-        "/** @type {number} */\n"
-        "const x = 'not a number';\n",
+        "// @ts-check\n/** @type {number} */\nconst x = 'not a number';\n",
         encoding="utf-8",
     )
     (tmp_path / "tsconfig.json").write_text(
@@ -63,9 +59,7 @@ def test_js_without_checkjs_is_not_checked(tsgo_binary, tmp_path: Path) -> None:
 
 
 def test_js_with_syntax_error(tsgo_binary, tmp_path: Path) -> None:
-    (tmp_path / "broken.js").write_text(
-        "// @ts-check\nfunction f( {\n", encoding="utf-8"
-    )
+    (tmp_path / "broken.js").write_text("// @ts-check\nfunction f( {\n", encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
         '{"compilerOptions": {"allowJs": true, "checkJs": true, "noEmit": true}, '
         '"include": ["**/*.js"]}',

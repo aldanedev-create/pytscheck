@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from .sources import SourceFile
+from ..models import SourceFile
 
 
 @runtime_checkable

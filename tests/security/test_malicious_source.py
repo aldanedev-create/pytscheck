@@ -34,7 +34,7 @@ def test_null_byte_in_file_rejected(tsgo_binary: Path, tmp_path: Path) -> None:
 
 
 def test_very_long_line(tsgo_binary: Path) -> None:
-    src = "const s: string = \"" + "a" * 1_000_000 + "\";"
+    src = 'const s: string = "' + "a" * 1_000_000 + '";'
     try:
         r = check(src)
     except PyTSCheckError:
@@ -127,7 +127,7 @@ def test_comment_with_nested_block_markers(tsgo_binary: Path) -> None:
 
 
 def test_regex_with_slashes(tsgo_binary: Path) -> None:
-    src = r'const re: RegExp = /\/path\/to\/file/;'
+    src = r"const re: RegExp = /\/path\/to\/file/;"
     r = check(src)
     assert isinstance(r.success, bool)
 

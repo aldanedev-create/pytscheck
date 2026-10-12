@@ -9,8 +9,6 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-import pytest
-
 from pytscheck.protocol import parse
 from pytscheck.runner import run
 
@@ -81,11 +79,7 @@ def test_subprocess_produces_expected_stdout_pipe(tmp_path: Path) -> None:
         [
             "python",
             "-c",
-            (
-                "import sys\n"
-                "sys.stdout.write('STDOUT\\n')\n"
-                "sys.stderr.write('STDERR\\n')\n"
-            ),
+            ("import sys\nsys.stdout.write('STDOUT\\n')\nsys.stderr.write('STDERR\\n')\n"),
         ],
         capture_output=True,
         text=True,
@@ -104,7 +98,7 @@ def test_cli_json_output_is_valid_json(tsgo_binary: Path, tmp_path: Path) -> Non
 
     f = tmp_path / "bad.ts"
     f.write_text('const age: number = "twenty";\n', encoding="utf-8")
-    code, out, _ = run_cli(["file", str(f), "--json"])
+    _code, out, _ = run_cli(["file", str(f), "--json"])
     payload = parse_cli_json(out)
     assert "diagnostics" in payload
     assert isinstance(payload["diagnostics"], list)

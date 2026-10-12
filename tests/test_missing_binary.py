@@ -83,9 +83,8 @@ def test_binary_restored_after_fixture() -> None:
     except CompilerNotFoundError:
         pytest.skip("no bundled binary present")
 
-    with hide_file(original):
-        with pytest.raises(CompilerNotFoundError):
-            binary_path()
+    with hide_file(original), pytest.raises(CompilerNotFoundError):
+        binary_path()
 
     assert binary_path() == original
 

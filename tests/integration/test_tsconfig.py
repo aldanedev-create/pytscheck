@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check_project
 from tests.assertions import assert_valid_result
 
@@ -48,15 +46,12 @@ def test_broken_tsconfig_reports_error(tsgo_binary, tmp_path: Path) -> None:
 
 def test_tsconfig_include_limits_files(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["src/**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["src/**/*.ts"]}',
         encoding="utf-8",
     )
     (tmp_path / "src").mkdir()
     (tmp_path / "src" / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
-    (tmp_path / "outside.ts").write_text(
-        'export const bad: number = "string";\n', encoding="utf-8"
-    )
+    (tmp_path / "outside.ts").write_text('export const bad: number = "string";\n', encoding="utf-8")
     r = check_project(tmp_path)
     # The outside file should not be included
     assert r.success
@@ -110,9 +105,7 @@ def test_tsconfig_target_es2022(tsgo_binary, tsconfig_strict: Path, tmp_path: Pa
 def test_tsconfig_module_resolution_bundler(
     tsgo_binary, tsconfig_strict: Path, tmp_path: Path
 ) -> None:
-    (tmp_path / "util.ts").write_text(
-        "export const x: number = 1;\n", encoding="utf-8"
-    )
+    (tmp_path / "util.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     (tmp_path / "main.ts").write_text(
         "import { x } from './util';\nexport const y: number = x;\n",
         encoding="utf-8",

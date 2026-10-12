@@ -26,17 +26,13 @@ def test_is_inside_rejects_dotdot_after_resolution(tmp_path: Path) -> None:
 
 
 def test_resolve_project_rejects_extends_escape(tmp_path: Path) -> None:
-    (tmp_path / "tsconfig.json").write_text(
-        '{"extends": "../../etc/passwd"}', encoding="utf-8"
-    )
+    (tmp_path / "tsconfig.json").write_text('{"extends": "../../etc/passwd"}', encoding="utf-8")
     with pytest.raises(ConfigurationError, match="escapes"):
         resolve_project(tmp_path)
 
 
 def test_resolve_project_rejects_absolute_extends_escape(tmp_path: Path) -> None:
-    (tmp_path / "tsconfig.json").write_text(
-        '{"extends": "/etc/passwd"}', encoding="utf-8"
-    )
+    (tmp_path / "tsconfig.json").write_text('{"extends": "/etc/passwd"}', encoding="utf-8")
     with pytest.raises(ConfigurationError):
         resolve_project(tmp_path)
 

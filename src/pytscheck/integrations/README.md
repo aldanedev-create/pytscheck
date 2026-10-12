@@ -216,9 +216,7 @@ def read_component(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
-        raise AdapterExtractionError(
-            f"Could not read component: {path}"
-        ) from exc
+        raise AdapterExtractionError(f"Could not read component: {path}") from exc
 ```
 
 Do not disguise extraction failures as TypeScript diagnostics or silently skip

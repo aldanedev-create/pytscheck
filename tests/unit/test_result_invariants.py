@@ -41,9 +41,7 @@ def test_build_result_with_error_is_failure() -> None:
 
 
 def test_build_result_with_warning_is_success() -> None:
-    r = build_result(
-        [_d(category="warning")], compiler_version="x", elapsed_seconds=0.0
-    )
+    r = build_result([_d(category="warning")], compiler_version="x", elapsed_seconds=0.0)
     assert r.success is True
 
 
@@ -107,9 +105,7 @@ def test_invariant_raw_output_default_none() -> None:
 
 
 def test_invariant_raw_output_can_be_set() -> None:
-    r = build_result(
-        [], compiler_version="x", elapsed_seconds=0.0, raw_output="some output"
-    )
+    r = build_result([], compiler_version="x", elapsed_seconds=0.0, raw_output="some output")
     assert r.raw_output == "some output"
 
 

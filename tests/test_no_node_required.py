@@ -5,7 +5,6 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -34,8 +33,7 @@ def test_import_without_node_on_path(clean_venv_python: Path) -> None:
     env = os.environ.copy()
     # Remove node from PATH entirely
     env["PATH"] = os.pathsep.join(
-        p for p in env.get("PATH", "").split(os.pathsep)
-        if "node" not in p.lower()
+        p for p in env.get("PATH", "").split(os.pathsep) if "node" not in p.lower()
     )
     r = subprocess.run(
         [str(clean_venv_python), "-c", "import pytscheck; print('ok')"],
@@ -56,8 +54,7 @@ def test_check_without_node(clean_venv_python: Path, tmp_path: Path) -> None:
 
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(
-        p for p in env.get("PATH", "").split(os.pathsep)
-        if "node" not in p.lower()
+        p for p in env.get("PATH", "").split(os.pathsep) if "node" not in p.lower()
     )
     code = (
         "from pytscheck import checker\n"

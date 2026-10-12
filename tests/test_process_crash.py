@@ -11,6 +11,7 @@ from pytscheck.exceptions import (
     CompilerExecutionError,
     CompilerNotFoundError,
     OutputParseError,
+    PyTSCheckError,
 )
 from pytscheck.runner import run
 from tests.helpers import hide_file, make_fake_tsgo
@@ -50,7 +51,7 @@ def test_crashing_process_never_reports_success(crashing_binary: Path) -> None:
     from pytscheck import checker
 
     try:
-        r = checker.check_source("const x = 1;")
+        checker.check_source("const x = 1;")
     except (CompilerExecutionError, OutputParseError):
         return
     raise AssertionError("crashing compiler was accepted as success")
@@ -90,12 +91,12 @@ def test_segfault_reports_negative_or_large_returncode(crashing_binary: Path) ->
 
 def test_crash_recovers_for_next_call(crashing_binary: Path) -> None:
     """A crash must not leave the runner in a broken state."""
-    with pytest.raises(Exception):
+    with pytest.raises(PyTSCheckError):
         from pytscheck import checker
 
         checker.check_source("const x = 1;")
     # Second call behaves the same way
-    with pytest.raises(Exception):
+    with pytest.raises(PyTSCheckError):
         from pytscheck import checker
 
         checker.check_source("const y = 2;")

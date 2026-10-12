@@ -26,14 +26,11 @@ def assert_valid_result(result: Result) -> None:
 
     expected = not any(d.category == "error" for d in result.diagnostics)
     assert result.success is expected, (
-        f"success={result.success} but errors present="
-        f"{[d.message for d in result.errors]}"
+        f"success={result.success} but errors present={[d.message for d in result.errors]}"
     )
 
 
-def assert_diagnostics_equal(
-    actual: Sequence[Diagnostic], expected: Sequence[Diagnostic]
-) -> None:
+def assert_diagnostics_equal(actual: Sequence[Diagnostic], expected: Sequence[Diagnostic]) -> None:
     assert len(actual) == len(expected), (
         f"count mismatch: {len(actual)} != {len(expected)}\n"
         f"actual  : {[(d.file, d.line, d.column, d.code) for d in actual]}\n"
@@ -45,10 +42,7 @@ def assert_diagnostics_equal(
 
 def assert_diagnostic_ordering(diags: Sequence[Diagnostic]) -> None:
     """Diagnostics must be ordered by (has_file, file, line, column, code, message)."""
-    keys = [
-        (d.file is None, d.file or "", d.line, d.column, d.code, d.message)
-        for d in diags
-    ]
+    keys = [(d.file is None, d.file or "", d.line, d.column, d.code, d.message) for d in diags]
     assert keys == sorted(keys), f"diagnostics are not deterministically ordered: {keys}"
 
 

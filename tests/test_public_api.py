@@ -9,7 +9,6 @@ import pytest
 import pytscheck
 from pytscheck import check, check_file, check_project
 
-
 # --- __all__ contract ------------------------------------------------------
 
 

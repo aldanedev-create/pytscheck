@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
@@ -35,10 +34,7 @@ def test_wheel_contains_manifest_json(built_wheel: Path) -> None:
 
 def test_wheel_contains_license(built_wheel: Path) -> None:
     members = list_wheel_members(built_wheel)
-    assert any(
-        m.endswith("/LICENSE") or m.endswith(".dist-info/LICENSE")
-        for m in members
-    )
+    assert any(m.endswith("/LICENSE") or m.endswith(".dist-info/LICENSE") for m in members)
 
 
 def test_wheel_contains_metadata(built_wheel: Path) -> None:
@@ -51,9 +47,7 @@ def test_wheel_contains_only_current_platform_bin(built_wheel: Path) -> None:
     members = list_wheel_members(built_wheel)
     binaries = [m for m in members if m.endswith("/tsgo") or m.endswith("/tsgo.exe")]
     if not binaries:
-        pytest.skip(
-            "no binary in wheel (Phase 0 not run for this platform)"
-        )
+        pytest.skip("no binary in wheel (Phase 0 not run for this platform)")
     assert len(binaries) == 1, binaries
 
 

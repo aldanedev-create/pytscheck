@@ -8,11 +8,14 @@ about a project before invoking the compiler.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .config import TSCONFIG_FILENAME, load_tsconfig
-from .paths import assert_inside
+from .config import load_tsconfig
+from .defaults import TSCONFIG_FILENAME
+from .exceptions import ConfigurationError
+from .paths import assert_inside, assert_no_null_bytes, normalize
 
 
 @dataclass(frozen=True, slots=True)
@@ -36,18 +39,44 @@ def resolve_project(root: Path) -> ResolvedProject:
 
     Does not attempt to resolve ``extends`` chains; tsgo does that.
     """
-    root = root.resolve()
+    root = normalize(root)
     tsconfig = root / TSCONFIG_FILENAME
     package_json = root / "package.json"
 
     extends: str | None = None
     if tsconfig.is_file():
-        cfg = load_tsconfig(tsconfig)
+        try:
+            cfg = load_tsconfig(tsconfig)
+        except ConfigurationError as validation_error:
+            # Projects accept TypeScript JSONC; preserve strings while removing comments.
+            try:
+                text = tsconfig.read_text(encoding="utf-8")
+            except (OSError, UnicodeError) as exc:
+                raise validation_error from exc
+            text = re.sub(
+                r'"(?:\\.|[^"\\])*"|/\*[\s\S]*?\*/|//[^\r\n]*',
+                lambda match: match[0] if match[0].startswith('"') else " ",
+                text,
+            )
+            text = re.sub(
+                r'"(?:\\.|[^"\\])*"|,\s*([}\]])',
+                lambda match: match[0] if match[0].startswith('"') else match[1],
+                text,
+            )
+            try:
+                cfg = json.loads(text)
+            except (json.JSONDecodeError, RecursionError) as exc:
+                raise ConfigurationError(f"invalid JSONC in {tsconfig}: {exc}") from exc
+            if not isinstance(cfg, dict):
+                raise ConfigurationError(
+                    f"{tsconfig}: top-level value must be an object"
+                ) from validation_error
         raw = cfg.get("extends")
         if isinstance(raw, str):
             extends = raw
             # Guard against path traversal in a hostile tsconfig.
-            candidate = (root / raw).resolve()
+            assert_no_null_bytes(raw, what="tsconfig extends")
+            candidate = normalize(root / raw)
             assert_inside(candidate, root, what="tsconfig extends target")
 
     return ResolvedProject(

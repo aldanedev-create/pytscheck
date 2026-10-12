@@ -10,4 +10,4 @@ COMPILER_VERSION = "7.0.0-dev.20260707.2"
 # Adapter protocol version. Bump on breaking protocol changes.
 ADAPTER_PROTOCOL_VERSION = "1.0"
 
-__all__ = ["__version__", "COMPILER_VERSION", "ADAPTER_PROTOCOL_VERSION"]
+__all__ = ["ADAPTER_PROTOCOL_VERSION", "COMPILER_VERSION", "__version__"]

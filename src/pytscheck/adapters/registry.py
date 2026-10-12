@@ -3,18 +3,18 @@
 from __future__ import annotations
 
 from .base import CompilerAdapter
-from .errors import AdapterRegistrationError, AdapterProtocolError
+from .errors import AdapterProtocolError, AdapterRegistrationError
 
 _REGISTRY: dict[str, CompilerAdapter] = {}
 
 
 def register_adapter(adapter: CompilerAdapter) -> None:
     """Register an adapter instance under its ``name``."""
-    if not isinstance(adapter, CompilerAdapter):
+    if not isinstance(adapter, CompilerAdapter) or not callable(adapter.get_sources):
         raise AdapterProtocolError(
             f"object does not satisfy CompilerAdapter protocol: {type(adapter).__name__}"
         )
-    if not adapter.name:
+    if not isinstance(adapter.name, str) or not adapter.name.strip():
         raise AdapterRegistrationError("adapter.name must be a non-empty string")
     if adapter.name in _REGISTRY:
         raise AdapterRegistrationError(f"adapter already registered: {adapter.name!r}")
@@ -37,8 +37,8 @@ def registered_adapters() -> tuple[str, ...]:
 
 
 __all__ = [
-    "register_adapter",
-    "unregister_adapter",
     "get_adapter",
+    "register_adapter",
     "registered_adapters",
+    "unregister_adapter",
 ]

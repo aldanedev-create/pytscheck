@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check_project
 
 
@@ -18,10 +16,7 @@ def _setup(root: Path, tsconfig: str, files: dict[str, str]) -> Path:
     return root
 
 
-_STRICT_TSCONFIG = (
-    '{"compilerOptions": {"strict": true, "noEmit": true}, '
-    '"include": ["**/*.ts"]}'
-)
+_STRICT_TSCONFIG = '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}'
 
 
 def test_relative_import(tsgo_binary, tmp_path: Path) -> None:
@@ -66,7 +61,9 @@ def test_parent_directory_import(tsgo_binary, tmp_path: Path) -> None:
         _STRICT_TSCONFIG,
         {
             "shared/util.ts": "export const shared: number = 1;\n",
-            "src/main.ts": "import { shared } from '../shared/util';\nexport const y: number = shared;\n",
+            "src/main.ts": (
+                "import { shared } from '../shared/util';\nexport const y: number = shared;\n"
+            ),
         },
     )
     r = check_project(tmp_path)
@@ -88,7 +85,9 @@ def test_type_only_import(tsgo_binary, tmp_path: Path) -> None:
         _STRICT_TSCONFIG,
         {
             "types.ts": "export interface User { name: string; }\n",
-            "main.ts": "import type { User } from './types';\nexport const u: User = { name: 'a' };\n",
+            "main.ts": (
+                "import type { User } from './types';\nexport const u: User = { name: 'a' };\n"
+            ),
         },
     )
     r = check_project(tmp_path)
@@ -100,8 +99,12 @@ def test_circular_imports(tsgo_binary, tmp_path: Path) -> None:
         tmp_path,
         _STRICT_TSCONFIG,
         {
-            "a.ts": "import { b } from './b';\nexport const a = 1;\nexport const combined = b + a;\n",
-            "b.ts": "import { a } from './a';\nexport const b = 2;\nexport const combined = a + b;\n",
+            "a.ts": (
+                "import { b } from './b';\nexport const a = 1;\nexport const combined = b + a;\n"
+            ),
+            "b.ts": (
+                "import { a } from './a';\nexport const b = 2;\nexport const combined = a + b;\n"
+            ),
         },
     )
     r = check_project(tmp_path)

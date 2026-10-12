@@ -14,9 +14,7 @@ from pytscheck.models import Diagnostic, SourceFile
 
 
 def _diag(file: str = "a.ts") -> Diagnostic:
-    return Diagnostic(
-        file=file, line=1, column=1, code=1, category="error", message="m"
-    )
+    return Diagnostic(file=file, line=1, column=1, code=1, category="error", message="m")
 
 
 def test_deeply_nested_json_in_source_map() -> None:
@@ -117,9 +115,7 @@ def test_tsconfig_with_invalid_utf8_bytes(tmp_path: Path) -> None:
 
 
 def test_source_map_with_extra_large_array_field() -> None:
-    payload = json.dumps(
-        {"version": 3, "mappings": "", "sources": ["x"] * 1_000_000}
-    )
+    payload = json.dumps({"version": 3, "mappings": "", "sources": ["x"] * 1_000_000})
     src = SourceFile(
         path="a.ts",
         text="",
@@ -134,9 +130,7 @@ def test_source_map_with_extra_large_array_field() -> None:
 
 def test_json_with_nested_key_objects() -> None:
     """`mappings` must be a value, not nested structures."""
-    payload = json.dumps(
-        {"version": 3, "mappings": {"deep": {"deeper": {"deepest": 1}}}}
-    )
+    payload = json.dumps({"version": 3, "mappings": {"deep": {"deeper": {"deepest": 1}}}})
     src = SourceFile(
         path="a.ts",
         text="",

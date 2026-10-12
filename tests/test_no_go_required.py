@@ -21,7 +21,8 @@ def clean_venv_python(built_wheel: Path, tmp_path_factory) -> Path:
 def test_import_without_go_on_path(clean_venv_python: Path) -> None:
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(
-        p for p in env.get("PATH", "").split(os.pathsep)
+        p
+        for p in env.get("PATH", "").split(os.pathsep)
         if "go" not in p.lower() and "golang" not in p.lower()
     )
     env.pop("GOFLAGS", None)
@@ -47,7 +48,8 @@ def test_check_without_go(clean_venv_python: Path) -> None:
 
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(
-        p for p in env.get("PATH", "").split(os.pathsep)
+        p
+        for p in env.get("PATH", "").split(os.pathsep)
         if "go" not in p.lower() and "golang" not in p.lower()
     )
 

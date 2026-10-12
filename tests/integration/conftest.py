@@ -67,17 +67,15 @@ def tsconfig_no_emit_disabled(tmp_path: Path) -> Path:
 def project_declaration_files(tmp_path: Path) -> Path:
     """A project with a hand-written .d.ts file."""
     (tmp_path / "types.d.ts").write_text(
-        'declare function greet(name: string): string;\n'
-        'declare const version: string;\n',
+        "declare function greet(name: string): string;\ndeclare const version: string;\n",
         encoding="utf-8",
     )
     (tmp_path / "main.ts").write_text(
-        'export const s: string = greet(version);\n',
+        "export const s: string = greet(version);\n",
         encoding="utf-8",
     )
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     return tmp_path
@@ -87,8 +85,7 @@ def project_declaration_files(tmp_path: Path) -> Path:
 def project_with_js(tmp_path: Path) -> Path:
     """A project mixing .ts and .js files."""
     (tmp_path / "util.js").write_text(
-        "// @ts-check\n"
-        "exports.double = function double(n) { return n * 2; };\n",
+        "// @ts-check\nexports.double = function double(n) { return n * 2; };\n",
         encoding="utf-8",
     )
     (tmp_path / "main.ts").write_text(

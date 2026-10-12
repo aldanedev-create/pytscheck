@@ -19,10 +19,10 @@ import importlib.util
 import json
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import ModuleType
-from typing import Callable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BENCHMARKS = REPO_ROOT / "benchmarks"
@@ -52,13 +52,16 @@ BENCHMARK_SPECS: list[BenchmarkSpec] = [
 
 
 def _load_module(path: Path) -> ModuleType:
-    spec = importlib.util.spec_from_file_location(
-        f"_benchmark_{path.stem}", path
-    )
+    spec = importlib.util.spec_from_file_location(f"_benchmark_{path.stem}", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load benchmark module: {path}")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        sys.modules.pop(spec.name, None)
+        raise
     return module
 
 
@@ -131,6 +134,14 @@ def run_one(spec: BenchmarkSpec) -> BenchmarkResult:
 
     try:
         data = run_fn()
+        if not isinstance(data, dict):
+            raise TypeError("benchmark run() must return a dictionary")
+        pending = [data]
+        while pending:
+            value = pending.pop()
+            if value.get("error"):
+                raise RuntimeError(str(value["error"]))
+            pending.extend(item for item in value.values() if isinstance(item, dict))
     except Exception as exc:
         return BenchmarkResult(
             name=spec.name,
@@ -143,7 +154,7 @@ def run_one(spec: BenchmarkSpec) -> BenchmarkResult:
         name=spec.name,
         ok=True,
         elapsed=time.monotonic() - start,
-        data=data if isinstance(data, dict) else {},
+        data=data,
     )
 
 
@@ -190,11 +201,14 @@ def compare_baseline(
         cur_value = current_flat.get(key)
         if cur_value is None:
             continue
-        delta = (cur_value - base_value) / base_value
+        higher_is_better = key.endswith(("_per_second", "_speedup", "_efficiency"))
+        delta = (
+            base_value - cur_value if higher_is_better else cur_value - base_value
+        ) / base_value
         if delta > tolerance:
             regressions.append(
                 f"{key}: {base_value:.3f} -> {cur_value:.3f} "
-                f"(+{delta * 100:.1f}%, tolerance {tolerance * 100:.1f}%)"
+                f"({delta * 100:.1f}% regression, tolerance {tolerance * 100:.1f}%)"
             )
 
     return not regressions, regressions
@@ -280,8 +294,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not _binary_present():
         print(
-            "error: bundled tsgo not present; "
-            "run scripts/build_binaries.py <platform> first",
+            "error: bundled tsgo not present; run scripts/build_binaries.py <platform> first",
             file=sys.stderr,
         )
         return 1
@@ -323,13 +336,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"\nbaseline written: {args.save_baseline}")
 
     if args.baseline:
-        ok, regressions = compare_baseline(
-            results, args.baseline, args.tolerance
-        )
+        ok, regressions = compare_baseline(results, args.baseline, args.tolerance)
         if ok:
             print(f"\nbaseline comparison OK (tolerance {args.tolerance:.0%})")
         else:
-            print(f"\nbaseline comparison FAILED:")
+            print("\nbaseline comparison FAILED:")
             for r in regressions:
                 print(f"  {r}")
             return 1

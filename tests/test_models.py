@@ -15,7 +15,6 @@ from pytscheck.models import (
     SourceKind,
 )
 
-
 # --- Diagnostic -------------------------------------------------------------
 
 
@@ -86,9 +85,7 @@ def test_diagnostic_origin_file_is_separate_from_file() -> None:
     assert d.origin_file == "App.vel"
 
 
-@pytest.mark.parametrize(
-    "category", ["error", "warning", "suggestion", "message"]
-)
+@pytest.mark.parametrize("category", ["error", "warning", "suggestion", "message"])
 def test_diagnostic_accepts_all_categories(category: DiagnosticCategory) -> None:
     d = _d(category=category)
     assert d.category == category

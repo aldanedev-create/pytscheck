@@ -36,11 +36,11 @@ def _time_import() -> float:
         shell=False,
     )
     if result.returncode != 0:
-        return -1.0
+        raise RuntimeError(f"cold import failed: {result.stderr.strip()}")
     try:
         return float(result.stdout.strip())
-    except ValueError:
-        return -1.0
+    except ValueError as exc:
+        raise RuntimeError("cold import returned an invalid timing") from exc
 
 
 def _time_locate() -> float:

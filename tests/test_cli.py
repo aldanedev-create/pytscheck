@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -15,7 +13,6 @@ from pytscheck.__main__ import (
     EXIT_USAGE,
 )
 from tests.helpers import parse_cli_json, run_cli, run_cli_subprocess
-
 
 # --- --version --------------------------------------------------------------
 
@@ -47,9 +44,8 @@ def test_where_with_binary_prints_path(tsgo_binary: Path) -> None:
 
 def test_where_without_binary_exits_operational(monkeypatch: pytest.MonkeyPatch) -> None:
     """Simulate a missing binary by pointing platform detection at a bogus dir."""
-    from tests.helpers import hide_file
-
     from pytscheck import runner
+    from tests.helpers import hide_file
 
     # Find the real binary; if it isn't there, the test still makes sense.
     try:
@@ -61,7 +57,7 @@ def test_where_without_binary_exits_operational(monkeypatch: pytest.MonkeyPatch)
         return
 
     with hide_file(binary):
-        code, out, err = run_cli(["--where"])
+        code, _out, err = run_cli(["--where"])
         assert code == EXIT_OPERATIONAL
         assert "error" in err.lower()
 
@@ -86,13 +82,13 @@ def test_string_check_valid(tsgo_binary: Path) -> None:
 
 
 def test_string_check_type_error(tsgo_binary: Path) -> None:
-    code, out, err = run_cli(["string", 'const age: number = "twenty";'])
+    code, out, _err = run_cli(["string", 'const age: number = "twenty";'])
     assert code == EXIT_TYPE_ERRORS
     assert "error" in out.lower()
 
 
 def test_string_check_json(tsgo_binary: Path) -> None:
-    code, out, err = run_cli(["string", 'const age: number = "twenty";', "--json"])
+    code, out, _err = run_cli(["string", 'const age: number = "twenty";', "--json"])
     assert code == EXIT_TYPE_ERRORS
     payload = parse_cli_json(out)
     assert payload["success"] is False
@@ -107,17 +103,17 @@ def test_file_check_valid(tsgo_binary: Path, ts_file_valid: Path) -> None:
 
 
 def test_file_check_type_error(tsgo_binary: Path, ts_file_type_error: Path) -> None:
-    code, out, _ = run_cli(["file", str(ts_file_type_error)])
+    code, _out, _ = run_cli(["file", str(ts_file_type_error)])
     assert code == EXIT_TYPE_ERRORS
 
 
 def test_project_check(tsgo_binary: Path, project_type_error: Path) -> None:
-    code, out, _ = run_cli(["project", str(project_type_error)])
+    code, _out, _ = run_cli(["project", str(project_type_error)])
     assert code == EXIT_TYPE_ERRORS
 
 
 def test_project_check_clean(tsgo_binary: Path, project_minimal: Path) -> None:
-    code, out, _ = run_cli(["project", str(project_minimal)])
+    code, _out, _ = run_cli(["project", str(project_minimal)])
     assert code == EXIT_OK
 
 
@@ -138,9 +134,8 @@ def test_project_subcommand_missing_dir(tmp_path: Path) -> None:
 
 def test_string_subcommand_no_binary_exits_operational() -> None:
     """Without the binary, the CLI must fail cleanly, not traceback."""
-    from tests.helpers import hide_file
-
     from pytscheck import runner
+    from tests.helpers import hide_file
 
     try:
         binary = runner.binary_path()
@@ -157,8 +152,11 @@ def test_string_subcommand_no_binary_exits_operational() -> None:
 
 
 def test_unknown_subcommand_raises_system_exit() -> None:
-    with pytest.raises(SystemExit):
-        run_cli(["nonsense"])
+    from pytscheck.__main__ import main
+
+    with pytest.raises(SystemExit) as raised:
+        main(["nonsense"])
+    assert raised.value.code == EXIT_USAGE
 
 
 # --- subprocess-level ------------------------------------------------------

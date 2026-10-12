@@ -39,9 +39,7 @@ def test_adapter_errors_are_not_compiler_errors() -> None:
 
 
 def test_compiler_execution_error_carries_payload() -> None:
-    e = exc.CompilerExecutionError(
-        "boom", returncode=137, stdout="out", stderr="err"
-    )
+    e = exc.CompilerExecutionError("boom", returncode=137, stdout="out", stderr="err")
     assert e.returncode == 137
     assert e.stdout == "out"
     assert e.stderr == "err"
@@ -95,10 +93,14 @@ def test_exception_chaining_preserved() -> None:
 
 
 def test_slots_prevent_attribute_sprawl_on_payload_classes() -> None:
+    """Payload slots coexist with BaseException's inherited attribute dictionary."""
     e = exc.CompilerExecutionError("boom", returncode=1)
-    with pytest.raises(AttributeError):
-        e.undeclared = 1  # type: ignore[attr-defined]
-
-    e2 = exc.OutputParseError("bad")
-    with pytest.raises(AttributeError):
-        e2.undeclared = 1  # type: ignore[attr-defined]
+    assert set(type(e).__slots__) == {"returncode", "stdout", "stderr"}
+    assert e.returncode == 1
+    assert "returncode" not in vars(e)
+    e2 = exc.OutputParseError("bad", raw_output="output")
+    assert type(e2).__slots__ == ("raw_output",)
+    assert e2.raw_output == "output"
+    assert "raw_output" not in vars(e2)
+    assert isinstance(vars(e), dict)
+    assert isinstance(vars(e2), dict)

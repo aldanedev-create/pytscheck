@@ -6,7 +6,6 @@ import pytest
 
 from pytscheck import exceptions as exc
 
-
 # --- raise-from preservation -----------------------------------------------
 
 
@@ -94,9 +93,7 @@ def test_payload_and_chaining_together() -> None:
         try:
             raise original
         except RuntimeError as e:
-            raise exc.CompilerExecutionError(
-                "failed", returncode=137, stderr="killed"
-            ) from e
+            raise exc.CompilerExecutionError("failed", returncode=137, stderr="killed") from e
     except exc.CompilerExecutionError as wrapped:
         assert wrapped.__cause__ is original
         assert wrapped.returncode == 137

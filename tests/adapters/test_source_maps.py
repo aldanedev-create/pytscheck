@@ -12,9 +12,7 @@ from pytscheck.models import Diagnostic, SourceFile
 
 
 def _d(file: str = "App.ts", line: int = 1, column: int = 1) -> Diagnostic:
-    return Diagnostic(
-        file=file, line=line, column=column, code=2322, category="error", message="m"
-    )
+    return Diagnostic(file=file, line=line, column=column, code=2322, category="error", message="m")
 
 
 def _valid_map() -> str:
@@ -37,9 +35,7 @@ def test_remap_uses_origin_path() -> None:
 
 
 def test_remap_preserves_other_fields() -> None:
-    src = SourceFile(
-        path="a.ts", text="", origin_path="a.vel", kind="generated"
-    )
+    src = SourceFile(path="a.ts", text="", origin_path="a.vel", kind="generated")
     original = Diagnostic(
         file="a.ts", line=5, column=10, code=9999, category="warning", message="w"
     )
@@ -77,9 +73,7 @@ def test_remap_leaves_unknown_file_untouched() -> None:
 
 def test_remap_leaves_global_diagnostic_untouched() -> None:
     src = SourceFile(path="App.ts", text="", origin_path="App.vel")
-    g = Diagnostic(
-        file=None, line=0, column=0, code=1000, category="error", message="global"
-    )
+    g = Diagnostic(file=None, line=0, column=0, code=1000, category="error", message="global")
     out = remap_diagnostics((g,), (src,))
     assert out[0].file is None
     assert out[0].origin_file is None
@@ -89,17 +83,13 @@ def test_remap_leaves_global_diagnostic_untouched() -> None:
 
 
 def test_remap_accepts_valid_source_map() -> None:
-    src = SourceFile(
-        path="a.ts", text="", origin_path="a.vel", source_map=_valid_map()
-    )
+    src = SourceFile(path="a.ts", text="", origin_path="a.vel", source_map=_valid_map())
     out = remap_diagnostics((_d("a.ts"),), (src,))
     assert out[0].file == "a.vel"
 
 
 def test_remap_rejects_malformed_json() -> None:
-    src = SourceFile(
-        path="a.ts", text="", origin_path="a.vel", source_map="not json"
-    )
+    src = SourceFile(path="a.ts", text="", origin_path="a.vel", source_map="not json")
     with pytest.raises(AdapterMappingError, match="not valid JSON"):
         remap_diagnostics((_d("a.ts"),), (src,))
 
@@ -127,9 +117,7 @@ def test_remap_rejects_source_map_that_is_json_but_not_dict() -> None:
 
 
 def test_remap_rejects_empty_source_map_string() -> None:
-    src = SourceFile(
-        path="a.ts", text="", origin_path="a.vel", source_map=""
-    )
+    src = SourceFile(path="a.ts", text="", origin_path="a.vel", source_map="")
     with pytest.raises(AdapterMappingError):
         remap_diagnostics((_d("a.ts"),), (src,))
 

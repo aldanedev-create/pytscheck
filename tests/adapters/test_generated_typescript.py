@@ -113,9 +113,7 @@ def test_generated_with_invalid_source_map_raises_on_remap() -> None:
         source_map="not json",
         kind="generated",
     )
-    d = Diagnostic_(
-        file="__gen__/a.ts", line=1, column=1, code=1, category="error", message="m"
-    )
+    d = Diagnostic_(file="__gen__/a.ts", line=1, column=1, code=1, category="error", message="m")
     with pytest.raises(AdapterMappingError):
         remap_diagnostics((d,), (src,))
 

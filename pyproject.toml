@@ -44,14 +44,14 @@ Homepage = "https://github.com/your-org/pytscheck"
 Repository = "https://github.com/your-org/pytscheck"
 Documentation = "https://pytscheck.readthedocs.io/"
 
+[project.scripts]
+pytscheck = "pytscheck.__main__:main"
+
 [project.entry-points."pytscheck.adapters"]
 # Third-party tools register here. Intentionally empty in core.
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pytscheck"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"src/pytscheck/bin" = "pytscheck/bin"
 
 [tool.hatch.build.targets.sdist]
 include = ["src/", "tests/", "scripts/", "docs/", "examples/", "README.md", "LICENSE", "NOTICE.txt"]

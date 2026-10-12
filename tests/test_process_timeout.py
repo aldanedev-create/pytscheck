@@ -6,7 +6,6 @@ into a genuine subprocess.TimeoutExpired path.
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
@@ -57,7 +56,7 @@ def test_timeout_error_carries_partial_output() -> None:
     # carries stdout on this platform (or is empty, but present).
     with pytest.raises(sp.TimeoutExpired) as excinfo:
         sp.run(
-            [sys.executable, "-c", "import time; print('before'); time.sleep(10)"],
+            [sys.executable, "-c", "import time; print('before', flush=True); time.sleep(10)"],
             capture_output=True,
             timeout=0.5,
             check=False,
@@ -67,7 +66,6 @@ def test_timeout_error_carries_partial_output() -> None:
 
 
 def test_checker_surfaces_timeout(hanging_binary: Path) -> None:
-    from pytscheck import checker
 
     # Patch the runner's default timeout by calling with a small one? The
     # checker uses defaults. Instead, verify that checker raises the same
@@ -80,7 +78,7 @@ def test_timeout_does_not_report_success(hanging_binary: Path) -> None:
     from pytscheck import checker
 
     try:
-        r = checker.check_source("const x = 1;")
+        checker.check_source("const x = 1;")
     except CompilerTimeoutError:
         return
     except CompilerExecutionError:

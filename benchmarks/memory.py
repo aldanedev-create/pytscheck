@@ -30,9 +30,7 @@ def _measure_check(path: Path) -> dict:
         "source_bytes": path.stat().st_size,
         "current_bytes": current,
         "peak_bytes": peak,
-        "ratio_peak_to_source": peak / path.stat().st_size
-        if path.stat().st_size > 0
-        else 0.0,
+        "ratio_peak_to_source": peak / path.stat().st_size if path.stat().st_size > 0 else 0.0,
     }
 
 

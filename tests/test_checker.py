@@ -7,22 +7,18 @@ if it is not present.
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
 
 import pytest
 
 from pytscheck import checker
-from pytscheck.config import CompilerOptions
 from pytscheck.exceptions import (
     CompilerExecutionError,
     CompilerNotFoundError,
     ConfigurationError,
-    OutputParseError,
 )
 from pytscheck.models import SourceFile
 from tests.assertions import assert_valid_result
-
 
 # --- check_source ----------------------------------------------------------
 
@@ -98,18 +94,14 @@ def test_check_project_missing(tmp_path: Path) -> None:
 
 
 def test_check_sources_virtual_single(tsgo_binary: Path) -> None:
-    sources = (
-        SourceFile(path="a.ts", text="export const x: number = 1;\n"),
-    )
+    sources = (SourceFile(path="a.ts", text="export const x: number = 1;\n"),)
     r = checker.check_sources_virtual(sources)
     assert_valid_result(r)
     assert r.success
 
 
 def test_check_sources_virtual_with_error(tsgo_binary: Path) -> None:
-    sources = (
-        SourceFile(path="a.ts", text='export const x: number = "bad";\n'),
-    )
+    sources = (SourceFile(path="a.ts", text='export const x: number = "bad";\n'),)
     r = checker.check_sources_virtual(sources)
     assert not r.success
     assert any(d.code == 2322 for d in r.errors)
@@ -133,9 +125,8 @@ def test_check_sources_virtual_empty_raises() -> None:
 
 
 def test_check_source_without_binary_raises() -> None:
-    from tests.helpers import hide_file
-
     from pytscheck import runner
+    from tests.helpers import hide_file
 
     try:
         binary = runner.binary_path()
@@ -144,9 +135,8 @@ def test_check_source_without_binary_raises() -> None:
             checker.check_source("const x = 1;")
         return
 
-    with hide_file(binary):
-        with pytest.raises((CompilerNotFoundError, CompilerExecutionError)):
-            checker.check_source("const x = 1;")
+    with hide_file(binary), pytest.raises((CompilerNotFoundError, CompilerExecutionError)):
+        checker.check_source("const x = 1;")
 
 
 # --- operational error mapping ---------------------------------------------
@@ -160,15 +150,13 @@ def test_checker_nonzero_no_output_raises_operational() -> None:
     relying on the missing-binary path. This exercises the operational
     error boundary without fabricating output.
     """
-    from tests.helpers import hide_file
-
     from pytscheck import runner
+    from tests.helpers import hide_file
 
     try:
         binary = runner.binary_path()
     except CompilerNotFoundError:
         return pytest.skip("no binary present")
 
-    with hide_file(binary):
-        with pytest.raises((CompilerNotFoundError, CompilerExecutionError)):
-            checker.check_source("const x = 1;")
+    with hide_file(binary), pytest.raises((CompilerNotFoundError, CompilerExecutionError)):
+        checker.check_source("const x = 1;")

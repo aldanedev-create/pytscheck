@@ -8,8 +8,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck.client import Client
 from pytscheck.models import Result
 from tests.assertions import assert_valid_result
@@ -40,9 +38,7 @@ def test_client_check_file_with_error(tsgo_binary: Path, ts_file_type_error: Pat
     assert not r.success
 
 
-def test_client_check_project(
-    tsgo_binary: Path, project_type_error: Path
-) -> None:
+def test_client_check_project(tsgo_binary: Path, project_type_error: Path) -> None:
     r = Client().check_project(project_type_error)
     assert_valid_result(r)
     assert not r.success

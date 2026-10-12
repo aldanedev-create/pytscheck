@@ -16,7 +16,6 @@ from .config import CompilerOptions
 from .models import Result
 from .runner import RunResult
 
-
 RunnerFn = Callable[..., RunResult]
 
 
@@ -37,9 +36,7 @@ class Client:
         options: CompilerOptions | None = None,
         keep_raw: bool = False,
     ) -> Result:
-        return checker.check_source(
-            source, filename=filename, options=options, keep_raw=keep_raw
-        )
+        return checker.check_source(source, filename=filename, options=options, keep_raw=keep_raw)
 
     def check_file(
         self,

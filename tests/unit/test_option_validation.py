@@ -8,7 +8,6 @@ from pytscheck.config import CompilerOptions
 from pytscheck.exceptions import ConfigurationError
 from pytscheck.options import options_to_argv
 
-
 # --- type validation --------------------------------------------------------
 
 
@@ -105,9 +104,7 @@ def test_extra_key_with_double_dash_preserved() -> None:
 
 
 def test_extra_multiple_options_ordered() -> None:
-    argv = options_to_argv(
-        CompilerOptions(extra={"a": True, "b": "x", "c": False, "d": "y"})
-    )
+    argv = options_to_argv(CompilerOptions(extra={"a": True, "b": "x", "c": False, "d": "y"}))
     # All truthy keys present
     assert "--a" in argv
     assert "--b" in argv and "x" in argv

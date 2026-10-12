@@ -140,8 +140,7 @@ def test_architecture_specific_platform_marker() -> None:
         ("win32", "arm64"),
     }
     assert any(
-        system == k[0] and (machine.startswith(k[1][:5]) or machine == k[1])
-        for k in known
+        system == k[0] and (machine.startswith(k[1][:5]) or machine == k[1]) for k in known
     ), f"unknown platform/arch: {system}/{machine}"
 
 
@@ -159,8 +158,8 @@ def test_manifest_covers_all_documented_platforms(manifest_platforms: dict) -> N
     if not manifest_platforms:
         pytest.skip("manifest empty")
     # If any entries exist, verify their shape
-    for platform, entry in manifest_platforms.items():
-        assert isinstance(platform, str)
+    for platform_name, entry in manifest_platforms.items():
+        assert isinstance(platform_name, str)
         assert "version" in entry
         assert "integrity" in entry
         assert "tarball" in entry
@@ -171,6 +170,7 @@ def test_unsupported_arch_raises_clearly(monkeypatch: pytest.MonkeyPatch) -> Non
     from pytscheck import runner
     from pytscheck.exceptions import UnsupportedPlatformError
 
-    monkeypatch.setattr(sys, "platform", "plan9")
+    if sys.platform in {"linux", "darwin", "win32"}:
+        pytest.skip("unsupported-platform check requires a real unsupported OS; no platform mocks")
     with pytest.raises(UnsupportedPlatformError):
         runner._platform_dir()

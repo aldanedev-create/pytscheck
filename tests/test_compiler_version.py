@@ -19,7 +19,6 @@ import pytest
 
 from pytscheck.version import COMPILER_VERSION
 
-
 # --- version.py -------------------------------------------------------------
 
 
