@@ -98,7 +98,8 @@ def run(
     timeout and output-size limits.
     """
     exe = binary_path()
-    argv = [str(exe), *argv_tail]
+    # Diagnostics must stay machine-readable even when FORCE_COLOR is set.
+    argv = [str(exe), *argv_tail, "--pretty", "false"]
 
     start = time.monotonic()
     # Files avoid inherited pipe handles keeping communicate() alive after a
