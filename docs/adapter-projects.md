@@ -59,7 +59,7 @@ Checks always use plain diagnostics and no emission. An inherited build config w
 
 ## Configuration inheritance and imports
 
-JSONC comments/trailing commas, parent configuration files, multiple `extends` entries, and npm-package tsconfigs are supported in context mode. Inherited relative alias paths remain relative to the config that defined them, then are rebased into the snapshot when inside the project root.
+JSONC comments/trailing commas, parent configuration files, multiple `extends` entries, and npm-package tsconfigs are supported in context mode. Inherited relative alias paths remain relative to the config that defined them, then are rebased into the snapshot when inside the project root. The pinned compiler has removed `baseUrl`; use relative `paths` targets instead, as described in [project checking](project-checking.md).
 
 The native compiler selects original project inputs through `--showConfig`; generated sources and explicit declarations are added. This also supports projects whose original include pattern has no TypeScript inputs until the adapter generates them.
 
@@ -116,7 +116,7 @@ PyTSCheck creates a unique `.pytscheck-*` directory inside the project root, whi
 
 Original source files are not modified. Each check has a separate workspace; concurrent checks cannot overwrite one another. Workspace cleanup runs after compiler success, diagnostics, validation errors, and timeouts.
 
-This snapshot is not an operating-system sandbox. Configuration and dependencies remain trusted project inputs. Source symlinks escaping the root and declaration-resource symlinks are rejected. Large projects can set explicit workspace limits. Use a suitable source root and prepared dependency/declaration layout.
+This snapshot is not an operating-system sandbox. Configuration and dependencies remain trusted project inputs. Directory symlinks are not traversed. Source symlinks escaping the root and declaration-resource symlinks are rejected. Large projects can set explicit workspace limits. Use a suitable source root and prepared dependency/declaration layout.
 
 ## Source maps
 
