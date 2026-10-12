@@ -1,5 +1,7 @@
 # PyTSCheck
 
+<img src="https://raw.githubusercontent.com/aldanedev-create/pytscheck/03ac50ff57c8e58d7d7f05162f185c6556a25bcb/assets/pytscheck-logo.png" alt="PyTSCheck logo: white PyTS lettering and checkmark on blue" width="180" height="180">
+
 **Type-check TypeScript from Python, without installing Node.js or Go.**
 
 PyTSCheck wraps Microsoft's native TypeScript compiler, `tsgo`, and returns structured diagnostics for source strings, files, and projects. Platform wheels include the compiler and TypeScript standard-library declarations. The Python runtime has no third-party dependencies.
