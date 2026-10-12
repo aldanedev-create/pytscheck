@@ -1,24 +1,11 @@
 # Support
 
-## Getting help
+Read the [documentation index](docs/index.md), [FAQ](docs/faq.md), and [troubleshooting guide](docs/troubleshooting.md). The maintained documentation lives in this repository; a separate Read the Docs deployment is not promised.
 
-- **Documentation:** https://pytscheck.readthedocs.io/
-- **Questions and discussions:** https://github.com/your-org/pytscheck/discussions
-- **Bug reports:** https://github.com/your-org/pytscheck/issues
-- **Security reports:** see `SECURITY.md`
+For questions or bugs, open a [GitHub issue](https://github.com/aldanedev-create/pytscheck/issues). Include the package/compiler versions from `python -m pytscheck --version`, OS and Python architecture, exact command or code, and minimal source/configuration. Remove secrets and private paths/source before sharing.
 
-## Before opening an issue
+For a source checkout, include `python scripts/verify_binaries.py` output when the compiler cannot run. For an installed wheel, include its filename and binary path from `python -m pytscheck --where`.
 
-1. Search existing issues and discussions.
-2. Confirm the behavior against the latest commit on `main`.
-3. Run `python scripts/verify_binaries.py` and include the output.
-4. Include your OS, architecture, and Python version.
+PyTSCheck relays the pinned compiler's semantics. An upstream compiler issue may need a separate report to Microsoft's TypeScript Go project. Adapter implementation belongs to its consuming package; core support can explain the protocol but does not maintain every integration.
 
-## What we can't help with
-
-- Problems with the upstream TypeScript compiler's semantics — report those
-  to Microsoft. PyTSCheck reports whatever `tsgo` reports.
-- Recovering type information from already-transpiled JavaScript. Type
-  annotations are gone by then; no adapter can recover them.
-- Building a custom adapter for a tool we don't maintain. We'll document the
-  protocol; the adapter itself belongs to the consuming tool.
+Report vulnerabilities privately through [SECURITY.md](SECURITY.md).
