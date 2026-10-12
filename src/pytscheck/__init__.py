@@ -56,7 +56,7 @@ from .exceptions import (
 from .models import Diagnostic, RelatedInformation, Result, SourceFile
 from .version import ADAPTER_PROTOCOL_VERSION, COMPILER_VERSION, __version__
 
-__all__ = [
+__all__ = [  # noqa: RUF022 -- Public exports retain the tested version/API group order.
     # Version metadata
     "__version__",
     "COMPILER_VERSION",

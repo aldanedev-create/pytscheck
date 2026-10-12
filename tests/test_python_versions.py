@@ -13,14 +13,12 @@ from pathlib import Path
 
 import pytest
 
-
 MINIMUM = (3, 11)
 
 
 def test_running_python_is_at_least_the_floor() -> None:
     assert sys.version_info[:2] >= MINIMUM, (
-        f"tests require Python >= {MINIMUM[0]}.{MINIMUM[1]}, "
-        f"running {sys.version_info[:2]}"
+        f"tests require Python >= {MINIMUM[0]}.{MINIMUM[1]}, running {sys.version_info[:2]}"
     )
 
 
@@ -52,14 +50,11 @@ def test_classifiers_include_supported_versions() -> None:
 
 def test_uses_only_stdlib_imports_in_core() -> None:
     """Core package must not import third-party libraries at runtime."""
-    import pytscheck
 
     forbidden = {"requests", "httpx", "numpy", "click", "typer", "pydantic"}
     loaded = set(sys.modules)
     leaked = forbidden & loaded
-    assert not leaked, (
-        f"pytscheck import pulled in third-party modules: {leaked}"
-    )
+    assert not leaked, f"pytscheck import pulled in third-party modules: {leaked}"
 
 
 @pytest.mark.parametrize("module", ["tomllib", "importlib.metadata", "dataclasses", "typing"])
@@ -107,9 +102,9 @@ def test_architecture_is_known() -> None:
     }
     # Some CI runners report slightly different machine strings; allow if
     # any known prefix matches.
-    assert any(
-        system == k[0] and machine.startswith(k[1][:5]) for k in known
-    ), f"unknown platform: {system}/{machine}"
+    assert any(system == k[0] and machine.startswith(k[1][:5]) for k in known), (
+        f"unknown platform: {system}/{machine}"
+    )
 
 
 def test_no_deprecated_sys_api() -> None:

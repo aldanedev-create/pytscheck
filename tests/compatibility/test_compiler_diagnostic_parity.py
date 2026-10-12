@@ -10,8 +10,6 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check, check_file, check_project
 from pytscheck.protocol import parse
 
@@ -33,9 +31,7 @@ def _run_tsgo_directly(tsgo_binary: Path, args: list[str]) -> tuple[int, str]:
 
 
 def test_parity_single_type_error(tsgo_binary: Path, sample_bad_file: Path) -> None:
-    _, raw = _run_tsgo_directly(
-        tsgo_binary, ["--noEmit", "--strict", str(sample_bad_file)]
-    )
+    _, raw = _run_tsgo_directly(tsgo_binary, ["--noEmit", "--strict", str(sample_bad_file)])
     direct_report = parse(raw)
     direct_codes = {d.code for d in direct_report.diagnostics if d.category == "error"}
 
@@ -43,8 +39,7 @@ def test_parity_single_type_error(tsgo_binary: Path, sample_bad_file: Path) -> N
     api_codes = {d.code for d in api.errors}
 
     assert direct_codes == api_codes, (
-        f"direct codes: {direct_codes}; api codes: {api_codes}\n"
-        f"raw output:\n{raw}"
+        f"direct codes: {direct_codes}; api codes: {api_codes}\nraw output:\n{raw}"
     )
 
 
@@ -61,9 +56,7 @@ def test_parity_single_syntax_error(tsgo_binary: Path, tmp_path: Path) -> None:
 
 
 def test_parity_clean_file(tsgo_binary: Path, sample_good_file: Path) -> None:
-    _, raw = _run_tsgo_directly(
-        tsgo_binary, ["--noEmit", "--strict", str(sample_good_file)]
-    )
+    _, raw = _run_tsgo_directly(tsgo_binary, ["--noEmit", "--strict", str(sample_good_file)])
     direct = [d for d in parse(raw).diagnostics if d.category == "error"]
 
     api = check_file(sample_good_file)
@@ -90,9 +83,7 @@ def test_parity_multiple_errors(tsgo_binary: Path, tmp_path: Path) -> None:
     api = check_file(f)
     api_pairs = sorted((d.line, d.column, d.code) for d in api.errors)
 
-    assert direct_pairs == api_pairs, (
-        f"direct: {direct_pairs}\napi: {api_pairs}\nraw:\n{raw}"
-    )
+    assert direct_pairs == api_pairs, f"direct: {direct_pairs}\napi: {api_pairs}\nraw:\n{raw}"
 
 
 # --- positions --------------------------------------------------------------
@@ -101,8 +92,7 @@ def test_parity_multiple_errors(tsgo_binary: Path, tmp_path: Path) -> None:
 def test_parity_line_and_column(tsgo_binary: Path, tmp_path: Path) -> None:
     f = tmp_path / "pos.ts"
     f.write_text(
-        'const ok: number = 1;\n'
-        'const age: number = "twenty";\n',
+        'const ok: number = 1;\nconst age: number = "twenty";\n',
         encoding="utf-8",
     )
     _, raw = _run_tsgo_directly(tsgo_binary, ["--noEmit", "--strict", str(f)])
@@ -123,16 +113,11 @@ def test_parity_line_and_column(tsgo_binary: Path, tmp_path: Path) -> None:
 
 def test_parity_project(tsgo_binary: Path, tmp_path: Path) -> None:
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
-    (tmp_path / "a.ts").write_text(
-        'export const x: number = "bad";\n', encoding="utf-8"
-    )
-    _, raw = _run_tsgo_directly(
-        tsgo_binary, ["--noEmit", "-p", str(tmp_path / "tsconfig.json")]
-    )
+    (tmp_path / "a.ts").write_text('export const x: number = "bad";\n', encoding="utf-8")
+    _, raw = _run_tsgo_directly(tsgo_binary, ["--noEmit", "-p", str(tmp_path / "tsconfig.json")])
     direct = {d.code for d in parse(raw).diagnostics if d.category == "error"}
 
     api = check_project(tmp_path)
@@ -170,11 +155,7 @@ def test_parity_ordering(tsgo_binary: Path, tmp_path: Path) -> None:
         encoding="utf-8",
     )
     _, raw = _run_tsgo_directly(tsgo_binary, ["--noEmit", "--strict", str(f)])
-    direct = [
-        (d.line, d.column, d.code)
-        for d in parse(raw).diagnostics
-        if d.category == "error"
-    ]
+    direct = [(d.line, d.column, d.code) for d in parse(raw).diagnostics if d.category == "error"]
 
     api = check_file(f)
     api_pairs = [(d.line, d.column, d.code) for d in api.errors]
@@ -194,9 +175,7 @@ def test_no_diagnostics_lost(tsgo_binary: Path, tmp_path: Path) -> None:
         encoding="utf-8",
     )
     _, raw = _run_tsgo_directly(tsgo_binary, ["--noEmit", "--strict", str(f)])
-    direct_count = sum(
-        1 for d in parse(raw).diagnostics if d.category == "error"
-    )
+    direct_count = sum(1 for d in parse(raw).diagnostics if d.category == "error")
     api_count = len(check_file(f).errors)
     assert direct_count == api_count
 

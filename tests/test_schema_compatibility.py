@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from tests.helpers import parse_cli_json, run_cli
-
 
 # Schema version. If the JSON shape changes in a breaking way, this constant
 # must be bumped and a migration path documented.
@@ -54,9 +51,7 @@ def test_category_values(tsgo_binary: Path) -> None:
 
 def test_file_can_be_null_for_global(tsgo_binary: Path, tmp_path: Path) -> None:
     # A project with a broken config may produce a global diagnostic
-    (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {}}', encoding="utf-8"
-    )
+    (tmp_path / "tsconfig.json").write_text('{"compilerOptions": {}}', encoding="utf-8")
     # No .ts files -> tsgo produces TS18003 (no inputs)
     _, out, _ = run_cli(["project", str(tmp_path), "--json"])
     payload = parse_cli_json(out)

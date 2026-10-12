@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,7 @@ from pytscheck.exceptions import (
     CompilerExecutionError,
     CompilerNotFoundError,
     CompilerTimeoutError,
+    PyTSCheckError,
 )
 from tests.helpers import hide_file, make_fake_tsgo
 
@@ -23,9 +25,8 @@ def test_recovers_after_missing_binary() -> None:
     except CompilerNotFoundError:
         pytest.skip("no bundled binary present")
 
-    with hide_file(original):
-        with pytest.raises(CompilerNotFoundError):
-            checker.check_source("const x = 1;")
+    with hide_file(original), pytest.raises(CompilerNotFoundError):
+        checker.check_source("const x = 1;")
 
     # After restoring the binary, a clean check must work.
     r = checker.check_source("export const x: number = 1;")
@@ -46,10 +47,8 @@ def test_recovers_after_timeout(tmp_path: Path) -> None:
 
         shutil.copy2(fake, original)
         original.chmod(0o755)
-        try:
+        with suppress(CompilerTimeoutError, CompilerExecutionError):
             checker.check_source("const x = 1;")
-        except (CompilerTimeoutError, CompilerExecutionError):
-            pass
 
     # After the fake is removed, real checks must work again.
     r = checker.check_source("export const x: number = 1;")
@@ -70,10 +69,8 @@ def test_recovers_after_crash(tmp_path: Path) -> None:
 
         shutil.copy2(fake, original)
         original.chmod(0o755)
-        try:
+        with suppress(PyTSCheckError):
             checker.check_source("const x = 1;")
-        except Exception:
-            pass
 
     r = checker.check_source("export const x: number = 1;")
     assert r.success
@@ -93,16 +90,14 @@ def test_recovers_after_unparsable_output(tmp_path: Path) -> None:
 
         shutil.copy2(fake, original)
         original.chmod(0o755)
-        try:
+        with suppress(PyTSCheckError):
             checker.check_source("const x = 1;")
-        except Exception:
-            pass
 
     r = checker.check_source("export const x: number = 1;")
     assert r.success
 
 
-def test_recovers_after_bad_file(tmp_path: Path) -> None:
+def test_recovers_after_bad_file(tmp_path: Path, tsgo_binary: Path) -> None:
     from pytscheck.exceptions import ConfigurationError
 
     with pytest.raises(ConfigurationError):
@@ -126,17 +121,14 @@ def test_no_temp_dir_leak_after_failure(tmp_path: Path) -> None:
 
     before = set(glob.glob(tempfile.gettempdir() + "/pytscheck-*"))
 
-    with hide_file(original):
-        try:
-            checker.check_source("const x = 1;")
-        except Exception:
-            pass
+    with hide_file(original), suppress(PyTSCheckError):
+        checker.check_source("const x = 1;")
 
     after = set(glob.glob(tempfile.gettempdir() + "/pytscheck-*"))
     assert not (after - before)
 
 
-def test_multiple_failures_do_not_accumulate_state(tmp_path: Path) -> None:
+def test_multiple_failures_do_not_accumulate_state(tmp_path: Path, tsgo_binary: Path) -> None:
     from pytscheck.exceptions import ConfigurationError
 
     for _ in range(5):

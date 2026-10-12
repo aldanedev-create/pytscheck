@@ -17,19 +17,19 @@ from .errors import (
     AdapterRegistrationError,
 )
 from .registry import get_adapter, register_adapter, unregister_adapter
-from .sources import collect_sources
 from .source_maps import remap_diagnostics
+from .sources import collect_sources
 
 __all__ = [
-    "CompilerAdapter",
     "AdapterError",
     "AdapterExtractionError",
     "AdapterMappingError",
     "AdapterProtocolError",
     "AdapterRegistrationError",
-    "register_adapter",
-    "unregister_adapter",
-    "get_adapter",
+    "CompilerAdapter",
     "collect_sources",
+    "get_adapter",
+    "register_adapter",
     "remap_diagnostics",
+    "unregister_adapter",
 ]

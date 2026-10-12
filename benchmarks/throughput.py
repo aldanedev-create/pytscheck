@@ -19,7 +19,7 @@ calling `run()`; if you invoke this module directly, expect an
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -68,33 +68,25 @@ def _time_file(path: Path) -> FixtureMeasurement:
     from pytscheck import check_file
 
     if not path.exists():
-        return FixtureMeasurement(
-            name=path.name, error=f"fixture not found: {path.name}"
-        )
+        return FixtureMeasurement(name=path.name, error=f"fixture not found: {path.name}")
 
     try:
         size = path.stat().st_size
     except OSError as exc:
-        return FixtureMeasurement(
-            name=path.name, error=f"stat failed: {exc}"
-        )
+        return FixtureMeasurement(name=path.name, error=f"stat failed: {exc}")
 
     # Warm up once so we measure steady-state, not first-call cost.
     # The warmup uses the same file; if it fails, the timed run will too.
     try:
         check_file(path)
     except Exception as exc:
-        return FixtureMeasurement(
-            name=path.name, error=f"{type(exc).__name__}: {exc}"
-        )
+        return FixtureMeasurement(name=path.name, error=f"{type(exc).__name__}: {exc}")
 
     t0 = time.perf_counter()
     try:
         result = check_file(path)
     except Exception as exc:
-        return FixtureMeasurement(
-            name=path.name, error=f"{type(exc).__name__}: {exc}"
-        )
+        return FixtureMeasurement(name=path.name, error=f"{type(exc).__name__}: {exc}")
     elapsed = time.perf_counter() - t0
 
     n_diags = len(result.diagnostics)
@@ -135,25 +127,19 @@ def _time_project(project_dir: Path) -> FixtureMeasurement:
     try:
         total_bytes = sum(f.stat().st_size for f in ts_files)
     except OSError as exc:
-        return FixtureMeasurement(
-            name=project_dir.name, error=f"stat failed: {exc}"
-        )
+        return FixtureMeasurement(name=project_dir.name, error=f"stat failed: {exc}")
 
     # Warmup
     try:
         check_project(project_dir)
     except Exception as exc:
-        return FixtureMeasurement(
-            name=project_dir.name, error=f"{type(exc).__name__}: {exc}"
-        )
+        return FixtureMeasurement(name=project_dir.name, error=f"{type(exc).__name__}: {exc}")
 
     t0 = time.perf_counter()
     try:
         result = check_project(project_dir)
     except Exception as exc:
-        return FixtureMeasurement(
-            name=project_dir.name, error=f"{type(exc).__name__}: {exc}"
-        )
+        return FixtureMeasurement(name=project_dir.name, error=f"{type(exc).__name__}: {exc}")
     elapsed = time.perf_counter() - t0
 
     n_diags = len(result.diagnostics)

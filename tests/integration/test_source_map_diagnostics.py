@@ -69,9 +69,7 @@ def test_generated_source_has_prefix(tsgo_binary, tmp_path: Path) -> None:
     assert sources[0].text.startswith("\n\n\n\n\n")
 
 
-def test_diagnostic_line_offset_in_generated_text(
-    tsgo_binary, tmp_path: Path
-) -> None:
+def test_diagnostic_line_offset_in_generated_text(tsgo_binary, tmp_path: Path) -> None:
     (tmp_path / "a.ts").write_text('export const x: number = "bad";\n', encoding="utf-8")
     sources = collect_sources(_LinearOffsetAdapter(5), str(tmp_path))
     r = check_sources_virtual(sources)
@@ -132,8 +130,6 @@ def test_source_map_json_shape_required(tsgo_binary, tmp_path: Path) -> None:
         source_map='{"version":3}',
         kind="generated",
     )
-    d = Diagnostic(
-        file="__gen__/a.ts", line=1, column=1, code=1, category="error", message="m"
-    )
+    d = Diagnostic(file="__gen__/a.ts", line=1, column=1, code=1, category="error", message="m")
     with pytest.raises(AdapterMappingError, match="missing 'mappings'"):
         remap_diagnostics((d,), (src,))

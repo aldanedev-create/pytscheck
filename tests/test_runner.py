@@ -22,7 +22,6 @@ from pytscheck.exceptions import (
 from pytscheck.runner import RunResult, binary_path, run
 from tests.helpers import file_has_executable_bit, hide_file
 
-
 # --- binary_path -----------------------------------------------------------
 
 
@@ -41,9 +40,8 @@ def test_binary_path_raises_when_hidden() -> None:
     except (CompilerNotFoundError, UnsupportedPlatformError):
         pytest.skip("no bundled binary present")
 
-    with hide_file(binary):
-        with pytest.raises(CompilerNotFoundError):
-            binary_path()
+    with hide_file(binary), pytest.raises(CompilerNotFoundError):
+        binary_path()
 
 
 def test_binary_path_raises_when_not_executable() -> None:
@@ -111,9 +109,8 @@ def test_run_without_binary_raises() -> None:
     except (CompilerNotFoundError, UnsupportedPlatformError):
         pytest.skip("no bundled binary present")
 
-    with hide_file(binary):
-        with pytest.raises(CompilerNotFoundError):
-            run(["--version"])
+    with hide_file(binary), pytest.raises(CompilerNotFoundError):
+        run(["--version"])
 
 
 def test_run_timeout_raises_timeout_error(tsgo_binary: Path, tmp_path: Path) -> None:

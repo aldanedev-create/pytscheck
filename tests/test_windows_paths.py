@@ -6,12 +6,12 @@ on Windows or not.
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
 import pytest
 
+from pytscheck import checker
 from pytscheck.paths import is_inside, normalize
 
 

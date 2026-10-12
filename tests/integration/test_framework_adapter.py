@@ -19,7 +19,6 @@ from pytscheck.adapters.sources import collect_sources
 from pytscheck.checker import check_sources_virtual
 from pytscheck.models import SourceFile
 
-
 _SCRIPT_RE = re.compile(r"<script[^>]*>(?P<body>.*?)</script>", re.DOTALL)
 
 
@@ -109,7 +108,7 @@ def test_sfc_missing_script_raises(tsgo_binary, tmp_path: Path) -> None:
 def test_sfc_multiple_files(tsgo_binary, tmp_path: Path) -> None:
     for name in ("A.sfc", "B.sfc", "C.sfc"):
         (tmp_path / name).write_text(
-            f"<template></template>\n<script>export const n: number = 1;</script>\n",
+            "<template></template>\n<script>export const n: number = 1;</script>\n",
             encoding="utf-8",
         )
     sources = collect_sources(_SfcAdapter(), str(tmp_path))

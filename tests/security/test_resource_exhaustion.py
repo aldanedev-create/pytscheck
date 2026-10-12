@@ -45,14 +45,11 @@ def test_many_files_project(tmp_path: Path) -> None:
     from pytscheck.exceptions import ConfigurationError
 
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     for i in range(100):
-        (tmp_path / f"f{i}.ts").write_text(
-            f"export const x{i}: number = {i};\n", encoding="utf-8"
-        )
+        (tmp_path / f"f{i}.ts").write_text(f"export const x{i}: number = {i};\n", encoding="utf-8")
     try:
         r = check_project(tmp_path)
     except (ConfigurationError, PyTSCheckError):

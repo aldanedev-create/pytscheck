@@ -14,7 +14,6 @@ from pytscheck.paths import (
     normalize,
 )
 
-
 # --- normalize --------------------------------------------------------------
 
 

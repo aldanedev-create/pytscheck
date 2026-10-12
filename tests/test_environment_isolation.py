@@ -7,10 +7,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
-
-def _run_python(code: str, *, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run_python(
+    code: str, *, env: dict[str, str] | None = None
+) -> subprocess.CompletedProcess[str]:
     base_env = os.environ.copy()
     if env is not None:
         base_env.update(env)
@@ -62,7 +62,6 @@ def test_no_ts_node_env_leaks_in() -> None:
 
 def test_checker_does_not_read_env_when_checking(tsgo_binary: Path, tmp_path: Path) -> None:
     """Checking must not depend on environment variables a caller sets."""
-    from pytscheck import checker
 
     code = (
         "import os\n"

@@ -21,15 +21,12 @@ from pytscheck.adapters.sources import collect_sources
 from pytscheck.checker import check_sources_virtual
 from pytscheck.models import Result, SourceFile
 
-
 # ---------------------------------------------------------------------------
 # A minimal third-party adapter, mimicking teloc-py
 # ---------------------------------------------------------------------------
 
 
-_SCRIPT_RE = re.compile(
-    r"<script[^>]*>(?P<body>.*?)</script>", re.DOTALL
-)
+_SCRIPT_RE = re.compile(r"<script[^>]*>(?P<body>.*?)</script>", re.DOTALL)
 
 
 class _VelAdapter:
@@ -54,9 +51,7 @@ class _VelAdapter:
             text = vel.read_text(encoding="utf-8")
             match = _SCRIPT_RE.search(text)
             if match is None:
-                raise AdapterExtractionError(
-                    f"no <script> block found in {vel.name}"
-                )
+                raise AdapterExtractionError(f"no <script> block found in {vel.name}")
             body = match.group("body")
             # Virtual path: unique per source. Preserve directory structure.
             rel = vel.relative_to(root)
@@ -80,10 +75,7 @@ class _VelAdapter:
 @pytest.fixture
 def vel_project_clean(tmp_path: Path) -> Path:
     (tmp_path / "App.vel").write_text(
-        "<template><div /></template>\n"
-        "<script>\n"
-        "export const msg: string = 'hello';\n"
-        "</script>\n",
+        "<template><div /></template>\n<script>\nexport const msg: string = 'hello';\n</script>\n",
         encoding="utf-8",
     )
     return tmp_path
@@ -105,9 +97,7 @@ def vel_project_error(tmp_path: Path) -> Path:
 @pytest.fixture
 def vel_project_broken(tmp_path: Path) -> Path:
     (tmp_path / "Broken.vel").write_text(
-        "<template><div /></template>\n"
-        "<script>\n"
-        "export const x: number = 1;\n",  # unterminated
+        "<template><div /></template>\n<script>\nexport const x: number = 1;\n",  # unterminated
         encoding="utf-8",
     )
     return tmp_path
@@ -176,9 +166,7 @@ def test_vel_project_with_error_fails(tsgo_binary: Path, vel_project_error: Path
     assert any(d.code == 2322 for d in r.errors)
 
 
-def test_diagnostics_remap_to_origin_file(
-    tsgo_binary: Path, vel_project_error: Path
-) -> None:
+def test_diagnostics_remap_to_origin_file(tsgo_binary: Path, vel_project_error: Path) -> None:
     sources = collect_sources(_VelAdapter(), str(vel_project_error))
     r = check_sources_virtual(sources)
     remapped = remap_diagnostics(r.diagnostics, sources)
@@ -187,9 +175,7 @@ def test_diagnostics_remap_to_origin_file(
     assert any(d.file == "App.vel" for d in errors)
 
 
-def test_remapped_error_keeps_origin_file_field(
-    tsgo_binary: Path, vel_project_error: Path
-) -> None:
+def test_remapped_error_keeps_origin_file_field(tsgo_binary: Path, vel_project_error: Path) -> None:
     sources = collect_sources(_VelAdapter(), str(vel_project_error))
     r = check_sources_virtual(sources)
     remapped = remap_diagnostics(r.diagnostics, sources)

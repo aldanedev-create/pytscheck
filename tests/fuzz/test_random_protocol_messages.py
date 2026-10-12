@@ -26,9 +26,7 @@ from pytscheck.models import Diagnostic, SourceFile
 
 
 def _diag(file: str = "a.ts") -> Diagnostic:
-    return Diagnostic(
-        file=file, line=1, column=1, code=1, category="error", message="m"
-    )
+    return Diagnostic(file=file, line=1, column=1, code=1, category="error", message="m")
 
 
 # ---------------------------------------------------------------------------
@@ -97,16 +95,14 @@ def _random_json(rng: random.Random, depth: int = 0) -> object:
     if choice == 1:
         return rng.choice([True, False])
     if choice == 2:
-        return rng.randint(-10**6, 10**6)
+        return rng.randint(-(10**6), 10**6)
     if choice == 3:
         return "".join(rng.choices(string.printable, k=rng.randint(0, 50)))
     if choice == 4:
         return [_random_json(rng, depth + 1) for _ in range(rng.randint(0, 5))]
     if choice == 5:
         return {
-            "".join(rng.choices(string.ascii_letters, k=5)): _random_json(
-                rng, depth + 1
-            )
+            "".join(rng.choices(string.ascii_letters, k=5)): _random_json(rng, depth + 1)
             for _ in range(rng.randint(0, 5))
         }
     # Bias toward valid-looking source maps
@@ -152,14 +148,16 @@ class _RecordingAdapter:
         return self._sources
 
 
-@given(st.one_of(
-    st.none(),
-    st.text(),
-    st.integers(),
-    st.lists(st.integers()),
-    st.lists(st.text()),
-    st.dictionaries(st.text(max_size=10), st.integers()),
-))
+@given(
+    st.one_of(
+        st.none(),
+        st.text(),
+        st.integers(),
+        st.lists(st.integers()),
+        st.lists(st.text()),
+        st.dictionaries(st.text(max_size=10), st.integers()),
+    )
+)
 @settings(
     max_examples=200,
     deadline=None,
@@ -305,9 +303,7 @@ def test_remap_preserves_diagnostic_with_no_file() -> None:
 
 
 def test_remap_preserves_unicode_in_message() -> None:
-    d = Diagnostic(
-        file="a.ts", line=1, column=1, code=1, category="error", message="日本語 🌍"
-    )
+    d = Diagnostic(file="a.ts", line=1, column=1, code=1, category="error", message="日本語 🌍")
     src = SourceFile(path="a.ts", text="", origin_path="a.vel")
     out = remap_diagnostics((d,), (src,))
     assert out[0].message == "日本語 🌍"

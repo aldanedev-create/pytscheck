@@ -14,7 +14,6 @@ import pytest
 import pytscheck
 from pytscheck import check, check_file, check_project
 
-
 # --- check() ----------------------------------------------------------------
 
 
@@ -160,16 +159,33 @@ def test_public_functions_document_returns(fn) -> None:
 
 
 def test_importing_api_does_not_import_runner_at_module_level() -> None:
-    """`import pytscheck.api` should not execute the runner; only import it."""
+    """Import in a fresh interpreter without executing a compiler subprocess."""
+    import subprocess
     import sys
 
-    # Clear any cached imports
-    for name in list(sys.modules):
-        if name.startswith("pytscheck"):
-            del sys.modules[name]
+    code = (
+        "import sys\n"
+        "def audit(event, args):\n"
+        "    if event == 'subprocess.Popen':\n"
+        "        raise AssertionError('subprocess started during import')\n"
+        "sys.addaudithook(audit)\n"
+        "import pytscheck.api\n"
+        "print('isolated import OK')\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+        shell=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "isolated import OK"
 
-    import pytscheck.api  # noqa: F401
 
-    # runner is imported but not executed. Assert no side effects:
-    # specifically, no subprocess or binary_path call happened during import.
-    assert "pytscheck.runner" in sys.modules or True  # tolerate either design
+def test_project_adapter_annotation_keeps_exact_public_spelling() -> None:
+    assert (
+        inspect.signature(check_project).parameters["adapter"].annotation
+        == "'CompilerAdapter | None'"
+    )

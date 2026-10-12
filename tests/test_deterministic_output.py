@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import checker
 from pytscheck.protocol import parse
 from pytscheck.runner import run
@@ -35,9 +33,7 @@ def test_diagnostic_order_is_stable(tsgo_binary: Path, tmp_path: Path) -> None:
     for _ in range(3):
         r = checker.check_file(f)
         assert [d.code for d in r.errors] == [d.code for d in first.errors]
-        assert [(d.line, d.column) for d in r.errors] == [
-            (d.line, d.column) for d in first.errors
-        ]
+        assert [(d.line, d.column) for d in r.errors] == [(d.line, d.column) for d in first.errors]
 
 
 def test_runner_output_is_byte_identical(tsgo_binary: Path, tmp_path: Path) -> None:
@@ -62,8 +58,7 @@ def test_protocol_parse_is_pure(tsgo_binary: Path, tmp_path: Path) -> None:
 
 def test_project_order_of_files_is_stable(tsgo_binary: Path, tmp_path: Path) -> None:
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     for i in range(5):
@@ -85,8 +80,8 @@ def test_no_random_ordering_from_hashing(tsgo_binary: Path, tmp_path: Path) -> N
 
     code = (
         "from pytscheck import checker\n"
-        "r = checker.check_source('export const a: number = \"x\"; "
-        "export const b: number = \"y\";')\n"
+        'r = checker.check_source(\'export const a: number = "x"; '
+        'export const b: number = "y";\')\n'
         "print([(d.line, d.code) for d in r.errors])\n"
     )
     r1 = subprocess.run(

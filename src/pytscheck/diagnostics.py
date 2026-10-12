@@ -12,18 +12,18 @@ from collections.abc import Iterable, Iterator
 from .models import Diagnostic, DiagnosticCategory, RelatedInformation
 
 __all__ = [
-    "sort_diagnostics",
-    "deduplicate",
-    "filter_by_category",
-    "filter_by_file",
-    "filter_by_code",
+    "count_by_category",
     "count_errors",
     "count_warnings",
-    "count_by_category",
+    "deduplicate",
+    "filter_by_category",
+    "filter_by_code",
+    "filter_by_file",
     "group_by_file",
-    "summarize",
-    "make_related",
     "has_errors",
+    "make_related",
+    "sort_diagnostics",
+    "summarize",
     "worst_category",
 ]
 
@@ -99,16 +99,12 @@ def filter_by_category(
     return tuple(d for d in diags if d.category == category)
 
 
-def filter_by_file(
-    diags: Iterable[Diagnostic], file: str
-) -> tuple[Diagnostic, ...]:
+def filter_by_file(diags: Iterable[Diagnostic], file: str) -> tuple[Diagnostic, ...]:
     """Return diagnostics whose ``file`` matches exactly."""
     return tuple(d for d in diags if d.file == file)
 
 
-def filter_by_code(
-    diags: Iterable[Diagnostic], code: int
-) -> tuple[Diagnostic, ...]:
+def filter_by_code(diags: Iterable[Diagnostic], code: int) -> tuple[Diagnostic, ...]:
     """Return diagnostics with the given TS error code."""
     return tuple(d for d in diags if d.code == code)
 

@@ -49,7 +49,7 @@ def hostile_source_snippets() -> list[str]:
         "// " + "x" * 100_000,
         "/* " + "*" * 100_000 + " */",
         "const x = " + "1 + " * 10_000 + "1;",
-        "const s = \"" + "a" * 500_000 + "\";",
+        'const s = "' + "a" * 500_000 + '";',
         "\x00\x01\x02\x03",
         "\ufeffconst x = 1;",  # BOM
         "const \u202ex = 1;",  # RTL override
@@ -81,9 +81,7 @@ def symlink_escape_setup(tmp_path: Path):
 
     outside = tmp_path.parent / f"{tmp_path.name}-outside"
     outside.mkdir(exist_ok=True)
-    (outside / "target.ts").write_text(
-        "export const x: number = 1;\n", encoding="utf-8"
-    )
+    (outside / "target.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
 
     link = tmp_path / "link"
     try:

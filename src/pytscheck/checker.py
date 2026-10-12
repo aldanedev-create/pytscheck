@@ -9,7 +9,9 @@ from .config import CompilerOptions, find_tsconfig, validate_project_root
 from .exceptions import CompilerExecutionError, ConfigurationError
 from .models import Diagnostic, Result, SourceFile
 from .options import options_to_argv
+from .paths import assert_no_null_bytes, normalize
 from .protocol import parse_or_raise
+from .resolver import resolve_project
 from .results import build_result
 from .runner import run
 from .version import COMPILER_VERSION
@@ -25,6 +27,14 @@ def _run_tsgo_on_args(
     r = run(argv_tail, cwd=cwd)
     output = r.stdout + ("\n" + r.stderr if r.stderr else "")
 
+    if r.returncode not in (0, 1, 2):
+        raise CompilerExecutionError(
+            f"tsgo exited abnormally with code {r.returncode}",
+            returncode=r.returncode,
+            stdout=r.stdout,
+            stderr=r.stderr,
+        )
+
     if r.returncode != 0 and not output.strip():
         raise CompilerExecutionError(
             f"tsgo exited with code {r.returncode} and produced no output",
@@ -36,6 +46,14 @@ def _run_tsgo_on_args(
     diagnostics: tuple[Diagnostic, ...] = ()
     if output.strip():
         diagnostics = parse_or_raise(output, allow_unparsed=False)
+
+    if r.returncode != 0 and not any(d.category == "error" for d in diagnostics):
+        raise CompilerExecutionError(
+            f"tsgo exited with code {r.returncode} without error diagnostics",
+            returncode=r.returncode,
+            stdout=r.stdout,
+            stderr=r.stderr,
+        )
 
     return build_result(
         list(diagnostics),
@@ -53,6 +71,8 @@ def check_source(
     keep_raw: bool = False,
 ) -> Result:
     options = options or CompilerOptions()
+    assert_no_null_bytes(source, what="source")
+    assert_no_null_bytes(filename, what="filename")
     with tempfile.TemporaryDirectory(prefix="pytscheck-") as tmp:
         tmp_path = Path(tmp)
         target = tmp_path / filename
@@ -70,14 +90,12 @@ def check_file(
     keep_raw: bool = False,
 ) -> Result:
     options = options or CompilerOptions()
-    target = Path(path).expanduser().resolve()
+    target = normalize(path)
     if not target.exists():
         raise ConfigurationError(f"file does not exist: {target}")
 
     argv_tail = [*options_to_argv(options), str(target)]
     return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=target.parent)
-
-
 
 
 def check_sources_virtual(
@@ -116,6 +134,7 @@ def check_project(
     options = options or CompilerOptions()
     root = validate_project_root(Path(project_root).expanduser().resolve())
 
+    resolve_project(root)
     argv_tail = [*options_to_argv(options)]
     tsconfig = find_tsconfig(root)
     if tsconfig is not None:
@@ -126,4 +145,4 @@ def check_project(
     return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=root)
 
 
-__all__ = ["check_source", "check_file", "check_project"]
+__all__ = ["check_file", "check_project", "check_source"]

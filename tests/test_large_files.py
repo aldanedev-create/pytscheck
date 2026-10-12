@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from pytscheck import checker
+from pytscheck.exceptions import PyTSCheckError
 from tests.assertions import assert_valid_result
 
 
@@ -52,7 +53,7 @@ def test_large_file_exceeds_source_limit(tsgo_binary: Path, tmp_path: Path) -> N
             fh.write(chunk)
             written += len(chunk)
 
-    with pytest.raises(Exception):
+    with pytest.raises(PyTSCheckError):
         checker.check_file(f)
 
 

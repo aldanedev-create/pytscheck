@@ -27,7 +27,7 @@ def printable_alphabet() -> str:
 @pytest.fixture
 def hostile_alphabet() -> str:
     """Bytes and control characters that the parser must survive."""
-    return "".join(chr(i) for i in list(range(0x00, 0x20)) + [0x7F, 0x80, 0xFF])
+    return "".join(chr(i) for i in [*range(0x00, 0x20), 0x7F, 0x80, 0xFF])
 
 
 @pytest.fixture

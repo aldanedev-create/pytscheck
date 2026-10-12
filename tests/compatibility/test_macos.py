@@ -12,7 +12,6 @@ import pytest
 
 from pytscheck import check, check_file, check_project
 
-
 pytestmark = pytest.mark.macos
 
 
@@ -34,8 +33,7 @@ def test_check_file_works(tsgo_binary: Path, tmp_path: Path) -> None:
 
 def test_check_project_works(tsgo_binary: Path, tmp_path: Path) -> None:
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     (tmp_path / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
@@ -99,9 +97,7 @@ def test_binary_not_quarantined(tsgo_binary: Path) -> None:
     # If xattr is missing, skip.
     if "No such file" in result.stderr or result.returncode not in {0, 1}:
         pytest.skip("xattr not available")
-    assert result.returncode != 0, (
-        f"quarantine attribute set on {tsgo_binary}: {result.stdout}"
-    )
+    assert result.returncode != 0, f"quarantine attribute set on {tsgo_binary}: {result.stdout}"
 
 
 # --- case insensitivity (HFS+/APFS default) --------------------------------

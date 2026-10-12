@@ -9,7 +9,6 @@ import pytest
 from pytscheck.exceptions import ConfigurationError
 from pytscheck.project import describe_project, iter_typescript_files
 
-
 # --- iter_typescript_files --------------------------------------------------
 
 

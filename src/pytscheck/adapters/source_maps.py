@@ -59,9 +59,7 @@ def _validate_source_map(raw: str, virtual_path: str) -> None:
             f"source map for {virtual_path!r} is not valid JSON: {exc.msg}"
         ) from exc
     if not isinstance(data, dict) or "mappings" not in data:
-        raise AdapterMappingError(
-            f"source map for {virtual_path!r} is missing 'mappings'"
-        )
+        raise AdapterMappingError(f"source map for {virtual_path!r} is missing 'mappings'")
 
 
 __all__ = ["remap_diagnostics"]

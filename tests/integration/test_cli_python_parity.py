@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import check, check_file, check_project
 from tests.helpers import parse_cli_json, run_cli
 
@@ -13,7 +11,7 @@ from tests.helpers import parse_cli_json, run_cli
 def test_string_parity(tsgo_binary) -> None:
     src = 'const age: number = "twenty";'
     api = check(src)
-    code, out, _ = run_cli(["string", src, "--json"])
+    _code, out, _ = run_cli(["string", src, "--json"])
     cli = parse_cli_json(out)
     assert cli["success"] == api.success
     assert [d["code"] for d in cli["diagnostics"]] == [d.code for d in api.diagnostics]
@@ -39,12 +37,9 @@ def test_file_parity(tsgo_binary, tmp_path: Path) -> None:
 
 
 def test_project_parity(tsgo_binary, tmp_path: Path) -> None:
-    (tmp_path / "main.ts").write_text(
-        'export const x: number = "bad";\n', encoding="utf-8"
-    )
+    (tmp_path / "main.ts").write_text('export const x: number = "bad";\n', encoding="utf-8")
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     api = check_project(tmp_path)

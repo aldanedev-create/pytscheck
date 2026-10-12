@@ -6,7 +6,6 @@ import pytest
 
 from pytscheck import exceptions as exc
 
-
 # --- hierarchy --------------------------------------------------------------
 
 
@@ -123,4 +122,4 @@ def test_cannot_catch_adapter_error_as_compiler_error() -> None:
         try:
             raise exc.AdapterExtractionError("x")
         except exc.CompilerExecutionError:  # pragma: no cover
-            raise AssertionError("adapter error caught as compiler error")
+            raise AssertionError("adapter error caught as compiler error") from None

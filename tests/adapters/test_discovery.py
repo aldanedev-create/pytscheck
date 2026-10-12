@@ -7,10 +7,7 @@ a no-op. We test the API contract and the failure modes we can control.
 
 from __future__ import annotations
 
-import pytest
-
 from pytscheck.adapters.discovery import discover_adapters
-from pytscheck.adapters.errors import AdapterDiscoveryError
 from pytscheck.adapters.registry import registered_adapters
 from pytscheck.defaults import DEFAULT_ADAPTER_ENTRY_POINT_GROUP
 

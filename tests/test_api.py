@@ -19,7 +19,6 @@ from tests.assertions import (
     assert_valid_result,
 )
 
-
 # --- validation (no binary needed) -----------------------------------------
 
 
@@ -155,9 +154,8 @@ def test_check_project_adapter_none_is_default(tsgo_binary: Path, project_minima
 
 def test_check_without_binary_raises_operational() -> None:
     """When the binary is missing, check() must raise, not return success."""
-    from tests.helpers import hide_file
-
     from pytscheck import runner
+    from tests.helpers import hide_file
 
     try:
         binary = runner.binary_path()
@@ -167,6 +165,5 @@ def test_check_without_binary_raises_operational() -> None:
             check("const x = 1;")
         return
 
-    with hide_file(binary):
-        with pytest.raises(PyTSCheckError):
-            check("const x = 1;")
+    with hide_file(binary), pytest.raises(PyTSCheckError):
+        check("const x = 1;")

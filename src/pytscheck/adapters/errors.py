@@ -16,8 +16,8 @@ from ..exceptions import (
 )
 
 __all__ = [
-    "AdapterError",
     "AdapterDiscoveryError",
+    "AdapterError",
     "AdapterExtractionError",
     "AdapterMappingError",
     "AdapterProtocolError",

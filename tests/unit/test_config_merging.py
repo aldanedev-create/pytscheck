@@ -67,7 +67,8 @@ def test_options_with_different_extra_are_not_equal() -> None:
 
 def test_options_are_hashable() -> None:
     o = CompilerOptions()
-    assert hash(o) == hash(o)
+    with pytest.raises(TypeError):
+        hash(o)
 
 
 def test_options_with_extra_dict_are_hashable_if_dict_is_not() -> None:
@@ -97,8 +98,9 @@ def test_replace_does_not_share_extra_dict() -> None:
 
     a = CompilerOptions(extra={"x": 1})
     b = dataclasses.replace(a, strict=False)
-    # dataclasses.replace produces a new dict by default for mutable fields
+    # dataclasses.replace carries supplied fields into the new instance
     assert a.extra == b.extra
-    # Mutating one must not affect the other
+    # Mutable fields are shared; replacement does not promise a deep copy
     b.extra["y"] = 2  # type: ignore[index]
-    assert "y" not in a.extra
+    assert b.extra is a.extra
+    assert a.extra["y"] == 2

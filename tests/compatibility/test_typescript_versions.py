@@ -10,11 +10,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import pytest
-
-from pytscheck import check, check_project
+from pytscheck import check
 from pytscheck.version import COMPILER_VERSION
-
 
 # --- version pin ------------------------------------------------------------
 
@@ -66,10 +63,7 @@ def test_supports_template_literal_types(tsgo_binary: Path) -> None:
 
 
 def test_supports_satisfies_operator(tsgo_binary: Path) -> None:
-    src = (
-        "const config = { a: 1 } satisfies Record<string, number>;\n"
-        "export { config };\n"
-    )
+    src = "const config = { a: 1 } satisfies Record<string, number>;\nexport { config };\n"
     assert check(src).success
 
 
@@ -107,10 +101,7 @@ def test_supports_mapped_types(tsgo_binary: Path) -> None:
 
 
 def test_supports_import_type(tsgo_binary: Path) -> None:
-    src = (
-        "export type Foo = string;\n"
-        "export const x: import('./input.ts').Foo = 'a';\n"
-    )
+    src = "export type Foo = string;\nexport const x: import('./input.ts').Foo = 'a';\n"
     # `import('./input.ts')` may or may not resolve in a source-string
     # context, but the syntax itself must parse. Success or a type-only
     # diagnostic is acceptable; a syntax error is not.

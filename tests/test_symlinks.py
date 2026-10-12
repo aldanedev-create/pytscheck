@@ -11,7 +11,6 @@ import pytest
 from pytscheck import checker
 from pytscheck.paths import is_inside
 
-
 pytestmark = pytest.mark.skipif(
     sys.platform == "win32" and os.environ.get("CI") == "true",
     reason="Windows CI runners may not permit symlink creation",
@@ -66,25 +65,21 @@ def test_check_project_with_symlinked_file(tsgo_binary: Path, tmp_path: Path) ->
     link = tmp_path / "link.ts"
     _try_symlink(real, link)
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     r = checker.check_project(tmp_path)
     assert r.success
 
 
-def test_check_project_with_symlinked_directory(
-    tsgo_binary: Path, tmp_path: Path
-) -> None:
+def test_check_project_with_symlinked_directory(tsgo_binary: Path, tmp_path: Path) -> None:
     realdir = tmp_path / "realdir"
     realdir.mkdir()
     (realdir / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     link = tmp_path / "linkdir"
     _try_symlink(realdir, link, is_dir=True)
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     # Depending on tsgo's resolution, it may or may not follow the link.

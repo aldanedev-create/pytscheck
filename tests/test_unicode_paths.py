@@ -37,8 +37,7 @@ def test_unicode_project_root(tsgo_binary: Path, tmp_path: Path) -> None:
     root = tmp_path / "日本語プロジェクト"
     root.mkdir()
     (root / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     (root / "x.ts").write_text("export const x: number = 1;\n", encoding="utf-8")

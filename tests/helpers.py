@@ -17,7 +17,6 @@ from typing import Any
 
 from pytscheck.models import Diagnostic
 
-
 # ---------------------------------------------------------------------------
 # CLI invocation
 # ---------------------------------------------------------------------------
@@ -40,7 +39,9 @@ def run_cli(argv: list[str]) -> tuple[int, str, str]:
     return code, out.getvalue(), err.getvalue()
 
 
-def run_cli_subprocess(argv: list[str], *, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+def run_cli_subprocess(
+    argv: list[str], *, cwd: Path | None = None
+) -> subprocess.CompletedProcess[str]:
     """Run ``python -m pytscheck`` as a real subprocess.
 
     Used by tests that need to verify process-level behavior: exit codes,
@@ -123,11 +124,9 @@ def make_project_with_errors(root: Path, n_files: int, errors_per_file: int = 1)
     return paths
 
 
+def make_fake_tsgo(path: Path, *, behavior: str = "echo") -> Path:
 
-    def make_fake_tsgo(path: Path, *, behavior: str = "echo") -> Path:
-   
     import os
-    import sys
 
     path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -143,8 +142,7 @@ def make_project_with_errors(root: Path, n_files: int, errors_per_file: int = 1)
     return path
 
 
-
-    def build_wheel(repo_root: Path, outdir: Path) -> Path:
+def build_wheel(repo_root: Path, outdir: Path) -> Path:
     """Build a real wheel via `python -m build`. Returns the .whl path.
 
     Skips are handled by the caller. Raises RuntimeError if the build fails.
@@ -163,9 +161,7 @@ def make_project_with_errors(root: Path, n_files: int, errors_per_file: int = 1)
         shell=False,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"wheel build failed (exit {result.returncode}):\n{result.stderr}"
-        )
+        raise RuntimeError(f"wheel build failed (exit {result.returncode}):\n{result.stderr}")
     wheels = sorted(outdir.glob("*.whl"))
     if not wheels:
         raise RuntimeError(f"no wheel found in {outdir} after build")
@@ -188,9 +184,7 @@ def build_sdist(repo_root: Path, outdir: Path) -> Path:
         shell=False,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"sdist build failed (exit {result.returncode}):\n{result.stderr}"
-        )
+        raise RuntimeError(f"sdist build failed (exit {result.returncode}):\n{result.stderr}")
     sdists = sorted(outdir.glob("*.tar.gz"))
     if not sdists:
         raise RuntimeError(f"no sdist found in {outdir} after build")
@@ -268,9 +262,7 @@ def installed_in_clean_venv(wheel: Path, tmp_path: Path) -> Path:
         shell=False,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"pip install failed (exit {result.returncode}):\n{result.stderr}"
-        )
+        raise RuntimeError(f"pip install failed (exit {result.returncode}):\n{result.stderr}")
     return py
 
 
@@ -278,16 +270,12 @@ def _fake_tsgo_posix_body(behavior: str) -> str:
     if behavior == "echo":
         return '#!/bin/sh\necho "$@"\nexit 0\n'
     if behavior == "error":
-        return (
-            '#!/bin/sh\n'
-            'echo "fake.ts(1,1): error TS9999: fake error" 1>&2\n'
-            'exit 1\n'
-        )
+        return '#!/bin/sh\necho "fake.ts(1,1): error TS9999: fake error" 1>&2\nexit 1\n'
     if behavior == "hang":
-        return '#!/bin/sh\nsleep 3600\n'
+        return "#!/bin/sh\nsleep 3600\n"
     if behavior == "crash":
         # SIGSEGV kills the process; the shell reports it via the exit code.
-        return '#!/bin/sh\nkill -SEGV $$\n'
+        return "#!/bin/sh\nkill -SEGV $$\n"
     if behavior == "garbage":
         return '#!/bin/sh\necho "this is not a diagnostic line"\nexit 0\n'
     if behavior == "big":
@@ -299,11 +287,7 @@ def _fake_tsgo_windows_body(behavior: str) -> str:
     if behavior == "echo":
         return "@echo off\necho %*\r\nexit /b 0\r\n"
     if behavior == "error":
-        return (
-            "@echo off\r\n"
-            "echo fake.ts(1,1): error TS9999: fake error 1>&2\r\n"
-            "exit /b 1\r\n"
-        )
+        return "@echo off\r\necho fake.ts(1,1): error TS9999: fake error 1>&2\r\nexit /b 1\r\n"
     if behavior == "hang":
         return "@echo off\r\n:loop\r\ngoto loop\r\n"
     if behavior == "crash":
@@ -311,16 +295,11 @@ def _fake_tsgo_windows_body(behavior: str) -> str:
     if behavior == "garbage":
         return "@echo off\r\necho this is not a diagnostic line\r\nexit /b 0\r\n"
     if behavior == "big":
-        return (
-            "@echo off\r\n"
-            "for /L %%i in (1,1,100000) do echo line of output\r\n"
-        )
+        return "@echo off\r\nfor /L %%i in (1,1,100000) do echo line of output\r\n"
     raise ValueError(f"unknown fake behavior: {behavior}")
 
 
-def make_fake_tsgo_on_path(
-    path: Path, *, behavior: str = "echo"
-) -> tuple[Path, Path]:
+def make_fake_tsgo_on_path(path: Path, *, behavior: str = "echo") -> tuple[Path, Path]:
     """Create a fake tsgo directory with a `lib/` subdirectory containing
     the fake binary. Returns (platform_dir, binary_path).
     """

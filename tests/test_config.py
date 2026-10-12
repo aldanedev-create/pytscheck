@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,6 @@ from pytscheck.config import (
     validate_project_root,
 )
 from pytscheck.exceptions import ConfigurationError
-
 
 # --- CompilerOptions -------------------------------------------------------
 
@@ -98,10 +98,8 @@ def test_load_tsconfig_utf8_bom(tmp_path: Path) -> None:
     p.write_bytes(b"\xef\xbb\xbf{}")
     # JSON with a BOM: our reader uses utf-8 (not utf-8-sig), so this should
     # either parse (if BOM stripped) or raise ConfigurationError.
-    try:
+    with suppress(ConfigurationError):
         load_tsconfig(p)
-    except ConfigurationError:
-        pass  # acceptable
 
 
 # --- validate_project_root -------------------------------------------------

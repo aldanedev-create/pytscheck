@@ -8,12 +8,11 @@ The runner must surface a clear operational error and never report success.
 from __future__ import annotations
 
 import os
-import sys
 from pathlib import Path
 
 import pytest
 
-from pytscheck.exceptions import CompilerExecutionError, CompilerNotFoundError
+from pytscheck.exceptions import CompilerExecutionError, CompilerNotFoundError, PyTSCheckError
 from pytscheck.runner import run
 from tests.helpers import hide_file
 
@@ -81,7 +80,7 @@ def test_garbage_executable_does_not_report_success(tmp_path: Path) -> None:
 
         shutil.copy2(fake, original)
         original.chmod(0o755)
-        with pytest.raises(Exception):
+        with pytest.raises(PyTSCheckError):
             # Either CompilerExecutionError or OutputParseError, depending
             # on how the garbage is interpreted. Either way: not success.
             r = checker.check_source("const x = 1;")
@@ -131,7 +130,7 @@ def test_empty_executable_raises(tmp_path: Path) -> None:
         shutil.copy2(empty, original)
         original.chmod(0o755)
         # Empty file with exec bit: on Linux, Exec format error -> OSError
-        with pytest.raises(Exception):
+        with pytest.raises(PyTSCheckError):
             run(["--version"])
 
 

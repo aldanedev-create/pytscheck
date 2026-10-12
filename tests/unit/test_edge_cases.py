@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-import pytest
-
 from pytscheck import diagnostics as dg
 from pytscheck.config import CompilerOptions
-from pytscheck.exceptions import ConfigurationError
 from pytscheck.models import Diagnostic, Result
 from pytscheck.options import options_to_argv
 from pytscheck.paths import normalize
 from tests.factories import make_diagnostic
-
 
 # --- empty inputs ----------------------------------------------------------
 
@@ -66,8 +62,7 @@ def test_many_diagnostics_sort_is_fast() -> None:
     import time
 
     diags = [
-        make_diagnostic(file=f"f{i % 10}.ts", line=i % 1000, code=i % 100)
-        for i in range(5000)
+        make_diagnostic(file=f"f{i % 10}.ts", line=i % 1000, code=i % 100) for i in range(5000)
     ]
     start = time.perf_counter()
     ordered = dg.sort_diagnostics(diags)
@@ -88,17 +83,13 @@ def test_zero_position_diagnostic() -> None:
 
 def test_negative_code_is_not_rejected_by_dataclass() -> None:
     """The dataclass itself does not validate codes; the parser does."""
-    d = Diagnostic(
-        file="a.ts", line=1, column=1, code=-1, category="error", message="x"
-    )
+    d = Diagnostic(file="a.ts", line=1, column=1, code=-1, category="error", message="x")
     assert d.code == -1
 
 
 def test_category_accepts_all_literals() -> None:
     for cat in ("error", "warning", "suggestion", "message"):
-        d = Diagnostic(
-            file="a.ts", line=1, column=1, code=1, category=cat, message="x"
-        )
+        d = Diagnostic(file="a.ts", line=1, column=1, code=1, category=cat, message="x")
         assert d.category == cat
 
 
@@ -106,9 +97,7 @@ def test_category_accepts_all_literals() -> None:
 
 
 def test_options_with_only_extra() -> None:
-    argv = options_to_argv(
-        CompilerOptions(strict=False, no_emit=False, extra={"pretty": True})
-    )
+    argv = options_to_argv(CompilerOptions(strict=False, no_emit=False, extra={"pretty": True}))
     assert argv == ["--pretty"]
 
 

@@ -8,13 +8,12 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-import pytest
-
 from pytscheck import checker
 
 
 def test_many_concurrent_checks_all_succeed(tsgo_binary: Path) -> None:
     """16 threads each check a valid source; all must return success."""
+
     def do_check(i: int) -> bool:
         r = checker.check_source(f"export const x{i}: number = {i};")
         return r.success
@@ -43,6 +42,7 @@ def test_concurrent_checks_produce_consistent_results(tsgo_binary: Path) -> None
 
 def test_concurrent_checks_do_not_interfere(tsgo_binary: Path) -> None:
     """Mixed valid/invalid sources under load must not corrupt each other."""
+
     def do_check(i: int):
         if i % 2 == 0:
             r = checker.check_source(f"export const x{i}: number = {i};")

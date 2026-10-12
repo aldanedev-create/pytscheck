@@ -21,7 +21,6 @@ import pytest
 from pytscheck.exceptions import OutputParseError
 from pytscheck.protocol import parse, parse_or_raise
 
-
 # ---------------------------------------------------------------------------
 # Synthetic input (parser grammar)
 # ---------------------------------------------------------------------------
@@ -53,10 +52,7 @@ def test_parse_single_error() -> None:
 
 
 def test_parse_multiple_errors() -> None:
-    text = (
-        "a.ts(1,1): error TS1005: ';' expected.\n"
-        "b.ts(2,3): error TS2322: Type mismatch.\n"
-    )
+    text = "a.ts(1,1): error TS1005: ';' expected.\nb.ts(2,3): error TS2322: Type mismatch.\n"
     report = parse(text)
     assert len(report.diagnostics) == 2
     assert report.diagnostics[0].file == "a.ts"
@@ -166,11 +162,7 @@ def test_parse_handles_path_with_parentheses() -> None:
 
 
 def test_parse_blank_line_flushes_pending_diagnostic() -> None:
-    text = (
-        "a.ts(1,1): error TS1005: ';' expected.\n"
-        "\n"
-        "b.ts(2,1): error TS2322: Type mismatch.\n"
-    )
+    text = "a.ts(1,1): error TS1005: ';' expected.\n\nb.ts(2,1): error TS2322: Type mismatch.\n"
     report = parse(text)
     assert len(report.diagnostics) == 2
     assert report.diagnostics[0].message == "';' expected."
@@ -211,9 +203,7 @@ def test_parse_returns_tuple_diagnostics() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_parse_real_tsgo_output_for_valid_source(
-    tsgo_binary: Path, tmp_path: Path
-) -> None:
+def test_parse_real_tsgo_output_for_valid_source(tsgo_binary: Path, tmp_path: Path) -> None:
     f = tmp_path / "ok.ts"
     f.write_text("export const x: number = 1;\n", encoding="utf-8")
     result = subprocess.run(
@@ -230,9 +220,7 @@ def test_parse_real_tsgo_output_for_valid_source(
     assert not any(d.category == "error" for d in report.diagnostics)
 
 
-def test_parse_real_tsgo_output_for_type_error(
-    tsgo_binary: Path, tmp_path: Path
-) -> None:
+def test_parse_real_tsgo_output_for_type_error(tsgo_binary: Path, tmp_path: Path) -> None:
     f = tmp_path / "bad.ts"
     f.write_text('export const age: number = "twenty";\n', encoding="utf-8")
     result = subprocess.run(
@@ -253,9 +241,7 @@ def test_parse_real_tsgo_output_for_type_error(
     ]
 
 
-def test_parse_real_tsgo_output_for_syntax_error(
-    tsgo_binary: Path, tmp_path: Path
-) -> None:
+def test_parse_real_tsgo_output_for_syntax_error(tsgo_binary: Path, tmp_path: Path) -> None:
     f = tmp_path / "syntax.ts"
     f.write_text("const x: number = ;\n", encoding="utf-8")
     result = subprocess.run(

@@ -5,8 +5,6 @@ from __future__ import annotations
 import tarfile
 from pathlib import Path
 
-import pytest
-
 
 def _sdist_members(sdist: Path) -> list[str]:
     with tarfile.open(sdist) as tf:

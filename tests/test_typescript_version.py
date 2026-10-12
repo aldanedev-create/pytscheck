@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from pytscheck import checker
 
 
@@ -36,27 +34,19 @@ def test_supports_nullish_coalescing(tsgo_binary: Path) -> None:
 
 
 def test_supports_template_literal_types(tsgo_binary: Path) -> None:
-    src = (
-        "type Greeting = `hello ${string}`;\n"
-        "export const g: Greeting = 'hello world';\n"
-    )
+    src = "type Greeting = `hello ${string}`;\nexport const g: Greeting = 'hello world';\n"
     r = checker.check_source(src)
     assert r.success, [d.message for d in r.errors]
 
 
 def test_supports_satisfies_operator(tsgo_binary: Path) -> None:
-    src = (
-        "const config = { a: 1 } satisfies Record<string, number>;\n"
-        "export { config };\n"
-    )
+    src = "const config = { a: 1 } satisfies Record<string, number>;\nexport { config };\n"
     r = checker.check_source(src)
     assert r.success, [d.message for d in r.errors]
 
 
 def test_supports_const_type_parameters(tsgo_binary: Path) -> None:
-    src = (
-        "export function tuple<const T extends readonly unknown[]>(t: T): T { return t; }\n"
-    )
+    src = "export function tuple<const T extends readonly unknown[]>(t: T): T { return t; }\n"
     r = checker.check_source(src)
     assert r.success, [d.message for d in r.errors]
 
@@ -127,10 +117,6 @@ def test_string_methods_available(tsgo_binary: Path) -> None:
 
 
 def test_object_methods_available(tsgo_binary: Path) -> None:
-    src = (
-        "export function f(o: object): string[] {\n"
-        "  return Object.keys(o);\n"
-        "}\n"
-    )
+    src = "export function f(o: object): string[] {\n  return Object.keys(o);\n}\n"
     r = checker.check_source(src)
     assert r.success, [d.message for d in r.errors]

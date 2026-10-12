@@ -23,13 +23,13 @@ def options_to_argv(options: CompilerOptions) -> list[str]:
     for lib in options.lib:
         assert_no_null_bytes(lib, what="lib name")
         argv += ["--lib", lib]
-    if options.target:
+    if options.target is not None:
         assert_no_null_bytes(options.target, what="target")
         argv += ["--target", options.target]
-    if options.module:
+    if options.module is not None:
         assert_no_null_bytes(options.module, what="module")
         argv += ["--module", options.module]
-    if options.module_resolution:
+    if options.module_resolution is not None:
         assert_no_null_bytes(options.module_resolution, what="moduleResolution")
         argv += ["--moduleResolution", options.module_resolution]
 

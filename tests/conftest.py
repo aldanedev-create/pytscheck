@@ -22,7 +22,6 @@ from pathlib import Path
 
 import pytest
 
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SRC_ROOT = REPO_ROOT / "src" / "pytscheck"
 BIN_ROOT = SRC_ROOT / "bin"
@@ -170,6 +169,7 @@ def built_sdist(tmp_path_factory: pytest.TempPathFactory) -> Path:
     outdir = tmp_path_factory.mktemp("dist-sdist")
     return build_sdist(REPO_ROOT, outdir)
 
+
 # ---------------------------------------------------------------------------
 # Real filesystem fixtures
 # ---------------------------------------------------------------------------
@@ -237,9 +237,7 @@ def project_minimal(tmp_path: Path, tsconfig_minimal: Path, ts_file_valid: Path)
 
 
 @pytest.fixture
-def project_type_error(
-    tmp_path: Path, tsconfig_minimal: Path, ts_file_type_error: Path
-) -> Path:
+def project_type_error(tmp_path: Path, tsconfig_minimal: Path, ts_file_type_error: Path) -> Path:
     return tmp_path
 
 

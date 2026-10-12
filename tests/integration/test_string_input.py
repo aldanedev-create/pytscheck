@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from pytscheck import check
 from tests.assertions import (
     assert_has_error_code,
@@ -86,19 +84,13 @@ def test_type_error_undefined_identifier(tsgo_binary) -> None:
 
 
 def test_type_error_wrong_argument_count(tsgo_binary) -> None:
-    r = check(
-        "function f(a: number, b: number): void {} "
-        "f(1);"
-    )
+    r = check("function f(a: number, b: number): void {} f(1);")
     assert not r.success
     assert any(d.code in {2554, 2555} for d in r.errors)
 
 
 def test_type_error_missing_property(tsgo_binary) -> None:
-    r = check(
-        "interface User { name: string; } "
-        "const u: User = { name: 'a', extra: 1 };"
-    )
+    r = check("interface User { name: string; } const u: User = { name: 'a', extra: 1 };")
     assert not r.success
     assert any(d.code in {2353, 2322} for d in r.errors)
 

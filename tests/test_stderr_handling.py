@@ -47,9 +47,7 @@ def test_stderr_only_output_is_captured(tmp_path: Path) -> None:
     assert "only stderr" in result.stderr
 
 
-def test_diagnostics_on_stderr_are_seen_by_checker(
-    tsgo_binary: Path, tmp_path: Path
-) -> None:
+def test_diagnostics_on_stderr_are_seen_by_checker(tsgo_binary: Path, tmp_path: Path) -> None:
     """If tsgo reports diagnostics on stderr, checker must still see them."""
     from pytscheck import checker
 
@@ -74,12 +72,7 @@ def test_stderr_preserved_when_stdout_is_large(tmp_path: Path) -> None:
         [
             "python",
             "-c",
-            (
-                "import sys\n"
-                "sys.stdout.write('x' * 100000)\n"
-                "sys.stderr.write('ERR!')\n"
-                "sys.exit(1)\n"
-            ),
+            ("import sys\nsys.stdout.write('x' * 100000)\nsys.stderr.write('ERR!')\nsys.exit(1)\n"),
         ],
         capture_output=True,
         text=True,
@@ -93,8 +86,8 @@ def test_stderr_preserved_when_stdout_is_large(tmp_path: Path) -> None:
 
 def test_runner_does_not_merge_streams(tmp_path: Path) -> None:
     """stderr=subprocess.PIPE and stdout=subprocess.PIPE must be separate."""
-    from pytscheck.runner import binary_path as real_binary_path
     from pytscheck.exceptions import CompilerNotFoundError
+    from pytscheck.runner import binary_path as real_binary_path
 
     try:
         real_binary_path()

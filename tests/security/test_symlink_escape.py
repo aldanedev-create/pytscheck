@@ -11,7 +11,6 @@ import pytest
 from pytscheck.exceptions import ConfigurationError
 from pytscheck.paths import assert_inside, is_inside
 
-
 pytestmark = pytest.mark.skipif(
     sys.platform == "win32" and os.environ.get("CI") == "true",
     reason="Windows CI may not permit symlink creation",

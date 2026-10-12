@@ -14,7 +14,6 @@ import pytest
 from pytscheck import checker
 from pytscheck.protocol import parse
 
-
 # --- parser behavior --------------------------------------------------------
 
 
@@ -31,11 +30,7 @@ def test_regression_multiline_message_contination_preserved() -> None:
 
 def test_regression_blank_line_flushes_diagnostic() -> None:
     """A blank line between diagnostics must not merge them."""
-    text = (
-        "a.ts(1,1): error TS1005: ';' expected.\n"
-        "\n"
-        "b.ts(2,1): error TS2322: Type mismatch.\n"
-    )
+    text = "a.ts(1,1): error TS1005: ';' expected.\n\nb.ts(2,1): error TS2322: Type mismatch.\n"
     report = parse(text)
     assert len(report.diagnostics) == 2
 
@@ -71,9 +66,7 @@ def test_regression_diagnostic_order_is_deterministic(tsgo_binary: Path) -> None
     )
     r1 = checker.check_source(src)
     r2 = checker.check_source(src)
-    assert [(d.line, d.code) for d in r1.errors] == [
-        (d.line, d.code) for d in r2.errors
-    ]
+    assert [(d.line, d.code) for d in r1.errors] == [(d.line, d.code) for d in r2.errors]
 
 
 # --- error taxonomy --------------------------------------------------------
@@ -81,7 +74,7 @@ def test_regression_diagnostic_order_is_deterministic(tsgo_binary: Path) -> None
 
 def test_regression_extraction_error_is_not_a_type_error() -> None:
     """Adapter extraction failures must be AdapterExtractionError, not diagnostics."""
-    from pytscheck.exceptions import AdapterExtractionError, AdapterError, PyTSCheckError
+    from pytscheck.exceptions import AdapterError, AdapterExtractionError, PyTSCheckError
 
     assert issubclass(AdapterExtractionError, AdapterError)
     assert issubclass(AdapterExtractionError, PyTSCheckError)
@@ -156,9 +149,7 @@ def test_regression_ts2322_code_stable(tsgo_binary: Path) -> None:
 def test_regression_ts1005_code_stable(tsgo_binary: Path) -> None:
     src = "const x: number = ;"
     r = checker.check_source(src)
-    assert any(d.code == 1005 for d in r.errors), [
-        (d.code, d.message) for d in r.errors
-    ]
+    assert any(d.code == 1005 for d in r.errors), [(d.code, d.message) for d in r.errors]
 
 
 # --- no-emit behavior --------------------------------------------------------
@@ -178,9 +169,7 @@ def test_regression_no_emit_by_default(tsgo_binary: Path, tmp_path: Path) -> Non
 # --- idempotency ------------------------------------------------------------
 
 
-def test_regression_repeated_checks_do_not_leak_files(
-    tsgo_binary: Path, tmp_path: Path
-) -> None:
+def test_regression_repeated_checks_do_not_leak_files(tsgo_binary: Path, tmp_path: Path) -> None:
     before = set(tmp_path.iterdir())
     for _ in range(3):
         checker.check_source("export const x: number = 1;")

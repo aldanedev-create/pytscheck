@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -76,8 +74,11 @@ def test_subprocess_exit_code_matches_in_process(tsgo_binary: Path) -> None:
 
 
 def test_unknown_subcommand_raises_system_exit() -> None:
-    with pytest.raises(SystemExit):
-        run_cli(["nonsense"])
+    from pytscheck.__main__ import main
+
+    with pytest.raises(SystemExit) as raised:
+        main(["nonsense"])
+    assert raised.value.code == EXIT_USAGE
 
 
 def test_unknown_subcommand_exit_code() -> None:

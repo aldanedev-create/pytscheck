@@ -29,7 +29,9 @@ _PLATFORM_DIRS: dict[tuple[str, str], str] = {
     ("linux", "aarch64"): "linux-arm64",
     ("linux", "arm64"): "linux-arm64",
     ("darwin", "x86_64"): "darwin-amd64",
+    ("darwin", "amd64"): "darwin-amd64",
     ("darwin", "arm64"): "darwin-arm64",
+    ("darwin", "aarch64"): "darwin-arm64",
 }
 
 
@@ -75,9 +77,7 @@ def binary_path() -> Path:
             f"or reinstall pytscheck."
         )
     if sys.platform != "win32" and not os.access(candidate, os.X_OK):
-        raise CompilerNotFoundError(
-            f"bundled tsgo at {candidate} is not executable"
-        )
+        raise CompilerNotFoundError(f"bundled tsgo at {candidate} is not executable")
     return candidate
 
 
@@ -119,13 +119,9 @@ def run(
     elapsed = time.monotonic() - start
 
     if len(proc.stdout) > max_stdout_bytes:
-        raise CompilerExecutionError(
-            f"tsgo stdout exceeded {max_stdout_bytes} bytes"
-        )
+        raise CompilerExecutionError(f"tsgo stdout exceeded {max_stdout_bytes} bytes")
     if len(proc.stderr) > max_stderr_bytes:
-        raise CompilerExecutionError(
-            f"tsgo stderr exceeded {max_stderr_bytes} bytes"
-        )
+        raise CompilerExecutionError(f"tsgo stderr exceeded {max_stderr_bytes} bytes")
 
     return RunResult(
         returncode=proc.returncode,

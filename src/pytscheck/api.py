@@ -62,7 +62,7 @@ def _coerce_options(
 
 
 def _check_adapter(
-    adapter: "CompilerAdapter",
+    adapter: CompilerAdapter,
     project_root: Path,
     *,
     options: CompilerOptions,
@@ -74,7 +74,7 @@ def _check_adapter(
     modules when the caller never uses them.
     """
     from .adapters.compatibility import check_protocol_version
-    from .adapters.errors import AdapterError
+    from .adapters.errors import AdapterError, AdapterExtractionError
     from .adapters.source_maps import remap_diagnostics
     from .adapters.sources import collect_sources
     from .checker import check_sources_virtual
@@ -87,7 +87,7 @@ def _check_adapter(
     except AdapterError:
         raise
     except Exception as exc:  # pragma: no cover - defensive
-        raise AdapterError(
+        raise AdapterExtractionError(
             f"adapter {adapter.name!r} raised during source collection: {exc}"
         ) from exc
 
@@ -161,9 +161,7 @@ def check(
     if "\x00" in filename:
         raise ConfigurationError("filename contains a NUL byte")
     if "/" in filename or "\\" in filename:
-        raise ConfigurationError(
-            f"filename must be a bare basename, got {filename!r}"
-        )
+        raise ConfigurationError(f"filename must be a bare basename, got {filename!r}")
 
     opts = _coerce_options(options)
 
@@ -214,7 +212,7 @@ def check_project(
     project_root: str | Path,
     *,
     options: CompilerOptions | dict[str, Any] | None = None,
-    adapter: "CompilerAdapter | None" = None,
+    adapter: "CompilerAdapter | None" = None,  # noqa: UP037 -- Preserve the frozen public annotation.
     keep_raw: bool = False,
 ) -> Result:
     """Type-check a TypeScript project directory.

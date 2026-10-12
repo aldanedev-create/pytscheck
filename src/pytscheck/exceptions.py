@@ -32,7 +32,7 @@ class CompilerExecutionError(PyTSCheckError):
     specific case of a timeout.
     """
 
-    __slots__ = ("returncode", "stdout", "stderr")
+    __slots__ = ("returncode", "stderr", "stdout")
 
     def __init__(
         self,
@@ -99,17 +99,17 @@ class AdapterProtocolError(AdapterError):
 
 
 __all__ = [
-    "PyTSCheckError",
-    "UnsupportedPlatformError",
-    "CompilerNotFoundError",
-    "CompilerExecutionError",
-    "CompilerTimeoutError",
-    "OutputParseError",
-    "ConfigurationError",
-    "AdapterError",
-    "AdapterRegistrationError",
     "AdapterDiscoveryError",
+    "AdapterError",
     "AdapterExtractionError",
     "AdapterMappingError",
     "AdapterProtocolError",
+    "AdapterRegistrationError",
+    "CompilerExecutionError",
+    "CompilerNotFoundError",
+    "CompilerTimeoutError",
+    "ConfigurationError",
+    "OutputParseError",
+    "PyTSCheckError",
+    "UnsupportedPlatformError",
 ]

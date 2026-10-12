@@ -33,9 +33,7 @@ def discover_adapters(
 
         adapter = obj() if isinstance(obj, type) else obj
         if not isinstance(adapter, CompilerAdapter):
-            raise AdapterDiscoveryError(
-                f"entry point {ep.name!r} did not yield a CompilerAdapter"
-            )
+            raise AdapterDiscoveryError(f"entry point {ep.name!r} did not yield a CompilerAdapter")
         register_adapter(adapter)
         registered.append(adapter.name)
 

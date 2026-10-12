@@ -32,7 +32,9 @@ def test_project_with_error(tsgo_binary, tsconfig_strict: Path, tmp_path: Path) 
     assert_has_error_code(r, 2322)
 
 
-def test_project_with_nested_directories(tsgo_binary, tsconfig_strict: Path, tmp_path: Path) -> None:
+def test_project_with_nested_directories(
+    tsgo_binary, tsconfig_strict: Path, tmp_path: Path
+) -> None:
     _write_project(
         tmp_path,
         {
@@ -68,11 +70,11 @@ def test_project_without_tsconfig(tsgo_binary, tmp_path: Path) -> None:
     assert_valid_result(r)
 
 
-def test_project_diagnostics_carry_paths(tsgo_binary, tsconfig_strict: Path, tmp_path: Path) -> None:
+def test_project_diagnostics_carry_paths(
+    tsgo_binary, tsconfig_strict: Path, tmp_path: Path
+) -> None:
     (tmp_path / "src").mkdir()
-    (tmp_path / "src" / "bad.ts").write_text(
-        'export const x: number = "s";\n', encoding="utf-8"
-    )
+    (tmp_path / "src" / "bad.ts").write_text('export const x: number = "s";\n', encoding="utf-8")
     r = check_project(tmp_path)
     assert r.errors
     for d in r.errors:
@@ -116,7 +118,9 @@ def test_project_with_imports(tsgo_binary, tsconfig_strict: Path, tmp_path: Path
         tmp_path,
         {
             "src/util.ts": "export function double(n: number): number { return n * 2; }\n",
-            "src/main.ts": "import { double } from './util';\nexport const x: number = double(2);\n",
+            "src/main.ts": (
+                "import { double } from './util';\nexport const x: number = double(2);\n"
+            ),
         },
     )
     r = check_project(tmp_path)
@@ -134,7 +138,9 @@ def test_project_with_broken_import(tsgo_binary, tsconfig_strict: Path, tmp_path
     assert not r.success
 
 
-def test_project_elapsed_seconds_positive(tsgo_binary, tsconfig_strict: Path, tmp_path: Path) -> None:
+def test_project_elapsed_seconds_positive(
+    tsgo_binary, tsconfig_strict: Path, tmp_path: Path
+) -> None:
     (tmp_path / "main.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
     r = check_project(tmp_path)
     assert r.elapsed_seconds > 0.0

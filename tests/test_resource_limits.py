@@ -8,7 +8,7 @@ import pytest
 
 from pytscheck.exceptions import CompilerExecutionError
 from pytscheck.runner import run
-from tests.helpers import make_fake_tsgo, hide_file
+from tests.helpers import hide_file, make_fake_tsgo
 
 
 def test_stdout_size_limit_enforced(tsgo_binary: Path, tmp_path: Path) -> None:
@@ -20,8 +20,8 @@ def test_stdout_size_limit_enforced(tsgo_binary: Path, tmp_path: Path) -> None:
 
 def test_stderr_size_limit_enforced_by_fake(tmp_path: Path) -> None:
     """A fake compiler that produces stderr above the limit must be rejected."""
-    from pytscheck.runner import binary_path as real_binary_path
     from pytscheck.exceptions import CompilerNotFoundError
+    from pytscheck.runner import binary_path as real_binary_path
 
     try:
         original = real_binary_path()
@@ -32,11 +32,7 @@ def test_stderr_size_limit_enforced_by_fake(tmp_path: Path) -> None:
     fake = tmp_path / "fake"
     if __import__("os").name == "nt":
         pytest.skip("POSIX fake script used here")
-    fake.write_text(
-        "#!/bin/sh\n"
-        "yes 'stderr line' | head -n 100000 1>&2\n"
-        "exit 1\n"
-    )
+    fake.write_text("#!/bin/sh\nyes 'stderr line' | head -n 100000 1>&2\nexit 1\n")
     fake.chmod(0o755)
 
     with hide_file(original):
@@ -49,9 +45,9 @@ def test_stderr_size_limit_enforced_by_fake(tmp_path: Path) -> None:
 
 
 def test_source_size_limit_enforced(tsgo_binary: Path, tmp_path: Path) -> None:
+    from pytscheck import checker
     from pytscheck.defaults import DEFAULT_MAX_SOURCE_BYTES
     from pytscheck.exceptions import ConfigurationError
-    from pytscheck import checker
 
     f = tmp_path / "huge.ts"
     chunk = b"// padding\n"
@@ -105,8 +101,8 @@ def test_timeout_kills_child_process(tmp_path: Path) -> None:
 
 def test_output_bomb_from_fake_compiler_rejected(tmp_path: Path) -> None:
     """A fake compiler emitting a huge stdout must trip the size limit."""
-    from pytscheck.runner import binary_path as real_binary_path
     from pytscheck.exceptions import CompilerNotFoundError
+    from pytscheck.runner import binary_path as real_binary_path
 
     try:
         original = real_binary_path()
@@ -126,6 +122,7 @@ def test_output_bomb_from_fake_compiler_rejected(tmp_path: Path) -> None:
 def test_concurrent_checks_do_not_leak_fds(tsgo_binary: Path) -> None:
     """Running many checks in a row must not leak file descriptors."""
     import os
+
     from pytscheck import checker
 
     if not hasattr(os, "listdir"):

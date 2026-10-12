@@ -69,9 +69,7 @@ def test_recompute_binary_hash_is_stable(
     bin_platform_dir: Path,
 ) -> None:
     """Running the same hash twice must give the same value (sanity check)."""
-    binaries = list(bin_platform_dir.rglob("tsgo")) + list(
-        bin_platform_dir.rglob("tsgo.exe")
-    )
+    binaries = list(bin_platform_dir.rglob("tsgo")) + list(bin_platform_dir.rglob("tsgo.exe"))
     if not binaries:
         pytest.skip("no binary bundled")
     binary = binaries[0]

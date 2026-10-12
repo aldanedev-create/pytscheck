@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from pytscheck.diagnostics import sort_diagnostics
 from pytscheck.models import Diagnostic, Result
 from pytscheck.results import build_result

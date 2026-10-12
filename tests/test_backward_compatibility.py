@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import inspect
 
-import pytest
-
 import pytscheck
 
 
@@ -142,7 +140,4 @@ def test_adapter_protocol_methods_are_stable() -> None:
     from pytscheck.adapters.base import CompilerAdapter
 
     # Protocol declares `name` and `get_sources`
-    annotations = getattr(CompilerAdapter, "__annotations__", {})
-    assert "get_sources" in dir(CompilerAdapter) or "get_sources" in str(
-        CompilerAdapter.__dict__
-    )
+    assert "get_sources" in dir(CompilerAdapter) or "get_sources" in str(CompilerAdapter.__dict__)

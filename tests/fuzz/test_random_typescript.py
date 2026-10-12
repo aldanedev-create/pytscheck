@@ -18,7 +18,6 @@ from hypothesis import strategies as st
 from pytscheck import check
 from pytscheck.exceptions import PyTSCheckError
 
-
 # ---------------------------------------------------------------------------
 # Property-based: pure random text must never crash
 # ---------------------------------------------------------------------------
@@ -58,14 +57,44 @@ def test_printable_text_never_crashes(tsgo_binary: Path, text: str) -> None:
 
 
 _KEYWORDS = [
-    "const", "let", "var", "function", "class", "interface", "type", "enum",
-    "namespace", "export", "import", "if", "else", "for", "while", "return",
-    "async", "await", "yield", "new", "typeof", "instanceof", "in",
+    "const",
+    "let",
+    "var",
+    "function",
+    "class",
+    "interface",
+    "type",
+    "enum",
+    "namespace",
+    "export",
+    "import",
+    "if",
+    "else",
+    "for",
+    "while",
+    "return",
+    "async",
+    "await",
+    "yield",
+    "new",
+    "typeof",
+    "instanceof",
+    "in",
 ]
 
 _TYPES = [
-    "number", "string", "boolean", "any", "unknown", "never", "void",
-    "null", "undefined", "object", "symbol", "bigint",
+    "number",
+    "string",
+    "boolean",
+    "any",
+    "unknown",
+    "never",
+    "void",
+    "null",
+    "undefined",
+    "object",
+    "symbol",
+    "bigint",
 ]
 
 _PUNCT = ["{", "}", "(", ")", "[", "]", ";", ":", ",", ".", "=>", "=", "+", "-"]

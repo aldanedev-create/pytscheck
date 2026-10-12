@@ -6,6 +6,7 @@ import glob
 import os
 import tempfile
 import time
+from contextlib import suppress
 from pathlib import Path
 
 import pytest
@@ -42,8 +43,7 @@ def test_check_file_cleans_tempdirs(tsgo_binary: Path, tmp_path: Path) -> None:
 
 def test_check_project_cleans_tempdirs(tsgo_binary: Path, tmp_path: Path) -> None:
     (tmp_path / "tsconfig.json").write_text(
-        '{"compilerOptions": {"strict": true, "noEmit": true}, '
-        '"include": ["**/*.ts"]}',
+        '{"compilerOptions": {"strict": true, "noEmit": true}, "include": ["**/*.ts"]}',
         encoding="utf-8",
     )
     (tmp_path / "a.ts").write_text("export const x: number = 1;\n", encoding="utf-8")
@@ -57,10 +57,8 @@ def test_failed_check_cleans_tempdirs(tsgo_binary: Path) -> None:
     from pytscheck.exceptions import PyTSCheckError
 
     before = _pytscheck_tmpdirs()
-    try:
+    with suppress(PyTSCheckError):
         check("const x: number = ;")
-    except PyTSCheckError:
-        pass
     after = _pytscheck_tmpdirs()
     assert not (after - before)
 
@@ -76,11 +74,8 @@ def test_missing_binary_cleans_tempdirs() -> None:
         pytest.skip("no binary")
 
     before = _pytscheck_tmpdirs()
-    with hide_file(original):
-        try:
-            check("const x = 1;")
-        except PyTSCheckError:
-            pass
+    with hide_file(original), suppress(PyTSCheckError):
+        check("const x = 1;")
     after = _pytscheck_tmpdirs()
     assert not (after - before)
 
@@ -118,10 +113,8 @@ def test_cleanup_happens_even_on_early_exit(tsgo_binary: Path) -> None:
     from pytscheck.exceptions import PyTSCheckError
 
     before = _pytscheck_tmpdirs()
-    try:
+    with suppress(PyTSCheckError):
         check("const x: number = ;")
-    except PyTSCheckError:
-        pass
     time.sleep(0.1)  # give the context manager a chance to finalize
     after = _pytscheck_tmpdirs()
     assert not (after - before)
@@ -132,9 +125,7 @@ def test_no_tempdir_on_validation_error() -> None:
     from pytscheck.exceptions import ConfigurationError
 
     before = _pytscheck_tmpdirs()
-    try:
+    with suppress(ConfigurationError):
         check("const x = 1;", filename="a\x00b.ts")
-    except ConfigurationError:
-        pass
     after = _pytscheck_tmpdirs()
     assert not (after - before)
