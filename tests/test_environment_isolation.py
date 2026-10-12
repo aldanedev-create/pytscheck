@@ -144,7 +144,7 @@ def test_force_color_does_not_change_diagnostics(tsgo_binary: Path) -> None:
         "from pytscheck import checker; "
         "r = checker.check_source('export const x: number = \"wrong\";'); "
         "assert [d.code for d in r.errors] == [2322]; print('ok')",
-        env={"FORCE_COLOR": "1"},
+        env={"FORCE_COLOR": "1", "TERM": "xterm-256color"},
     )
     assert result.returncode == 0, result.stderr
     assert "ok" in result.stdout
