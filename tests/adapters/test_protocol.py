@@ -80,10 +80,9 @@ def test_explicit_subclass_also_works() -> None:
 
 
 def test_protocol_is_runtime_checkable() -> None:
-    # runtime_checkable protocols have a __protocol_attrs__ attribute
-    assert hasattr(CompilerAdapter, "__protocol_attrs__")
-    assert "name" in CompilerAdapter.__protocol_attrs__
-    assert "get_sources" in CompilerAdapter.__protocol_attrs__
+    # Runtime checks must work without depending on typing internals.
+    assert isinstance(_FullAdapter(), CompilerAdapter)
+    assert not isinstance(object(), CompilerAdapter)
 
 
 # --- method signatures ------------------------------------------------------
