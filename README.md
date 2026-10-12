@@ -1,6 +1,8 @@
 # PyTSCheck
 
-<img src="https://raw.githubusercontent.com/aldanedev-create/pytscheck/03ac50ff57c8e58d7d7f05162f185c6556a25bcb/assets/pytscheck-logo.png" alt="PyTSCheck logo: white PyTS lettering and checkmark on blue" width="180" height="180">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/aldanedev-create/pytscheck/03ac50ff57c8e58d7d7f05162f185c6556a25bcb/assets/pytscheck-logo.png" alt="PyTSCheck logo: white PyTS lettering and checkmark on blue" width="180" height="180">
+</p>
 
 **Type-check TypeScript from Python, without installing Node.js or Go.**
 
