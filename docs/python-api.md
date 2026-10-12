@@ -81,4 +81,4 @@ All public exception classes derive from `PyTSCheckError`.
 from pytscheck import __version__, COMPILER_VERSION, ADAPTER_PROTOCOL_VERSION
 ```
 
-They currently identify `0.1.0.dev0`, `7.0.0-dev.20260707.2`, and `1.0` respectively. Package, compiler, and adapter protocol versions are separate contracts.
+They currently identify `0.1.0`, `7.0.0-dev.20260707.2`, and `1.0` respectively. Package, compiler, and adapter protocol versions are separate contracts.

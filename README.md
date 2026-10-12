@@ -10,10 +10,10 @@ PyTSCheck wraps Microsoft's native TypeScript compiler, `tsgo`, and returns stru
 
 Requires Python **3.11 or later** on a [supported platform](https://github.com/aldanedev-create/pytscheck/blob/main/docs/supported-platforms.md).
 
-The current package version is **`0.1.0.dev0`**, a development release. Once that version is published to PyPI:
+The current package version is **`0.1.0`**, an initial release. Once that version is published to PyPI:
 
 ```bash
-python -m pip install --only-binary=:all: "pytscheck==0.1.0.dev0"
+python -m pip install --only-binary=:all: "pytscheck==0.1.0"
 ```
 
 Before publication, install the wheel for your operating system and Python architecture from a successful **Build PyPI distributions** [Actions run](https://github.com/aldanedev-create/pytscheck/actions/workflows/distributions.yml):
