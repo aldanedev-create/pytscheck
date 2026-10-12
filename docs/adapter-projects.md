@@ -122,7 +122,7 @@ This snapshot is not an operating-system sandbox. Configuration and dependencies
 
 Provide standard source-map v3 JSON in `SourceFile.source_map`. PyTSCheck supports Base64 VLQ mappings, multiple original sources, `sourceRoot`, and inline indexed sections. It translates primary/end positions and related diagnostic locations using same-line greatest-lower-bound mappings. Compiler and map columns use UTF-16 coordinates; API locations are 1-based.
 
-For a flat map with one source, `origin_path` can explicitly override its original filename. Multi-source/indexed maps use their mapped source filenames. Unmapped positions retain generated locations; PyTSCheck does not invent a position. Empty legacy maps with no sources preserve the old filename-only behavior.
+For a flat map with one source, `origin_path` can explicitly override its original filename. Multi-source/indexed maps use their mapped source filenames. Unmapped positions retain generated locations; PyTSCheck does not invent a position. Empty legacy flat maps preserve the old filename-only behavior.
 
 Maps must be valid JSON/v3 with ordered valid segments and a string `mappings` field, or valid inline sections. Limits are 8 MiB per source/map, 500,000 segments per decoded map, and 16 indexed nesting levels. External section URLs are rejected; resolve them into inline maps in the consuming tool before checking.
 

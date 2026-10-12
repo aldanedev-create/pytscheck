@@ -187,7 +187,7 @@ def remap_diagnostics(
 
     Coordinates are converted between compiler 1-based and source-map 0-based
     UTF-16 positions. Unmapped segments retain their generated locations.
-    Legacy empty maps without sources retain filename-only remapping.
+    Legacy empty flat maps retain filename-only remapping.
     """
     by_path = {_key(source.path): source for source in sources}
     maps: dict[str, tuple[dict[str, Any], dict[int, list[_Position]]]] = {}
@@ -202,7 +202,7 @@ def remap_diagnostics(
         if key not in maps:
             maps[key] = _load(source.source_map, source.path)
         data, decoded = maps[key]
-        if not data.get("sources") and not data.get("sections") and not data.get("mappings"):
+        if "sections" not in data and not data.get("mappings"):
             return (source.origin_path, line, column) if source.origin_path is not None else None
         candidates = decoded.get(line - 1, [])
         index = bisect_right([entry.column for entry in candidates], column - 1) - 1
