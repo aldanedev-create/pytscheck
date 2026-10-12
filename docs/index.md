@@ -34,4 +34,4 @@ PyTSCheck exposes a Python API and CLI over a bundled native TypeScript compiler
 | [Publishing](publishing.md) | Build/download all artifacts and upload to PyPI |
 | [Release validation](release-validation-2026-10-12.md) | Dated evidence for the development release |
 
-The current package is `0.1.0.dev0`; the compiler is `7.0.0-dev.20260707.2`. The release workflow builds distributions but does not upload them to PyPI.
+The current package is `0.1.0`; the compiler is `7.0.0-dev.20260707.2`. The release workflow builds distributions but does not upload them to PyPI.

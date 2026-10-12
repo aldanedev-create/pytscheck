@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `scripts/publish.py` builds and validates all six wheels plus the source archive, then uploads through Twine; supports TestPyPI and build-only runs.
+
 - Complete user/maintainer documentation, CLI reference, adapter limitations, and PyPI publishing guide.
 
 - Repository scaffold: `pyproject.toml`, packaging, linting, typing, testing config.

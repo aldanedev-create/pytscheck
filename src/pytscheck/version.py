@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0."
+__version__ = "0.1.0"
 
 # Pinned bundled compiler. Must match src/pytscheck/bin/manifest.json.
 COMPILER_VERSION = "7.0.0-dev.20260707.2"

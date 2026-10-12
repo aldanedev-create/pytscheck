@@ -18,7 +18,7 @@ The checking API invokes a local executable. Wheel installation, source-build co
 
 ## Why is `pip install pytscheck` unavailable or not selecting this release?
 
-The documented version is a development release. It must be published first, and prerelease selection may require an exact version or `--pre`. Before publication, install the matching downloaded wheel.
+The documented version is an initial release. It must be published first, and prerelease selection may require an exact version or `--pre`. Before publication, install the matching downloaded wheel.
 
 ## Can I check a string that imports my files?
 
