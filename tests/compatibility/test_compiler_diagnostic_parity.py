@@ -16,7 +16,7 @@ from pytscheck.protocol import parse
 
 def _run_tsgo_directly(tsgo_binary: Path, args: list[str]) -> tuple[int, str]:
     result = subprocess.run(
-        [str(tsgo_binary), *args],
+        [str(tsgo_binary), *args, "--pretty", "false"],
         capture_output=True,
         text=True,
         timeout=60,
@@ -188,7 +188,7 @@ def test_diagnostics_are_found_regardless_of_stream(
 ) -> None:
     """Whether tsgo writes diagnostics to stdout or stderr, we capture them."""
     result = subprocess.run(
-        [str(tsgo_binary), "--noEmit", "--strict", str(sample_bad_file)],
+        [str(tsgo_binary), "--pretty", "false", "--noEmit", "--strict", str(sample_bad_file)],
         capture_output=True,
         text=True,
         timeout=60,

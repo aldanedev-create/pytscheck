@@ -207,7 +207,7 @@ def test_parse_real_tsgo_output_for_valid_source(tsgo_binary: Path, tmp_path: Pa
     f = tmp_path / "ok.ts"
     f.write_text("export const x: number = 1;\n", encoding="utf-8")
     result = subprocess.run(
-        [str(tsgo_binary), "--noEmit", "--strict", str(f)],
+        [str(tsgo_binary), "--pretty", "false", "--noEmit", "--strict", str(f)],
         capture_output=True,
         text=True,
         timeout=60,
@@ -224,7 +224,7 @@ def test_parse_real_tsgo_output_for_type_error(tsgo_binary: Path, tmp_path: Path
     f = tmp_path / "bad.ts"
     f.write_text('export const age: number = "twenty";\n', encoding="utf-8")
     result = subprocess.run(
-        [str(tsgo_binary), "--noEmit", "--strict", str(f)],
+        [str(tsgo_binary), "--pretty", "false", "--noEmit", "--strict", str(f)],
         capture_output=True,
         text=True,
         timeout=60,
@@ -245,7 +245,7 @@ def test_parse_real_tsgo_output_for_syntax_error(tsgo_binary: Path, tmp_path: Pa
     f = tmp_path / "syntax.ts"
     f.write_text("const x: number = ;\n", encoding="utf-8")
     result = subprocess.run(
-        [str(tsgo_binary), "--noEmit", str(f)],
+        [str(tsgo_binary), "--pretty", "false", "--noEmit", str(f)],
         capture_output=True,
         text=True,
         timeout=60,
