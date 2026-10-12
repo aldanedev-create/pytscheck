@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add musllinux 1.2+ tags to verified static Linux wheels, official ARMv7 binaries, and pinned-source Linux/Windows x86 builds. Test installed wheels in Alpine, 32-bit Linux, and 32-bit Windows environments.
+
 ### Added
 
 - Optional framework-independent ProjectContext for inherited settings, real/generated imports, isolated workspaces and declaration resources from Python packages.
@@ -15,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - JavaScript/JSDoc guide and a runnable string/project example with real compiler regressions.
 
-- `scripts/publish.py` builds and validates all six wheels plus the source archive, then uploads through Twine; supports TestPyPI and build-only runs.
+- `scripts/publish.py` builds and validates all nine wheels plus the source archive, then uploads through Twine; supports TestPyPI and build-only runs.
 
 - Complete user/maintainer documentation, CLI reference, adapter limitations, and PyPI publishing guide.
 

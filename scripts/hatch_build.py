@@ -7,14 +7,18 @@ import hashlib
 import json
 import os
 import platform
+import struct
 import sys
 from pathlib import Path
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 TAGS = {
-    "linux-x64": "manylinux_2_17_x86_64.manylinux2014_x86_64",
-    "linux-arm64": "manylinux_2_17_aarch64.manylinux2014_aarch64",
+    "linux-x64": "manylinux_2_17_x86_64.manylinux2014_x86_64.musllinux_1_2_x86_64",
+    "linux-arm64": "manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_2_aarch64",
+    "linux-arm": "manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_2_armv7l",
+    "linux-ia32": "manylinux_2_17_i686.manylinux2014_i686.musllinux_1_2_i686",
+    "win32-ia32": "win32",
     "win32-x64": "win_amd64",
     "win32-arm64": "win_arm64",
     "darwin-x64": "macosx_12_0_x86_64",
@@ -27,11 +31,28 @@ class CustomBuildHook(BuildHookInterface):
         if self.target_name != "wheel" or version == "editable":
             return
         sys.path.insert(0, str(Path(self.root) / "scripts"))
-        from build_binaries import BIN_ROOT, PLATFORMS, VERSION, fetch
-
-        arch = {"x86_64": "x64", "amd64": "x64", "aarch64": "arm64"}.get(
-            platform.machine().lower(), platform.machine().lower()
+        from build_binaries import (
+            BIN_ROOT,
+            PLATFORMS,
+            SOURCE_COMMIT,
+            SOURCE_GO_VERSION,
+            SOURCE_TARGETS,
+            VERSION,
+            fetch,
         )
+
+        arch = {
+            "x86_64": "x64",
+            "amd64": "x64",
+            "aarch64": "arm64",
+            "i386": "ia32",
+            "i686": "ia32",
+            "x86": "ia32",
+            "armv7l": "arm",
+            "armv8l": "arm",
+        }.get(platform.machine().lower(), platform.machine().lower())
+        if struct.calcsize("P") == 4:
+            arch = {"x64": "ia32", "arm64": "arm"}.get(arch, arch)
         system = {"linux": "linux", "win32": "win32", "darwin": "darwin"}.get(sys.platform)
         target = os.environ.get("PYTSCHECK_BUILD_PLATFORM", f"{system}-{arch}")
         if target not in TAGS:
@@ -44,9 +65,20 @@ class CustomBuildHook(BuildHookInterface):
             entry is None
             or entry.get("version") != VERSION
             or not (dest / entry["binary_relpath"]).is_file()
+            or (
+                target in SOURCE_TARGETS
+                and (
+                    entry.get("source_commit") != SOURCE_COMMIT
+                    or entry.get("go_version") != SOURCE_GO_VERSION
+                )
+            )
         ):
             entry = fetch(target, BIN_ROOT)
         binary = dest / entry["binary_relpath"]
+        if target.startswith("linux-"):
+            from build_binaries import verify_static_linux
+
+            verify_static_linux(binary, target)
         actual = "sha512-" + base64.b64encode(hashlib.sha512(binary.read_bytes()).digest()).decode()
         if actual != entry.get("integrity"):
             raise ValueError(f"compiler checksum mismatch for {target}; fetch it again")

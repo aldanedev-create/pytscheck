@@ -16,12 +16,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [linux-x64, linux-arm64, win32-x64, win32-arm64, darwin-x64, darwin-arm64]
+        platform: [linux-x64, linux-arm64, linux-arm, linux-ia32, win32-x64, win32-arm64, win32-ia32, darwin-x64, darwin-arm64]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - uses: actions/setup-go@v5
+        if: contains(matrix.platform, 'ia32')
+        with:
+          go-version: "1.26.9"
+          cache: false
       - run: python -m pip install build twine
       - name: Download and verify pinned compiler
         run: |
@@ -61,3 +66,65 @@ jobs:
           name: sdist
           path: dist/*.tar.gz
           if-no-files-found: error
+
+  linux-runtime:
+    name: Linux runtime (${{ matrix.target }}, ${{ matrix.libc }})
+    needs: wheels
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {target: linux-x64, libc: musl, docker: linux/amd64, image: "python:3.11-alpine"}
+          - {target: linux-arm64, libc: musl, docker: linux/arm64, image: "python:3.11-alpine"}
+          - {target: linux-arm, libc: musl, docker: linux/arm/v7, image: "python:3.11-alpine"}
+          - {target: linux-ia32, libc: musl, docker: linux/386, image: "python:3.11-alpine"}
+          - {target: linux-arm, libc: glibc, docker: linux/arm/v7, image: "python:3.11-slim-bookworm"}
+          - {target: linux-ia32, libc: glibc, docker: linux/386, image: "python:3.11-slim-bookworm"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v7
+        with:
+          name: wheel-${{ matrix.target }}
+          path: wheelhouse
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+      - name: Install wheel and check real compiler execution
+        run: |
+          docker run --rm --platform "${{ matrix.docker }}" -v "$PWD:/work" -w /work \
+            "${{ matrix.image }}" sh -ec '
+              python -m pip install --no-deps --no-index /work/wheelhouse/*.whl
+              python -m pip install pytest
+              python -m pytscheck --version
+              python examples/adapter_project.py
+              python examples/check_jsdoc.py
+              python -m pytest tests/compatibility/test_architectures.py tests/compatibility/test_linux.py tests/adapters/test_project_context.py tests/adapters/test_v3_source_maps.py tests/integration/test_source_map_diagnostics.py -q
+            '
+
+  windows-x86-runtime:
+    name: Windows x86 runtime
+    needs: wheels
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          architecture: x86
+      - uses: actions/download-artifact@v7
+        with:
+          name: wheel-win32-ia32
+          path: wheelhouse
+      - name: Install wheel and test with 32-bit Python
+        shell: bash
+        run: |
+          python -m pip install --no-deps --no-index wheelhouse/*.whl
+          python -m pip install pytest
+          python -c "import struct; assert struct.calcsize('P') == 4"
+          python -m pytscheck --version
+          python examples/adapter_project.py
+          python examples/check_jsdoc.py
+          python -m pytest tests/compatibility/test_architectures.py tests/compatibility/test_windows.py tests/adapters/test_project_context.py tests/adapters/test_v3_source_maps.py tests/integration/test_source_map_diagnostics.py -q

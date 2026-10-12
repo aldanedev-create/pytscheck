@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import json
 import os
-import platform
 import subprocess
 import sys
 from collections.abc import Iterator
@@ -22,8 +21,10 @@ from pathlib import Path
 
 import pytest
 
+import pytscheck
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SRC_ROOT = REPO_ROOT / "src" / "pytscheck"
+SRC_ROOT = Path(pytscheck.__file__).resolve().parent
 BIN_ROOT = SRC_ROOT / "bin"
 MANIFEST_PATH = BIN_ROOT / "manifest.json"
 
@@ -35,27 +36,14 @@ MANIFEST_PATH = BIN_ROOT / "manifest.json"
 
 def _platform_key() -> str:
     """Return the bin/ subdirectory name for the current OS/arch."""
-    system = sys.platform
-    machine = platform.machine().lower()
+    from pytscheck.exceptions import UnsupportedPlatformError
+    from pytscheck.runner import _platform_dir
 
-    if system == "win32":
-        if machine in {"amd64", "x86_64"}:
-            return "windows-amd64"
-        if machine in {"arm64", "aarch64"}:
-            return "windows-arm64"
-    elif system == "linux":
-        if machine in {"x86_64", "amd64"}:
-            return "linux-amd64"
-        if machine in {"aarch64", "arm64"}:
-            return "linux-arm64"
-    elif system == "darwin":
-        if machine in {"x86_64", "amd64"}:
-            return "darwin-amd64"
-        if machine in {"arm64", "aarch64"}:
-            return "darwin-arm64"
-
-    pytest.skip(f"unsupported test platform: {system}/{machine}")
-    raise AssertionError("unreachable")  # pragma: no cover
+    try:
+        return _platform_dir()
+    except UnsupportedPlatformError as exc:
+        pytest.skip(str(exc))
+        raise AssertionError("unreachable") from exc
 
 
 # ---------------------------------------------------------------------------

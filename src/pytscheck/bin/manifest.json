@@ -54,6 +54,41 @@
       "size_bytes": 23653616,
       "tarball": "https://registry.npmjs.org/@typescript/native-preview-darwin-arm64/-/native-preview-darwin-arm64-7.0.0-dev.20260707.2.tgz",
       "binary_relpath": "lib/tsgo"
+    },
+    "linux-arm": {
+      "npm_platform": "linux-arm",
+      "version": "7.0.0-dev.20260707.2",
+      "integrity": "sha512-GgHqr2FYNhDEJMDmlohpPGegOONIUzxCADXu0U1pYCMW5huSn2iDYl8xbhczw7txXsiUD9mgPxO1Yc9JzJHe+Q==",
+      "tarball_integrity": "sha512-hJm/UOqZTr9FHmR7uNm8VGX4oKtfWk0Jem0zPeJFNC8ckGUfSBueyiEYMZB+XmRc1aG4x1E46y3CplP4CLHvGQ==",
+      "size_bytes": 22937762,
+      "tarball": "https://registry.npmjs.org/@typescript/native-preview-linux-arm/-/native-preview-linux-arm-7.0.0-dev.20260707.2.tgz",
+      "binary_relpath": "lib/tsgo"
+    },
+    "linux-ia32": {
+      "npm_platform": "linux-ia32",
+      "version": "7.0.0-dev.20260707.2",
+      "integrity": "sha512-X7GOTr1lSju94VuLAUI1La0Ng868xQ2xH+1G4lpfYelkFMSq5YdauHFBvo8OPgopispsD8UQdGSnZN0HUTMVGg==",
+      "tarball_integrity": "sha512-du0dzi6y97Po5vDNdPJTyyijHCpaS22JLRnKZEJXBDaO9gCIymOv/5QQokFRuOlQm0bWl3i9PF4OVdGP6uAOQA==",
+      "size_bytes": 22753442,
+      "tarball": "https://registry.npmjs.org/@typescript/native-preview-linux-x64/-/native-preview-linux-x64-7.0.0-dev.20260707.2.tgz",
+      "binary_relpath": "lib/tsgo",
+      "source_commit": "9977d6d38fcc78de8ae71770f3aa08256e6cc861",
+      "source_repository": "https://github.com/microsoft/typescript-go.git",
+      "go_version": "go1.26.9",
+      "libraries_platform": "linux-x64"
+    },
+    "win32-ia32": {
+      "npm_platform": "win32-ia32",
+      "version": "7.0.0-dev.20260707.2",
+      "integrity": "sha512-1v9pe9iisNwtufZWUOfvU0xJZgCXDjzN1UR1LW+gemPLL9wagn1+2QSXM0ksGktUbddf5DuzjmfQFrJix2C6Zg==",
+      "tarball_integrity": "sha512-DL4u27stv0fo71sVhOzHSwE+YMZsbBijVI+kg5dLDLilSH79WFTJ8RSQ46vJrCMt+Gjlv/JOZP1PuLJDfioYeQ==",
+      "size_bytes": 23109632,
+      "tarball": "https://registry.npmjs.org/@typescript/native-preview-win32-x64/-/native-preview-win32-x64-7.0.0-dev.20260707.2.tgz",
+      "binary_relpath": "lib/tsgo.exe",
+      "source_commit": "9977d6d38fcc78de8ae71770f3aa08256e6cc861",
+      "source_repository": "https://github.com/microsoft/typescript-go.git",
+      "go_version": "go1.26.9",
+      "libraries_platform": "win32-x64"
     }
   }
 }

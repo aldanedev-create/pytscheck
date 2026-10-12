@@ -43,6 +43,9 @@ _PLATFORM_DIRS: dict[str, str] = {
     "win32-arm64": "windows-arm64",
     "linux-x64": "linux-amd64",
     "linux-arm64": "linux-arm64",
+    "linux-arm": "linux-arm",
+    "linux-ia32": "linux-386",
+    "win32-ia32": "windows-386",
     "darwin-x64": "darwin-amd64",
     "darwin-arm64": "darwin-arm64",
 }
@@ -105,8 +108,15 @@ def build_manifest() -> dict:
         old = existing.get(npm_platform, {})
         if old.get("integrity") == entry["integrity"]:
             entry["tarball"] = old.get("tarball", "")
-            if "tarball_integrity" in old:
-                entry["tarball_integrity"] = old["tarball_integrity"]
+            for field in (
+                "tarball_integrity",
+                "source_commit",
+                "source_repository",
+                "go_version",
+                "libraries_platform",
+            ):
+                if field in old:
+                    entry[field] = old[field]
         platforms[npm_platform] = entry
     return {
         "compiler_version": COMPILER_VERSION,

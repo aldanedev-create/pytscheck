@@ -7,6 +7,7 @@ that the platform detection is correct.
 from __future__ import annotations
 
 import platform
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -28,15 +29,15 @@ def test_platform_dir_matches_arch() -> None:
     dirname = _platform_dir()
     machine = _running_arch()
     if sys.platform == "linux":
-        assert dirname in {"linux-amd64", "linux-arm64"}
+        assert dirname in {"linux-amd64", "linux-arm64", "linux-arm", "linux-386"}
         if machine in {"x86_64", "amd64"}:
-            assert dirname == "linux-amd64"
+            assert dirname == ("linux-386" if struct.calcsize("P") == 4 else "linux-amd64")
         elif machine in {"aarch64", "arm64"}:
-            assert dirname == "linux-arm64"
+            assert dirname == ("linux-arm" if struct.calcsize("P") == 4 else "linux-arm64")
     elif sys.platform == "darwin":
         assert dirname in {"darwin-amd64", "darwin-arm64"}
     elif sys.platform == "win32":
-        assert dirname in {"windows-amd64", "windows-arm64"}
+        assert dirname in {"windows-amd64", "windows-arm64", "windows-386"}
 
 
 def test_all_documented_platforms_in_map() -> None:
@@ -46,6 +47,10 @@ def test_all_documented_platforms_in_map() -> None:
         ("win32", "arm64"),
         ("linux", "x86_64"),
         ("linux", "aarch64"),
+        ("linux", "armv7l"),
+        ("linux", "i686"),
+        ("linux", "i386"),
+        ("win32", "x86"),
         ("darwin", "x86_64"),
         ("darwin", "arm64"),
     }
@@ -109,20 +114,20 @@ def test_architecture_matches_binary_format() -> None:
         assert magic[:2] == b"MZ"
 
 
-def test_binary_is_64_bit(tsgo_binary: Path) -> None:
-    """The bundled binary must be 64-bit on all supported platforms."""
-    result = subprocess.run(
-        ["file", str(tsgo_binary)],
-        capture_output=True,
-        text=True,
-        timeout=10,
-        check=False,
-        shell=False,
-    )
-    if result.returncode != 0:
-        pytest.skip("`file` not available")
-    info = result.stdout.lower()
-    assert "64-bit" in info or "x86-64" in info or "arm64" in info or "aarch64" in info
+def test_binary_matches_interpreter_bitness(tsgo_binary: Path) -> None:
+    """Compiler bitness must match the Python interpreter architecture."""
+    with tsgo_binary.open("rb") as reader:
+        header = reader.read(64)
+        width = struct.calcsize("P")
+        if header[:4] == b"\x7fELF":
+            assert header[4] == (1 if width == 4 else 2)
+        elif header[:2] == b"MZ":
+            reader.seek(struct.unpack_from("<I", header, 60)[0] + 4)
+            machine = struct.unpack("<H", reader.read(2))[0]
+            assert machine in ({0x14C} if width == 4 else {0x8664, 0xAA64})
+        else:
+            assert width == 8
+            assert header[:4] in {b"\xcf\xfa\xed\xfe", b"\xfe\xed\xfa\xcf"}
 
 
 def test_architecture_specific_platform_marker() -> None:
@@ -133,6 +138,10 @@ def test_architecture_specific_platform_marker() -> None:
         ("linux", "x86_64"),
         ("linux", "amd64"),
         ("linux", "aarch64"),
+        ("linux", "armv7l"),
+        ("linux", "i686"),
+        ("linux", "i386"),
+        ("win32", "x86"),
         ("linux", "arm64"),
         ("darwin", "x86_64"),
         ("darwin", "arm64"),

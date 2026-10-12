@@ -19,7 +19,7 @@ Record OS, interpreter architecture, package/compiler versions, the command, and
 | Compiler missing | Editable/source checkout needs `scripts/build_binaries.py <platform>`; installed wheels may need reinstalling |
 | Permission denied | Reinstall an intact wheel; source downloads need executable permissions on POSIX |
 | Source build cannot download | Network is needed to fetch the pinned npm archive; use a prebuilt wheel for offline installation |
-| Alpine/musl installation fails | No supported musllinux wheel; use a supported glibc environment |
+| Alpine/musl installation fails | Use a current pip and the musllinux 1.2+ wheel for your CPU; verify the exact release includes the expanded platform builds |
 
 For a source checkout, run `python scripts/verify_binaries.py`. Reinstall only from an artifact whose checksum/contents you trust.
 

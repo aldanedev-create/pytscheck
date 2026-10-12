@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import os
 import signal
+import struct
 import subprocess
 import sys
 import tempfile
@@ -31,6 +32,12 @@ _PLATFORM_DIRS: dict[tuple[str, str], str] = {
     ("linux", "amd64"): "linux-amd64",
     ("linux", "aarch64"): "linux-arm64",
     ("linux", "arm64"): "linux-arm64",
+    ("linux", "armv7l"): "linux-arm",
+    ("linux", "armv8l"): "linux-arm",
+    ("linux", "i386"): "linux-386",
+    ("linux", "i686"): "linux-386",
+    ("linux", "x86"): "linux-386",
+    ("win32", "x86"): "windows-386",
     ("darwin", "x86_64"): "darwin-amd64",
     ("darwin", "amd64"): "darwin-amd64",
     ("darwin", "arm64"): "darwin-arm64",
@@ -54,9 +61,15 @@ def _platform_dir() -> str:
     # os.uname is POSIX-only; on Windows fall back to environment.
     if sys.platform == "win32":
         arch = os.environ.get("PROCESSOR_ARCHITECTURE", "").lower()
-        machine = {"amd64": "amd64", "arm64": "arm64", "x86": "x86_64"}.get(arch, "amd64")
+        machine = {"amd64": "amd64", "arm64": "arm64", "x86": "x86"}.get(arch, "amd64")
         key = ("win32", machine)
 
+    if struct.calcsize("P") == 4:
+        machine = key[1].lower()
+        if machine in {"amd64", "x86_64"}:
+            key = (key[0], "x86")
+        elif key[0] == "linux" and machine in {"aarch64", "arm64"}:
+            key = ("linux", "armv7l")
     try:
         return _PLATFORM_DIRS[key]
     except KeyError as exc:
@@ -77,6 +90,9 @@ def binary_path() -> Path:
         download_target = {
             "linux-amd64": "linux-x64",
             "linux-arm64": "linux-arm64",
+            "linux-arm": "linux-arm",
+            "linux-386": "linux-ia32",
+            "windows-386": "win32-ia32",
             "darwin-amd64": "darwin-x64",
             "darwin-arm64": "darwin-arm64",
             "windows-amd64": "win32-x64",
