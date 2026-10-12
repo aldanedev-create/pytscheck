@@ -34,7 +34,7 @@ There is no public timeout or async API. Each call is synchronous with runtime d
 
 ## Are source maps fully supported?
 
-No. Matching virtual filenames can be rewritten to original filenames; generated positions are preserved. Full VLQ lookup is not implemented. See [adapters](adapters.md).
+Source-map v3 VLQ positions, multiple sources, and inline indexed sections are supported. A consuming tool supplies correct maps; unmapped positions stay generated. External section URLs are not fetched. See [project-aware adapters](adapter-projects.md).
 
 ## Is untrusted code safe to check?
 

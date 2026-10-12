@@ -9,6 +9,7 @@ imports a specific adapter; tools register theirs through the
 from __future__ import annotations
 
 from .base import CompilerAdapter
+from .context import DeclarationResource, ProjectContext
 from .errors import (
     AdapterError,
     AdapterExtractionError,
@@ -27,6 +28,8 @@ __all__ = [
     "AdapterProtocolError",
     "AdapterRegistrationError",
     "CompilerAdapter",
+    "DeclarationResource",
+    "ProjectContext",
     "collect_sources",
     "get_adapter",
     "register_adapter",

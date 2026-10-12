@@ -21,8 +21,8 @@ TypeScript semantics, flags, diagnostics, and configuration compatibility follow
 
 ## Limits
 
-The wrapper does not build referenced projects, run a language server, transpile for a bundler, watch files, or offer incremental sessions. It does not implement full source-map position translation. The CLI exposes fewer knobs than the Python API.
+The wrapper does not build referenced projects, run a language server, transpile for a bundler, watch files, or offer incremental sessions. It supports source-map v3 VLQ positions and inline indexed maps; external indexed section URLs must be resolved by the consuming tool. The CLI exposes fewer knobs than the Python API.
 
-The defaults force strict/no-emit flags. A string tsconfig `extends` path outside the supplied project root is rejected. Virtual adapter checks do not automatically inherit the original tsconfig or dependencies. These constraints matter when migrating a monorepo or component pipeline.
+The defaults force strict/no-emit flags. A string tsconfig `extends` path outside the supplied project root is rejected. Legacy isolated adapter checks do not inherit project settings/dependencies. Optional ProjectContext enables project-aware checking and Python declaration resources. These constraints matter when migrating a monorepo or component pipeline.
 
 [Compiler upgrades](compiler-upgrade.md) must be validated with actual binary downloads, conformance diffs, and native CI.

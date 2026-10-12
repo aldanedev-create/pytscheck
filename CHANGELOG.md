@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Optional framework-independent ProjectContext for inherited settings, real/generated imports, isolated workspaces and declaration resources from Python packages.
+- Source-map v3 VLQ primary/end/related position translation, multiple sources, sourceRoot and inline indexed sections.
+- Project-aware component/schema example, migration guide and real compiler/zip-resource/Unicode/concurrency/timeout regressions.
+
 - JavaScript/JSDoc guide and a runnable string/project example with real compiler regressions.
 
 - `scripts/publish.py` builds and validates all six wheels plus the source archive, then uploads through Twine; supports TestPyPI and build-only runs.

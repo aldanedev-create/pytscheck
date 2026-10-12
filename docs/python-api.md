@@ -54,6 +54,14 @@ See [diagnostics](diagnostics.md) for reporting and serialization examples.
 
 `SourceFile(path, text, origin_path=None, source_map=None, kind="source", options={})` describes an adapter's virtual TypeScript input. The default options dictionary is created separately for each instance. `kind` is `source` or `generated`. Per-file `options` are metadata and are not applied as compiler flags. Read [adapters](adapters.md) for validation and mapping behavior.
 
+## Optional adapter project context
+
+```python
+from pytscheck.adapters import ProjectContext, DeclarationResource
+```
+
+An adapter may implement `get_context(root) -> ProjectContext` alongside `get_sources(root)`. This enables project settings, generated-to-real imports, and declaration files bundled in installed Python packages. Existing adapters require no changes. See [project-aware adapters](adapter-projects.md) for all fields, precedence, source-map v3 mapping, and examples.
+
 ## Exceptions
 
 All public exception classes derive from `PyTSCheckError`.

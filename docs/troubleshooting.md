@@ -47,6 +47,6 @@ The runner forces `--pretty false`, including with `FORCE_COLOR=1`. If output pa
 
 ## Adapter failures
 
-Use unique relative virtual paths and preserve type information. Empty source lists, duplicates, unsafe paths, wrong entry-point objects, and mismatched protocol majors fail explicitly. Original line/column mapping is not implemented; inspect generated positions rather than assuming a valid source map translates them.
+Use unique relative virtual paths and preserve type information. Empty source lists, duplicates, unsafe paths, wrong entry-point objects, and mismatched protocol majors fail explicitly. Inline source-map v3 mappings translate original lines and columns where segments cover a diagnostic. Unmapped positions remain generated. Verify the mappings produced by your tool against representative errors; see [project-aware adapters](adapter-projects.md).
 
 For further help, see [SUPPORT.md](../SUPPORT.md).
