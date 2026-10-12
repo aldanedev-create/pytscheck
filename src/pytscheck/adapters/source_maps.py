@@ -40,6 +40,8 @@ def _vlq(segment: str) -> list[int]:
         else:
             magnitude = value >> 1
             result.append(-magnitude if value & 1 else magnitude)
+            if len(result) > 5:
+                raise AdapterMappingError("source-map segment exceeds five fields")
             value = shift = 0
     if shift:
         raise AdapterMappingError("truncated source-map VLQ value")
@@ -163,6 +165,16 @@ def _decode(data: dict[str, Any], virtual: str, depth: int = 0) -> dict[int, lis
 
 
 def _load(raw: str, virtual: str) -> tuple[dict[str, Any], dict[int, list[_Position]]]:
+    if not isinstance(raw, str):
+        raise AdapterMappingError("source map must be a string")
+    if len(raw) > 8 * 1024 * 1024:
+        raise AdapterMappingError("source map exceeds 8 MiB")
+    try:
+        size = len(raw.encode("utf-8"))
+    except UnicodeError as exc:
+        raise AdapterMappingError("source map must contain valid UTF-8 text") from exc
+    if size > 8 * 1024 * 1024:
+        raise AdapterMappingError("source map exceeds 8 MiB")
     try:
         data = json.loads(raw)
     except (json.JSONDecodeError, RecursionError, TypeError) as exc:

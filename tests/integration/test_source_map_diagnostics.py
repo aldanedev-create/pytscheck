@@ -133,3 +133,40 @@ def test_source_map_json_shape_required(tsgo_binary, tmp_path: Path) -> None:
     d = Diagnostic(file="__gen__/a.ts", line=1, column=1, code=1, category="error", message="m")
     with pytest.raises(AdapterMappingError, match="missing 'mappings'"):
         remap_diagnostics((d,), (src,))
+
+
+def test_symlinked_temporary_root_preserves_virtual_paths(
+    tsgo_binary, tmp_path: Path, monkeypatch
+) -> None:
+    """Real symlink aliases must not leak into compiler diagnostic filenames."""
+    import tempfile
+
+    from pytscheck import check
+
+    directory = tmp_path / "physical"
+    directory.mkdir()
+    alias = tmp_path / "alias"
+    try:
+        alias.symlink_to(directory, target_is_directory=True)
+    except OSError:
+        pytest.skip("directory symlink creation is unavailable")
+    monkeypatch.setattr(tempfile, "tempdir", str(alias))
+
+    class Adapter:
+        name = "symlink-temp"
+
+        def get_sources(self, root: str) -> list[SourceFile]:
+            return [
+                SourceFile(
+                    "generated.ts",
+                    'export const x: number = "bad";',
+                    origin_path="component.vel",
+                    source_map=json.dumps(
+                        {"version": 3, "sources": ["component.vel"], "mappings": "aAQM"}
+                    ),
+                )
+            ]
+
+    error = check_project(tmp_path, adapter=Adapter()).errors[0]
+    assert (error.file, error.line, error.column) == ("component.vel", 9, 7)
+    assert check('export const x: number = "bad";').errors[0].file == "input.ts"
