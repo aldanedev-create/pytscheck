@@ -15,7 +15,8 @@ def test_types_must_be_tuple_of_strings() -> None:
     # A list is accepted at dataclass level but treated as iterable
     o = CompilerOptions(types=("a", "b"))
     argv = options_to_argv(o)
-    assert argv.count("--types") == 2
+    assert argv.count("--types") == 1
+    assert argv[argv.index("--types") + 1] == "a,b"
 
 
 def test_types_with_non_string_raises_at_argv_time() -> None:

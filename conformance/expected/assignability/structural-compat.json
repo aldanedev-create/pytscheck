@@ -1,0 +1,5 @@
+{
+  "case": "assignability/structural-compat.ts",
+  "success": true,
+  "diagnostics": []
+}

@@ -47,10 +47,8 @@ def test_safe_filenames_accepted(tsgo_binary) -> None:
 def test_empty_filename(tsgo_binary) -> None:
     from pytscheck.api import check
 
-    r = check("const x: number = 1;", filename="")
-    # Empty string is a valid basename; behavior is either a clean check
-    # or a clean diagnostic, not a crash.
-    assert isinstance(r.success, bool)
+    with pytest.raises(ConfigurationError, match="non-empty basename"):
+        check("const x: number = 1;", filename="")
 
 
 def test_very_long_filename(tsgo_binary) -> None:

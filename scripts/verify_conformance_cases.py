@@ -122,9 +122,7 @@ def check_manifest(report: Report) -> None:
     try:
         actual = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        report.drifts.append(
-            Drift("manifest_mismatch", "manifest.json", f"invalid JSON: {exc}")
-        )
+        report.drifts.append(Drift("manifest_mismatch", "manifest.json", f"invalid JSON: {exc}"))
         return
     expected = build_manifest()
     if actual.get("case_count") != expected["case_count"]:
@@ -132,20 +130,15 @@ def check_manifest(report: Report) -> None:
             Drift(
                 "manifest_mismatch",
                 "manifest.json",
-                f"case_count={actual.get('case_count')} expected "
-                f"{expected['case_count']}",
+                f"case_count={actual.get('case_count')} expected {expected['case_count']}",
             )
         )
     actual_paths = {c["path"] for c in actual.get("cases", [])}
     expected_paths = {c["path"] for c in expected["cases"]}
     for rel in sorted(expected_paths - actual_paths):
-        report.drifts.append(
-            Drift("manifest_mismatch", rel, "missing from manifest")
-        )
+        report.drifts.append(Drift("manifest_mismatch", rel, "missing from manifest"))
     for rel in sorted(actual_paths - expected_paths):
-        report.drifts.append(
-            Drift("manifest_extra", rel, "present in manifest but not in spec")
-        )
+        report.drifts.append(Drift("manifest_extra", rel, "present in manifest but not in spec"))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -163,16 +156,20 @@ def main(argv: list[str] | None = None) -> int:
     check_manifest(report)
 
     if args.json:
-        print(json.dumps({
-            "clean": report.clean,
-            "checked": report.checked,
-            "on_disk_total": report.on_disk_total,
-            "drift_count": len(report.drifts),
-            "drifts": [
-                {"kind": d.kind, "path": d.path, "detail": d.detail}
-                for d in report.drifts
-            ],
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "clean": report.clean,
+                    "checked": report.checked,
+                    "on_disk_total": report.on_disk_total,
+                    "drift_count": len(report.drifts),
+                    "drifts": [
+                        {"kind": d.kind, "path": d.path, "detail": d.detail} for d in report.drifts
+                    ],
+                },
+                indent=2,
+            )
+        )
     elif not args.quiet:
         if report.clean:
             print(
@@ -185,10 +182,7 @@ def main(argv: list[str] | None = None) -> int:
             for d in report.drifts:
                 print(str(d))
             print()
-            print(
-                "Run `python scripts/generate_conformance_cases.py --manifest` "
-                "to fix."
-            )
+            print("Run `python scripts/generate_conformance_cases.py --manifest` to fix.")
 
     return 0 if report.clean else 1
 

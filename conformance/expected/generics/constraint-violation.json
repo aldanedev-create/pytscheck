@@ -1,0 +1,14 @@
+{
+  "case": "generics/constraint-violation.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "constraint-violation.ts",
+      "line": 3,
+      "column": 7,
+      "code": 2345,
+      "category": "error",
+      "message": "Argument of type 'number' is not assignable to parameter of type '{ length: number; }'."
+    }
+  ]
+}

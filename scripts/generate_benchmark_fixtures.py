@@ -21,10 +21,9 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIXTURES_ROOT = REPO_ROOT / "benchmarks" / "fixtures"
@@ -115,7 +114,7 @@ def generate_project_files(n_files: int, decls_per_file: int) -> list[tuple[str,
     files.append(
         (
             "large-project/tsconfig.json",
-            '{\n'
+            "{\n"
             '  "compilerOptions": {\n'
             '    "strict": true,\n'
             '    "noEmit": true,\n'
@@ -206,8 +205,7 @@ FIXTURE_SETS: list[FixtureSet] = [
 
 def all_fixtures() -> Iterable[Fixture]:
     for fs in FIXTURE_SETS:
-        for f in fs.fixtures:
-            yield f
+        yield from fs.fixtures
 
 
 # ---------------------------------------------------------------------------
@@ -262,12 +260,13 @@ def main(argv: list[str] | None = None) -> int:
         prog="generate_benchmark_fixtures",
         description="Generate benchmarks/fixtures/ from a declarative spec.",
     )
-    parser.add_argument("--force", action="store_true",
-                        help="overwrite hand-edited files")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="report what would change, write nothing")
-    parser.add_argument("--manifest", action="store_true",
-                        help="write/update benchmarks/fixtures/MANIFEST.json")
+    parser.add_argument("--force", action="store_true", help="overwrite hand-edited files")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="report what would change, write nothing"
+    )
+    parser.add_argument(
+        "--manifest", action="store_true", help="write/update benchmarks/fixtures/MANIFEST.json"
+    )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
@@ -294,9 +293,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.manifest and not args.dry_run:
         manifest = build_manifest()
         MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-        MANIFEST_PATH.write_text(
-            json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
-        )
+        MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         changes.append(f"wrote {MANIFEST_PATH.relative_to(REPO_ROOT)}")
 
     if args.json:

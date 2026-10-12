@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Fetch pinned tsgo binaries from npm, verify SHA-512, extract safely."""
+
 from __future__ import annotations
 
 import base64
@@ -19,11 +20,11 @@ VERSION = "7.0.0-dev.20260707.2"
 
 # npm platform  ->  bin/ folder
 PLATFORMS: dict[str, str] = {
-    "win32-x64":    "windows-amd64",
-    "win32-arm64":  "windows-arm64",
-    "linux-x64":    "linux-amd64",
-    "linux-arm64":  "linux-arm64",
-    "darwin-x64":   "darwin-amd64",
+    "win32-x64": "windows-amd64",
+    "win32-arm64": "windows-arm64",
+    "linux-x64": "linux-amd64",
+    "linux-arm64": "linux-arm64",
+    "darwin-x64": "darwin-amd64",
     "darwin-arm64": "darwin-arm64",
 }
 
@@ -56,9 +57,7 @@ def _verify_integrity(data: bytes, integrity: str) -> None:
     digest = hashlib.new(algo, data).digest()
     actual_b64 = base64.b64encode(digest).decode()
     if actual_b64 != expected_b64:
-        raise RuntimeError(
-            f"checksum mismatch: expected {expected_b64!r}, got {actual_b64!r}"
-        )
+        raise RuntimeError(f"checksum mismatch: expected {expected_b64!r}, got {actual_b64!r}")
 
 
 def _safe_extract(tar_bytes: bytes, dest: Path) -> None:
@@ -72,7 +71,7 @@ def _safe_extract(tar_bytes: bytes, dest: Path) -> None:
             if not m.name.startswith("package/"):
                 continue
             # Reject any traversal just in case
-            clean = m.name[len("package/"):]
+            clean = m.name[len("package/") :]
             if ".." in clean.split("/") or clean.startswith("/"):
                 raise RuntimeError(f"unsafe member path: {m.name!r}")
             m.name = clean
@@ -94,6 +93,7 @@ def fetch(platform: str, out_root: Path) -> dict:
     dest = out_root / PLATFORMS[platform]
     if dest.exists():
         import shutil
+
         shutil.rmtree(dest)
     _safe_extract(data, dest)
 
@@ -113,7 +113,10 @@ def fetch(platform: str, out_root: Path) -> dict:
     return {
         "npm_platform": platform,
         "version": VERSION,
-        "integrity": integrity,
+        "integrity": "sha512-"
+        + base64.b64encode(hashlib.sha512(exe.read_bytes()).digest()).decode(),
+        "tarball_integrity": integrity,
+        "size_bytes": exe.stat().st_size,
         "tarball": tarball_url,
         "binary_relpath": str(exe.relative_to(dest)),
     }
@@ -124,6 +127,15 @@ def main(argv: list[str] | None = None) -> int:
     targets = argv or list(PLATFORMS.keys())
 
     manifest: dict = {"compiler_version": VERSION, "platforms": {}}
+    if MANIFEST_PATH.exists():
+        existing = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        if existing.get("compiler_version") == VERSION:
+            for platform, entry in existing.get("platforms", {}).items():
+                if (
+                    platform in PLATFORMS
+                    and (BIN_ROOT / PLATFORMS[platform] / entry["binary_relpath"]).is_file()
+                ):
+                    manifest["platforms"][platform] = entry
     for platform in targets:
         if platform not in PLATFORMS:
             print(f"unknown platform: {platform}", file=sys.stderr)

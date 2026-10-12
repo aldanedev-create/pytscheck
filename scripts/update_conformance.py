@@ -150,9 +150,7 @@ def _dump_expected(case: Case, payload: dict, outdir: Path) -> Path:
     rel = case.name.rstrip("/")
     out_path = (outdir / rel).with_suffix(".json")
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(
-        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
-    )
+    out_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return out_path
 
 
@@ -164,12 +162,8 @@ def _diff_expected(case: Case, new_payload: dict) -> str | None:
     if old == new_payload:
         return None
 
-    old_codes = sorted(
-        (d.get("line"), d.get("code")) for d in old.get("diagnostics", [])
-    )
-    new_codes = sorted(
-        (d.get("line"), d.get("code")) for d in new_payload.get("diagnostics", [])
-    )
+    old_codes = sorted((d.get("line"), d.get("code")) for d in old.get("diagnostics", []))
+    new_codes = sorted((d.get("line"), d.get("code")) for d in new_payload.get("diagnostics", []))
     if old_codes == new_codes:
         return "diagnostics differ in message/file only"
     return f"diagnostics changed: {old_codes} -> {new_codes}"
@@ -270,11 +264,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"ERROR {f}")
         return 1 if (changed or failures) else 0
 
-    # Write manifest
-    manifest = _build_manifest(cases)
-    MANIFEST_PATH.write_text(
-        json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
-    )
+    # The declarative case generator owns manifest.json. Updating outputs must
+    # not replace that catalog with a different schema (or a filtered subset).
 
     if args.json:
         print(

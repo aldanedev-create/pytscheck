@@ -1,0 +1,5 @@
+{
+  "case": "narrowing/in-operator.ts",
+  "success": true,
+  "diagnostics": []
+}

@@ -1,0 +1,14 @@
+{
+  "case": "classes/wrong-return.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "wrong-return.ts",
+      "line": 2,
+      "column": 37,
+      "code": 2322,
+      "category": "error",
+      "message": "Type 'number' is not assignable to type 'string'."
+    }
+  ]
+}

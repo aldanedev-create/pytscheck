@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
+import signal
 import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -98,38 +101,69 @@ def run(
     argv = [str(exe), *argv_tail]
 
     start = time.monotonic()
-    try:
-        proc = subprocess.run(
-            argv,
-            cwd=str(cwd) if cwd else None,
-            capture_output=True,
-            timeout=timeout,
-            check=False,
-            shell=False,
+    # Files avoid inherited pipe handles keeping communicate() alive after a
+    # timeout. Poll their sizes during execution; read only bounded data.
+    with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
+        try:
+            proc = subprocess.Popen(
+                argv,
+                cwd=str(cwd) if cwd else None,
+                stdout=stdout,
+                stderr=stderr,
+                shell=False,
+                start_new_session=os.name == "posix",
+            )
+        except OSError as exc:
+            raise CompilerExecutionError(f"failed to launch tsgo: {exc}") from exc
+        try:
+            while True:
+                for stream, limit, name in (
+                    (stdout, max_stdout_bytes, "stdout"),
+                    (stderr, max_stderr_bytes, "stderr"),
+                ):
+                    if os.fstat(stream.fileno()).st_size > limit:
+                        raise CompilerExecutionError(f"tsgo {name} exceeded {limit} bytes")
+                remaining = timeout - (time.monotonic() - start)
+                if remaining <= 0:
+                    stdout.seek(0)
+                    stderr.seek(0)
+                    raise CompilerTimeoutError(
+                        f"tsgo exceeded {timeout}s timeout",
+                        stdout=_decode(
+                            stdout.read(min(max_stdout_bytes, os.fstat(stdout.fileno()).st_size))
+                        ),
+                        stderr=_decode(
+                            stderr.read(min(max_stderr_bytes, os.fstat(stderr.fileno()).st_size))
+                        ),
+                    )
+                try:
+                    proc.wait(timeout=min(0.02, remaining))
+                except subprocess.TimeoutExpired:
+                    continue
+                # Recheck sizes after completion, including very fast producers.
+                for stream, limit, name in (
+                    (stdout, max_stdout_bytes, "stdout"),
+                    (stderr, max_stderr_bytes, "stderr"),
+                ):
+                    if os.fstat(stream.fileno()).st_size > limit:
+                        raise CompilerExecutionError(f"tsgo {name} exceeded {limit} bytes")
+                break
+        finally:
+            if os.name == "posix":
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(proc.pid, signal.SIGKILL)
+            elif proc.poll() is None:
+                proc.kill()
+            proc.wait()
+        stdout.seek(0)
+        stderr.seek(0)
+        return RunResult(
+            returncode=proc.returncode,
+            stdout=_decode(stdout.read(min(max_stdout_bytes, os.fstat(stdout.fileno()).st_size))),
+            stderr=_decode(stderr.read(min(max_stderr_bytes, os.fstat(stderr.fileno()).st_size))),
+            elapsed_seconds=time.monotonic() - start,
+            argv=tuple(argv),
         )
-    except subprocess.TimeoutExpired as exc:
-        raise CompilerTimeoutError(
-            f"tsgo exceeded {timeout}s timeout",
-            stdout=_decode(exc.stdout),
-            stderr=_decode(exc.stderr),
-        ) from exc
-    except OSError as exc:
-        raise CompilerExecutionError(f"failed to launch tsgo: {exc}") from exc
-
-    elapsed = time.monotonic() - start
-
-    if len(proc.stdout) > max_stdout_bytes:
-        raise CompilerExecutionError(f"tsgo stdout exceeded {max_stdout_bytes} bytes")
-    if len(proc.stderr) > max_stderr_bytes:
-        raise CompilerExecutionError(f"tsgo stderr exceeded {max_stderr_bytes} bytes")
-
-    return RunResult(
-        returncode=proc.returncode,
-        stdout=_decode(proc.stdout),
-        stderr=_decode(proc.stderr),
-        elapsed_seconds=elapsed,
-        argv=tuple(argv),
-    )
 
 
 def _decode(data: bytes | None) -> str:

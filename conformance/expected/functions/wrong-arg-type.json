@@ -1,0 +1,14 @@
+{
+  "case": "functions/wrong-arg-type.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "wrong-arg-type.ts",
+      "line": 3,
+      "column": 8,
+      "code": 2345,
+      "category": "error",
+      "message": "Argument of type 'string' is not assignable to parameter of type 'number'."
+    }
+  ]
+}

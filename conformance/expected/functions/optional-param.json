@@ -1,0 +1,5 @@
+{
+  "case": "functions/optional-param.ts",
+  "success": true,
+  "diagnostics": []
+}

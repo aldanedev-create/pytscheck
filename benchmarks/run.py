@@ -20,7 +20,9 @@ import json
 import sys
 import time
 from collections.abc import Callable
+from contextlib import redirect_stdout
 from dataclasses import dataclass, field
+from functools import partial
 from pathlib import Path
 from types import ModuleType
 
@@ -286,20 +288,22 @@ def main(argv: list[str] | None = None) -> int:
         help="list available benchmarks and exit",
     )
     args = parser.parse_args(argv)
+    report_stream = sys.stderr if args.json else sys.stdout
+    report = partial(print, file=report_stream)
 
     if args.list:
         for spec in BENCHMARK_SPECS:
-            print(f"{spec.name:12s} {spec.description}")
+            report(f"{spec.name:12s} {spec.description}")
         return 0
 
     if not _binary_present():
-        print(
+        report(
             "error: bundled tsgo not present; run scripts/build_binaries.py <platform> first",
             file=sys.stderr,
         )
         return 1
     if not _fixtures_present():
-        print(
+        report(
             "error: benchmark fixtures missing; "
             "run scripts/generate_benchmark_fixtures.py --manifest",
             file=sys.stderr,
@@ -311,21 +315,22 @@ def main(argv: list[str] | None = None) -> int:
         wanted = set(args.only)
         specs = [s for s in specs if s.name in wanted]
         if not specs:
-            print(f"no benchmarks matched: {sorted(wanted)}", file=sys.stderr)
+            report(f"no benchmarks matched: {sorted(wanted)}", file=sys.stderr)
             return 2
 
     results: list[BenchmarkResult] = []
     for spec in specs:
-        print(f"==> {spec.name}")
+        report(f"==> {spec.name}")
         result = run_one(spec)
         results.append(result)
         status = "OK  " if result.ok else "FAIL"
-        print(f"    {status} ({result.elapsed:.2f}s)")
+        report(f"    {status} ({result.elapsed:.2f}s)")
         if not result.ok:
-            print(f"    {result.error}")
+            report(f"    {result.error}")
 
-    print()
-    _print_results(results)
+    report()
+    with redirect_stdout(report_stream):
+        _print_results(results)
 
     if args.save_baseline:
         args.save_baseline.parent.mkdir(parents=True, exist_ok=True)
@@ -333,16 +338,16 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps(_to_json(results), indent=2) + "\n",
             encoding="utf-8",
         )
-        print(f"\nbaseline written: {args.save_baseline}")
+        report(f"\nbaseline written: {args.save_baseline}")
 
     if args.baseline:
         ok, regressions = compare_baseline(results, args.baseline, args.tolerance)
         if ok:
-            print(f"\nbaseline comparison OK (tolerance {args.tolerance:.0%})")
+            report(f"\nbaseline comparison OK (tolerance {args.tolerance:.0%})")
         else:
-            print("\nbaseline comparison FAILED:")
+            report("\nbaseline comparison FAILED:")
             for r in regressions:
-                print(f"  {r}")
+                report(f"  {r}")
             return 1
 
     if args.json:

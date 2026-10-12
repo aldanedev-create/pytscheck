@@ -1,0 +1,5 @@
+{
+  "case": "assignability/literal-to-primitive.ts",
+  "success": true,
+  "diagnostics": []
+}

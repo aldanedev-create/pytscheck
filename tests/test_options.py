@@ -31,18 +31,16 @@ def test_skip_lib_check_false_omits_flag() -> None:
     assert "--skipLibCheck" not in options_to_argv(CompilerOptions(skip_lib_check=False))
 
 
-def test_types_list_becomes_repeated_flag() -> None:
+def test_types_list_becomes_comma_separated_flag() -> None:
     argv = options_to_argv(CompilerOptions(types=("node", "jest")))
-    assert argv.count("--types") == 2
-    assert "node" in argv
-    assert "jest" in argv
+    assert argv.count("--types") == 1
+    assert argv[argv.index("--types") + 1] == "node,jest"
 
 
-def test_lib_list_becomes_repeated_flag() -> None:
+def test_lib_list_becomes_comma_separated_flag() -> None:
     argv = options_to_argv(CompilerOptions(lib=("es2022", "dom")))
-    assert argv.count("--lib") == 2
-    assert "es2022" in argv
-    assert "dom" in argv
+    assert argv.count("--lib") == 1
+    assert argv[argv.index("--lib") + 1] == "es2022,dom"
 
 
 def test_target_and_module_and_resolution() -> None:

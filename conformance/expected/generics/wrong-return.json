@@ -1,0 +1,14 @@
+{
+  "case": "generics/wrong-return.ts",
+  "success": false,
+  "diagnostics": [
+    {
+      "file": "wrong-return.ts",
+      "line": 2,
+      "column": 34,
+      "code": 2322,
+      "category": "error",
+      "message": "Type 'string' is not assignable to type 'T'.\n'T' could be instantiated with an arbitrary type which could be unrelated to 'string'."
+    }
+  ]
+}

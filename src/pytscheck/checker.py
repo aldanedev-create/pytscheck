@@ -6,10 +6,12 @@ import tempfile
 from pathlib import Path
 
 from .config import CompilerOptions, find_tsconfig, validate_project_root
+from .defaults import DEFAULT_MAX_SOURCE_BYTES
 from .exceptions import CompilerExecutionError, ConfigurationError
 from .models import Diagnostic, Result, SourceFile
 from .options import options_to_argv
 from .paths import assert_no_null_bytes, normalize
+from .project import iter_typescript_files
 from .protocol import parse_or_raise
 from .resolver import resolve_project
 from .results import build_result
@@ -71,13 +73,24 @@ def check_source(
     keep_raw: bool = False,
 ) -> Result:
     options = options or CompilerOptions()
+    try:
+        size = len(source.encode("utf-8"))
+    except UnicodeError as exc:
+        raise ConfigurationError("source is not valid UTF-8") from exc
+    if size > DEFAULT_MAX_SOURCE_BYTES:
+        raise ConfigurationError(f"source exceeds {DEFAULT_MAX_SOURCE_BYTES} bytes")
     assert_no_null_bytes(source, what="source")
     assert_no_null_bytes(filename, what="filename")
+    if not filename or Path(filename).name != filename:
+        raise ConfigurationError("filename must be a non-empty basename")
     with tempfile.TemporaryDirectory(prefix="pytscheck-") as tmp:
         tmp_path = Path(tmp)
         target = tmp_path / filename
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(source, encoding="utf-8")
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(source, encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise ConfigurationError(f"cannot write source {filename!r}: {exc}") from exc
 
         argv_tail = [*options_to_argv(options), str(target)]
         return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=tmp_path)
@@ -94,6 +107,17 @@ def check_file(
     if not target.exists():
         raise ConfigurationError(f"file does not exist: {target}")
 
+    try:
+        with target.open("rb") as handle:
+            size = 0
+            while chunk := handle.read(64 * 1024):
+                size += len(chunk)
+                if size > DEFAULT_MAX_SOURCE_BYTES:
+                    raise ConfigurationError(f"source exceeds {DEFAULT_MAX_SOURCE_BYTES} bytes")
+                if b"\x00" in chunk:
+                    raise ConfigurationError("source contains a NUL byte")
+    except OSError as exc:
+        raise ConfigurationError(f"cannot read source {target}: {exc}") from exc
     argv_tail = [*options_to_argv(options), str(target)]
     return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=target.parent)
 
@@ -121,7 +145,7 @@ def check_sources_virtual(
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_text(src.text, encoding="utf-8")
 
-        argv_tail = [*options_to_argv(options), str(tmp_path)]
+        argv_tail = [*options_to_argv(options), *(str(tmp_path / src.path) for src in sources)]
         return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=tmp_path)
 
 
@@ -140,7 +164,10 @@ def check_project(
     if tsconfig is not None:
         argv_tail += ["-p", str(tsconfig)]
     else:
-        argv_tail.append(str(root))
+        files = iter_typescript_files(root)
+        if not files:
+            raise ConfigurationError("project contains no TypeScript files")
+        argv_tail.extend(str(p) for p in files)
 
     return _run_tsgo_on_args(argv_tail, keep_raw=keep_raw, cwd=root)
 

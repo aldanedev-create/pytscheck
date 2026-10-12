@@ -22,9 +22,9 @@ from __future__ import annotations
 
 import json
 import sys
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIXTURES_ROOT = REPO_ROOT / "tests" / "fixtures"
@@ -119,9 +119,7 @@ def fixtures_typescript_valid() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/function-basic.ts",
             content=ts_file(
-                "export function add(a: number, b: number): number {\n"
-                "  return a + b;\n"
-                "}\n"
+                "export function add(a: number, b: number): number {\n  return a + b;\n}\n"
             ),
             note="typed function declaration",
         ),
@@ -139,9 +137,7 @@ def fixtures_typescript_valid() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/class-basic.ts",
             content=ts_file(
-                "export class Point {\n"
-                "  constructor(public x: number, public y: number) {}\n"
-                "}\n"
+                "export class Point {\n  constructor(public x: number, public y: number) {}\n}\n"
             ),
             note="class with parameter properties",
         ),
@@ -170,9 +166,7 @@ def fixtures_typescript_valid() -> list[Fixture]:
         ),
         Fixture(
             relpath=f"{base}/export-default.ts",
-            content=ts_file(
-                "export default function main(): void {}\n"
-            ),
+            content=ts_file("export default function main(): void {}\n"),
             note="export default function",
         ),
     ]
@@ -224,8 +218,7 @@ def fixtures_typescript_invalid() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS2554-wrong-arg-count.ts",
             content=ts_file(
-                "function f(a: number, b: number): void {}\n"
-                "f(1);\n",
+                "function f(a: number, b: number): void {}\nf(1);\n",
                 expect="fail",
                 codes=(2554,),
             ),
@@ -235,8 +228,7 @@ def fixtures_typescript_invalid() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS2741-missing-property.ts",
             content=ts_file(
-                "interface U { name: string; age: number; }\n"
-                "export const u: U = { name: 'a' };\n",
+                "interface U { name: string; age: number; }\nexport const u: U = { name: 'a' };\n",
                 expect="fail",
                 codes=(2741,),
             ),
@@ -284,9 +276,7 @@ def fixtures_generics() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/function-identity.ts",
-            content=ts_file(
-                "export function identity<T>(x: T): T { return x; }\n"
-            ),
+            content=ts_file("export function identity<T>(x: T): T { return x; }\n"),
             note="basic generic function",
         ),
         Fixture(
@@ -330,8 +320,7 @@ def fixtures_generics() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS2344-error-constraint.ts",
             content=ts_file(
-                "export function first<T extends { length: number }>(x: T) {}\n"
-                "first(42);\n",
+                "export function first<T extends { length: number }>(x: T) {}\nfirst(42);\n",
                 expect="fail",
                 codes=(2345, 2344),
             ),
@@ -400,9 +389,7 @@ def fixtures_narrowing() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS18047-error-not-narrowed.ts",
             content=ts_file(
-                "export function f(x: string | null): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x: string | null): number {\n  return x.length;\n}\n",
                 expect="fail",
                 codes=(18047, 2531),
             ),
@@ -417,10 +404,7 @@ def fixtures_unions() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/basic.ts",
-            content=ts_file(
-                "export type T = 'a' | 'b' | 'c';\n"
-                "export const t: T = 'b';\n"
-            ),
+            content=ts_file("export type T = 'a' | 'b' | 'c';\nexport const t: T = 'b';\n"),
             note="basic literal union",
         ),
         Fixture(
@@ -434,8 +418,7 @@ def fixtures_unions() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS2322-error.ts",
             content=ts_file(
-                "export type T = 'a' | 'b';\n"
-                "export const t: T = 'z';\n",
+                "export type T = 'a' | 'b';\nexport const t: T = 'z';\n",
                 expect="fail",
                 codes=(2322,),
             ),
@@ -610,8 +593,7 @@ def fixtures_template_literal_types() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/intrinsic-uppercase.ts",
             content=ts_file(
-                "export type Loud = Uppercase<'hello'>;\n"
-                "export const l: Loud = 'HELLO';\n"
+                "export type Loud = Uppercase<'hello'>;\nexport const l: Loud = 'HELLO';\n"
             ),
         ),
     ]
@@ -667,9 +649,7 @@ def fixtures_classes() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/basic.ts",
             content=ts_file(
-                "export class Point {\n"
-                "  constructor(public x: number, public y: number) {}\n"
-                "}\n"
+                "export class Point {\n  constructor(public x: number, public y: number) {}\n}\n"
             ),
         ),
         Fixture(
@@ -722,28 +702,22 @@ def fixtures_interfaces() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/basic.ts",
-            content=ts_file(
-                "export interface User { name: string; age: number; }\n"
-            ),
+            content=ts_file("export interface User { name: string; age: number; }\n"),
         ),
         Fixture(
             relpath=f"{base}/optional.ts",
-            content=ts_file(
-                "export interface User { name: string; age?: number; }\n"
-            ),
+            content=ts_file("export interface User { name: string; age?: number; }\n"),
         ),
         Fixture(
             relpath=f"{base}/extends.ts",
             content=ts_file(
-                "export interface A { a: number; }\n"
-                "export interface B extends A { b: string; }\n"
+                "export interface A { a: number; }\nexport interface B extends A { b: string; }\n"
             ),
         ),
         Fixture(
             relpath=f"{base}/TS2322-error-missing.ts",
             content=ts_file(
-                "export interface User { name: string; }\n"
-                "export const u: User = {};\n",
+                "export interface User { name: string; }\nexport const u: User = {};\n",
                 expect="fail",
                 codes=(2741,),
             ),
@@ -758,15 +732,11 @@ def fixtures_enums() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/numeric.ts",
-            content=ts_file(
-                "export enum Color { Red, Green, Blue }\n"
-            ),
+            content=ts_file("export enum Color { Red, Green, Blue }\n"),
         ),
         Fixture(
             relpath=f"{base}/string.ts",
-            content=ts_file(
-                'export enum Level { Low = "low", High = "high" }\n'
-            ),
+            content=ts_file('export enum Level { Low = "low", High = "high" }\n'),
         ),
         Fixture(
             relpath=f"{base}/const-enum.ts",
@@ -778,8 +748,7 @@ def fixtures_enums() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS2322-error.ts",
             content=ts_file(
-                "export enum Color { Red, Green }\n"
-                "export const c: Color = 'red';\n",
+                "export enum Color { Red, Green }\nexport const c: Color = 'red';\n",
                 expect="fail",
                 codes=(2322,),
             ),
@@ -813,15 +782,13 @@ def fixtures_namespaces() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/usage.ts",
             content=ts_file(
-                "namespace N { export const x: number = 1; }\n"
-                "export const y: number = N.x;\n"
+                "namespace N { export const x: number = 1; }\nexport const y: number = N.x;\n"
             ),
         ),
         Fixture(
             relpath=f"{base}/TS2339-error.ts",
             content=ts_file(
-                "namespace N { export const x: number = 1; }\n"
-                "export const y = N.notDefined;\n",
+                "namespace N { export const x: number = 1; }\nexport const y = N.notDefined;\n",
                 expect="fail",
                 codes=(2339,),
             ),
@@ -836,45 +803,28 @@ def fixtures_modules() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/named-export.ts",
-            content=ts_file(
-                "export const a: number = 1;\n"
-                "export const b: string = 'x';\n"
-            ),
+            content=ts_file("export const a: number = 1;\nexport const b: string = 'x';\n"),
         ),
         Fixture(
             relpath=f"{base}/default-export.ts",
-            content=ts_file(
-                "const value: number = 1;\n"
-                "export default value;\n"
-            ),
+            content=ts_file("const value: number = 1;\nexport default value;\n"),
         ),
         Fixture(
             relpath=f"{base}/reexport.ts",
-            content=ts_file(
-                "export { a } from './named-export';\n"
-            ),
+            content=ts_file("export { a } from './named-export';\n"),
             note="re-export pattern; may need a resolution context",
         ),
         Fixture(
             relpath=f"{base}/namespace-import.ts",
-            content=ts_file(
-                "export const x: number = 1;\n"
-                "export const y: number = 2;\n"
-            ),
+            content=ts_file("export const x: number = 1;\nexport const y: number = 2;\n"),
         ),
         Fixture(
             relpath=f"{base}/type-only-export.ts",
-            content=ts_file(
-                "export interface User { name: string; }\n"
-                "export type Alias = User;\n"
-            ),
+            content=ts_file("export interface User { name: string; }\nexport type Alias = User;\n"),
         ),
         Fixture(
             relpath=f"{base}/side-effect-import.ts",
-            content=ts_file(
-                "// Side-effect import.\n"
-                "export {};\n"
-            ),
+            content=ts_file("// Side-effect import.\nexport {};\n"),
         ),
     ]
 
@@ -884,9 +834,7 @@ def fixtures_async() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/async-function.ts",
-            content=ts_file(
-                "export async function f(): Promise<number> { return 1; }\n"
-            ),
+            content=ts_file("export async function f(): Promise<number> { return 1; }\n"),
         ),
         Fixture(
             relpath=f"{base}/await.ts",
@@ -908,9 +856,7 @@ def fixtures_async() -> list[Fixture]:
         ),
         Fixture(
             relpath=f"{base}/async-arrow.ts",
-            content=ts_file(
-                "export const f = async (): Promise<number> => 1;\n"
-            ),
+            content=ts_file("export const f = async (): Promise<number> => 1;\n"),
         ),
         Fixture(
             relpath=f"{base}/TS2322-error-return-type.ts",
@@ -947,9 +893,7 @@ def fixtures_decorators() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/class-decorator.ts",
             content=ts_file(
-                "function sealed(target: Function): void {}\n"
-                "@sealed\n"
-                "export class C {}\n"
+                "function sealed(target: Function): void {}\n@sealed\nexport class C {}\n"
             ),
         ),
         Fixture(
@@ -961,9 +905,7 @@ def fixtures_decorators() -> list[Fixture]:
         ),
         Fixture(
             relpath=f"{base}/no-decorators.ts",
-            content=ts_file(
-                "export class C { method(): void {} }\n"
-            ),
+            content=ts_file("export class C { method(): void {} }\n"),
             note="control: same shape without decorators",
         ),
     ]
@@ -974,9 +916,7 @@ def fixtures_jsx() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/element.tsx",
-            content=ts_file(
-                "export const el = <div>Hello</div>;\n"
-            ),
+            content=ts_file("export const el = <div>Hello</div>;\n"),
             note="basic JSX element",
         ),
         Fixture(
@@ -988,9 +928,7 @@ def fixtures_jsx() -> list[Fixture]:
         ),
         Fixture(
             relpath=f"{base}/fragment.tsx",
-            content=ts_file(
-                "export const el = <><span>a</span><span>b</span></>;\n"
-            ),
+            content=ts_file("export const el = <><span>a</span><span>b</span></>;\n"),
         ),
         Fixture(
             relpath=f"{base}/conditional.tsx",
@@ -1050,48 +988,35 @@ def fixtures_declaration_files() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/global.d.ts",
             content=ts_file(
-                "declare const VERSION: string;\n"
-                "declare function greet(name: string): string;\n"
+                "declare const VERSION: string;\ndeclare function greet(name: string): string;\n"
             ),
             note="ambient global declarations",
         ),
         Fixture(
             relpath=f"{base}/module.d.ts",
             content=ts_file(
-                "declare module 'vendor' {\n"
-                "  export function parse(s: string): number;\n"
-                "}\n"
+                "declare module 'vendor' {\n  export function parse(s: string): number;\n}\n"
             ),
             note="ambient module declaration",
         ),
         Fixture(
             relpath=f"{base}/types-only.d.ts",
-            content=ts_file(
-                "export interface User { name: string; }\n"
-                "export type ID = number;\n"
-            ),
+            content=ts_file("export interface User { name: string; }\nexport type ID = number;\n"),
         ),
         Fixture(
             relpath=f"{base}/augment.d.ts",
             content=ts_file(
-                "declare global {\n"
-                "  interface Window { custom: string; }\n"
-                "}\n"
-                "export {};\n"
+                "declare global {\n  interface Window { custom: string; }\n}\nexport {};\n"
             ),
         ),
         Fixture(
             relpath=f"{base}/consumer.ts",
-            content=ts_file(
-                "export const s: string = VERSION;\n"
-            ),
+            content=ts_file("export const s: string = VERSION;\n"),
             note="consumes global.d.ts",
         ),
         Fixture(
             relpath=f"{base}/no-implicit-any.d.ts",
-            content=ts_file(
-                "declare function f(x: string): string;\n"
-            ),
+            content=ts_file("declare function f(x: string): string;\n"),
         ),
     ]
 
@@ -1111,23 +1036,17 @@ def fixtures_strict_mode() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/undefined-checked.ts",
             content=ts_file(
-                "export function f(x: string | undefined): string {\n"
-                "  return x ?? '';\n"
-                "}\n"
+                "export function f(x: string | undefined): string {\n  return x ?? '';\n}\n"
             ),
         ),
         Fixture(
             relpath=f"{base}/no-implicit-any-ok.ts",
-            content=ts_file(
-                "export function f(x: number): number { return x; }\n"
-            ),
+            content=ts_file("export function f(x: number): number { return x; }\n"),
         ),
         Fixture(
             relpath=f"{base}/strict-null-checks.ts",
             content=ts_file(
-                "export function f(x: string | null): string {\n"
-                "  return x;\n"
-                "}\n",
+                "export function f(x: string | null): string {\n  return x;\n}\n",
                 expect="fail",
                 codes=(2322,),
             ),
@@ -1163,39 +1082,27 @@ def fixtures_nullability() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/optional-chain.ts",
             content=ts_file(
-                "export function f(x: { a?: { b?: number } }): number {\n"
-                "  return x.a?.b ?? 0;\n"
-                "}\n"
+                "export function f(x: { a?: { b?: number } }): number {\n  return x.a?.b ?? 0;\n}\n"
             ),
         ),
         Fixture(
             relpath=f"{base}/nullish-coalesce.ts",
-            content=ts_file(
-                "export const x: number = null ?? 1;\n"
-            ),
+            content=ts_file("export const x: number = null ?? 1;\n"),
         ),
         Fixture(
             relpath=f"{base}/non-null-assertion.ts",
             content=ts_file(
-                "export function f(x: string | null): number {\n"
-                "  return x!.length;\n"
-                "}\n"
+                "export function f(x: string | null): number {\n  return x!.length;\n}\n"
             ),
         ),
         Fixture(
             relpath=f"{base}/undefined-union.ts",
-            content=ts_file(
-                "export function f(x?: string): string {\n"
-                "  return x ?? '';\n"
-                "}\n"
-            ),
+            content=ts_file("export function f(x?: string): string {\n  return x ?? '';\n}\n"),
         ),
         Fixture(
             relpath=f"{base}/TS2531-error-object-null.ts",
             content=ts_file(
-                "export function f(x: string | null): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x: string | null): number {\n  return x.length;\n}\n",
                 expect="fail",
                 codes=(18047, 2531),
             ),
@@ -1205,9 +1112,7 @@ def fixtures_nullability() -> list[Fixture]:
         Fixture(
             relpath=f"{base}/TS2532-error-object-undefined.ts",
             content=ts_file(
-                "export function f(x?: string): number {\n"
-                "  return x.length;\n"
-                "}\n",
+                "export function f(x?: string): number {\n  return x.length;\n}\n",
                 expect="fail",
                 codes=(18048, 2532),
             ),
@@ -1222,28 +1127,19 @@ def fixtures_inference() -> list[Fixture]:
     return [
         Fixture(
             relpath=f"{base}/literal-inference.ts",
-            content=ts_file(
-                "export const x = 1;\n"
-                "export const s = 'a';\n"
-            ),
+            content=ts_file("export const x = 1;\nexport const s = 'a';\n"),
         ),
         Fixture(
             relpath=f"{base}/array-inference.ts",
-            content=ts_file(
-                "export const arr = [1, 2, 3];\n"
-            ),
+            content=ts_file("export const arr = [1, 2, 3];\n"),
         ),
         Fixture(
             relpath=f"{base}/object-inference.ts",
-            content=ts_file(
-                "export const obj = { a: 1, b: 'x' };\n"
-            ),
+            content=ts_file("export const obj = { a: 1, b: 'x' };\n"),
         ),
         Fixture(
             relpath=f"{base}/return-inference.ts",
-            content=ts_file(
-                "export function f() { return 42; }\n"
-            ),
+            content=ts_file("export function f() { return 42; }\n"),
         ),
     ]
 
@@ -1268,15 +1164,11 @@ def fixtures_standard_library() -> list[Fixture]:
         ),
         Fixture(
             relpath=f"{base}/set.ts",
-            content=ts_file(
-                "export const s: Set<number> = new Set([1, 2, 3]);\n"
-            ),
+            content=ts_file("export const s: Set<number> = new Set([1, 2, 3]);\n"),
         ),
         Fixture(
             relpath=f"{base}/promise.ts",
-            content=ts_file(
-                "export const p: Promise<number> = Promise.resolve(1);\n"
-            ),
+            content=ts_file("export const p: Promise<number> = Promise.resolve(1);\n"),
         ),
         Fixture(
             relpath=f"{base}/json.ts",
@@ -1333,8 +1225,7 @@ def fixtures_projects_minimal() -> list[Fixture]:
     return [
         _project_readme(
             "minimal",
-            "One tsconfig.json and one clean .ts file. Used by basic "
-            "project-checking tests.",
+            "One tsconfig.json and one clean .ts file. Used by basic project-checking tests.",
         ),
         Fixture(
             relpath="projects/minimal/tsconfig.json",
@@ -1361,8 +1252,7 @@ def fixtures_projects_monorepo() -> list[Fixture]:
     return [
         _project_readme(
             "monorepo",
-            "Two packages plus a root tsconfig. Used by project-references "
-            "and workspace tests.",
+            "Two packages plus a root tsconfig. Used by project-references and workspace tests.",
         ),
         Fixture(
             relpath="projects/monorepo/tsconfig.json",
@@ -1414,23 +1304,15 @@ def fixtures_projects_path_aliases() -> list[Fixture]:
         ),
         Fixture(
             relpath="projects/path-aliases/src/lib/math.ts",
-            content=(
-                "export function double(n: number): number { return n * 2; }\n"
-            ),
+            content=("export function double(n: number): number { return n * 2; }\n"),
         ),
         Fixture(
             relpath="projects/path-aliases/src/main.ts",
-            content=(
-                "import { double } from '@lib/math';\n"
-                "export const x: number = double(3);\n"
-            ),
+            content=("import { double } from '@lib/math';\nexport const x: number = double(3);\n"),
         ),
         Fixture(
             relpath="projects/path-aliases/src/broken.ts",
-            content=(
-                "import { notThere } from '@lib/missing';\n"
-                "export const y = notThere;\n"
-            ),
+            content=("import { notThere } from '@lib/missing';\nexport const y = notThere;\n"),
             expect="fail",
             codes=(2307,),
         ),
@@ -1456,9 +1338,7 @@ def fixtures_projects_references() -> list[Fixture]:
         ),
         Fixture(
             relpath="projects/references/lib/util.ts",
-            content=(
-                "export function double(n: number): number { return n * 2; }\n"
-            ),
+            content=("export function double(n: number): number { return n * 2; }\n"),
         ),
         Fixture(
             relpath="projects/references/app/tsconfig.json",
@@ -1477,15 +1357,12 @@ def fixtures_projects_references() -> list[Fixture]:
         Fixture(
             relpath="projects/references/app/main.ts",
             content=(
-                "import { double } from '../lib/util';\n"
-                "export const x: number = double(3);\n"
+                "import { double } from '../lib/util';\nexport const x: number = double(3);\n"
             ),
         ),
         Fixture(
             relpath="projects/references/app/broken.ts",
-            content=(
-                "export const bad: number = 'string';\n"
-            ),
+            content=("export const bad: number = 'string';\n"),
             expect="fail",
             codes=(2322,),
         ),
@@ -1511,15 +1388,12 @@ def fixtures_projects_custom_types() -> list[Fixture]:
         Fixture(
             relpath="projects/custom-types/types.d.ts",
             content=(
-                "declare function greet(name: string): string;\n"
-                "declare const VERSION: string;\n"
+                "declare function greet(name: string): string;\ndeclare const VERSION: string;\n"
             ),
         ),
         Fixture(
             relpath="projects/custom-types/main.ts",
-            content=(
-                "export const s: string = greet(VERSION);\n"
-            ),
+            content=("export const s: string = greet(VERSION);\n"),
         ),
     ]
 
@@ -1556,9 +1430,7 @@ FIXTURE_SETS: list[FixtureSet] = [
     FixtureSet("typescript/intersections", fixtures_intersections()),
     FixtureSet("typescript/conditional-types", fixtures_conditional_types()),
     FixtureSet("typescript/mapped-types", fixtures_mapped_types()),
-    FixtureSet(
-        "typescript/template-literal-types", fixtures_template_literal_types()
-    ),
+    FixtureSet("typescript/template-literal-types", fixtures_template_literal_types()),
     FixtureSet("typescript/overloads", fixtures_overloads()),
     FixtureSet("typescript/classes", fixtures_classes()),
     FixtureSet("typescript/interfaces", fixtures_interfaces()),
@@ -1591,8 +1463,7 @@ FIXTURE_SETS: list[FixtureSet] = [
 
 def all_fixtures() -> Iterable[Fixture]:
     for fs in FIXTURE_SETS:
-        for f in fs.fixtures:
-            yield f
+        yield from fs.fixtures
 
 
 def write_fixture(fixture: Fixture, *, force: bool) -> str:

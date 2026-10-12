@@ -47,6 +47,9 @@ jobs:
       - name: Install package with dev extras
         run: pip install -e ".[dev]"
 
+      - name: Fetch bundled compiler
+        run: python scripts/build_binaries.py linux-x64
+
       - name: Verify fixture drift
         run: |
           python scripts/verify_fixtures.py --quiet --strict
@@ -126,7 +129,7 @@ jobs:
         run: python conformance/run.py
 
       - name: Run benchmarks (informational)
-        run: python benchmarks/run.py --json > benchmarks.json || true
+        run: python benchmarks/run.py --json > benchmarks.json
 
       - name: Upload benchmark report
         uses: actions/upload-artifact@v7
@@ -208,12 +211,17 @@ jobs:
       - name: Fetch bundled compiler for this platform
         shell: bash
         run: |
-          case "${{ runner.os }}" in
-            Linux)   PLATFORM=linux-x64 ;;
-            macOS)   PLATFORM=darwin-arm64 ;;
-            Windows) PLATFORM=win32-x64 ;;
-          esac
+          PLATFORM=$(python -c "import platform, sys; a=platform.machine().lower(); print(sys.platform + '-' + ('arm64' if a in ('arm64', 'aarch64') else 'x64'))")
           python scripts/build_binaries.py "$PLATFORM"
+
+      - name: Native compatibility tests
+        run: python -m pytest tests/compatibility -q
+
+      - name: Build and install wheel
+        run: |
+          python -m build --wheel
+          python -m pip uninstall -y pytscheck
+          python -m pip install --no-deps --no-index --find-links dist pytscheck
 
       - name: Sanity check -- package imports and binary runs
         shell: bash

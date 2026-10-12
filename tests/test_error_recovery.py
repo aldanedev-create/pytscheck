@@ -48,7 +48,9 @@ def test_recovers_after_timeout(tmp_path: Path) -> None:
         shutil.copy2(fake, original)
         original.chmod(0o755)
         with suppress(CompilerTimeoutError, CompilerExecutionError):
-            checker.check_source("const x = 1;")
+            from pytscheck.runner import run
+
+            run([], timeout=0.1)
 
     # After the fake is removed, real checks must work again.
     r = checker.check_source("export const x: number = 1;")

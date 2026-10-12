@@ -1,0 +1,5 @@
+{
+  "case": "unions/discriminated.ts",
+  "success": true,
+  "diagnostics": []
+}

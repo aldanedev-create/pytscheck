@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.24"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
@@ -8,13 +8,13 @@ version = "0.1.0.dev0"
 description = "Python-native TypeScript type checking, powered by a bundled native tsgo compiler."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE.txt"]
 authors = [{ name = "PyTSCheck contributors" }]
 keywords = ["typescript", "type-checking", "tsgo", "compiler", "python"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -40,9 +40,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/pytscheck"
-Repository = "https://github.com/your-org/pytscheck"
-Documentation = "https://pytscheck.readthedocs.io/"
+Homepage = "https://github.com/aldanedev-create/pytscheck"
+Repository = "https://github.com/aldanedev-create/pytscheck"
+Documentation = "https://github.com/aldanedev-create/pytscheck/tree/main/docs"
 
 [project.scripts]
 pytscheck = "pytscheck.__main__:main"
@@ -52,9 +52,14 @@ pytscheck = "pytscheck.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pytscheck"]
+exclude = ["src/pytscheck/bin/**"]
+
+[tool.hatch.build.hooks.custom]
+path = "scripts/hatch_build.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/", "tests/", "scripts/", "docs/", "examples/", "README.md", "LICENSE", "NOTICE.txt"]
+include = ["src/", "tests/", "scripts/", "conformance/", "benchmarks/", "docs/", "examples/", "README.md", "LICENSE", "NOTICE.txt", "pytest.ini"]
+exclude = ["src/pytscheck/bin/*/**", "**/__pycache__", "**/*.pyc", "conformance/.staging/**"]
 
 [tool.ruff]
 target-version = "py311"
