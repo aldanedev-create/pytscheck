@@ -45,6 +45,9 @@ def test_bundled_binary_size_matches_manifest(
         "win32-arm64": "windows-arm64",
         "linux-x64": "linux-amd64",
         "linux-arm64": "linux-arm64",
+        "linux-arm": "linux-arm",
+        "linux-ia32": "linux-386",
+        "win32-ia32": "windows-386",
         "darwin-x64": "darwin-amd64",
         "darwin-arm64": "darwin-arm64",
     }

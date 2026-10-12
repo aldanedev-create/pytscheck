@@ -17,6 +17,9 @@ ROOT = Path(__file__).resolve().parent.parent
 PLATFORMS = (
     "linux-x64",
     "linux-arm64",
+    "linux-arm",
+    "linux-ia32",
+    "win32-ia32",
     "win32-x64",
     "win32-arm64",
     "darwin-x64",
@@ -72,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
         wheels = sorted(output.glob("*.whl"))
         sources = sorted(output.glob("*.tar.gz"))
         if len(wheels) != len(PLATFORMS) or len(sources) != 1:
-            raise ValueError("expected exactly six wheels and one source archive")
+            raise ValueError("expected exactly nine wheels and one source archive")
         if any(not path.name.startswith(f"pytscheck-{version}-") for path in wheels):
             raise ValueError("wheel version does not match the intended release")
         if sources[0].name != f"pytscheck-{version}.tar.gz":
@@ -85,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise ValueError(f"invalid wheel {wheel.name}: {check.detail}")
         artifacts = [str(path) for path in [*wheels, *sources]]
         command("twine", "check", "--strict", *artifacts)
-        print(f"Validated seven distributions: {output}", flush=True)
+        print(f"Validated ten distributions: {output}", flush=True)
         if args.build_only:
             return 0
         print(f"Uploading to {args.repository}; Twine will request your API token.", flush=True)

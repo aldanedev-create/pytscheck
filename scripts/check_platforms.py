@@ -37,6 +37,9 @@ EXPECTED_TARGETS: set[str] = {
     "windows-arm64",
     "linux-amd64",
     "linux-arm64",
+    "linux-arm",
+    "linux-386",
+    "windows-386",
     "darwin-amd64",
     "darwin-arm64",
 }
@@ -47,6 +50,9 @@ INITIAL_TARGETS: set[str] = {
     "windows-amd64",
     "linux-amd64",
     "linux-arm64",
+    "linux-arm",
+    "linux-386",
+    "windows-386",
     "darwin-amd64",
     "darwin-arm64",
 }

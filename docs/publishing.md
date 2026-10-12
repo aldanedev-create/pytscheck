@@ -11,7 +11,9 @@ python -m pip install --upgrade build twine
 python scripts/publish.py
 ```
 
-The script builds all six platform wheels and one source archive, validates version consistency and wheel contents, runs strict Twine checks, then uploads to **real PyPI**. Twine prompts for your PyPI API token (or uses your configured credentials). The package version is whatever is committed in both version files; it does not change the version for you.
+Building the x86 targets requires Git and Go 1.26.9 on PATH (CI installs this toolchain automatically). Installed wheels still require neither Go nor Node. See [compiler provenance](supported-platforms.md#compiler-provenance-and-build-requirements).
+
+The script builds all nine platform wheels and one source archive, validates version consistency and wheel contents, runs strict Twine checks, then uploads to **real PyPI**. Twine prompts for your PyPI API token (or uses your configured credentials). The package version is whatever is committed in both version files; it does not change the version for you.
 
 For a test upload or a build without uploading:
 
@@ -20,7 +22,7 @@ python scripts/publish.py --repository testpypi
 python scripts/publish.py --build-only
 ```
 
-Each invocation uses a new directory under `build/releases/`, prints its location, and uploads only the seven freshly built files. Existing distributions are preserved. Any failed build or validation stops the upload. This script does not run the full test suite; complete release CI first. Network access is needed for isolated build dependencies and any missing pinned compiler archives. Do not run it while compiler-mutating tests are active in the same checkout.
+Each invocation uses a new directory under `build/releases/`, prints its location, and uploads only the ten freshly built files. Existing distributions are preserved. Any failed build or validation stops the upload. This script does not run the full test suite; complete release CI first. Network access is needed for isolated build dependencies and any missing pinned compiler archives. Do not run it while compiler-mutating tests are active in the same checkout.
 
 ## 1. Choose and commit the release version
 
@@ -37,7 +39,7 @@ git pull --ff-only origin main
 
 Check the **CI** and **Build PyPI distributions** workflows in [Actions](https://github.com/aldanedev-create/pytscheck/actions). Use the successful distribution run for this exact commit, including the latest README.
 
-## 2. Obtain all seven distributions
+## 2. Obtain all ten distributions
 
 Open **Build PyPI distributions** for the chosen commit and download these artifact ZIPs:
 
@@ -51,9 +53,9 @@ Open **Build PyPI distributions** for the chosen commit and download these artif
 | `wheel-darwin-arm64` | macOS Apple Silicon `.whl` |
 | `sdist` | `pytscheck-0.1.0.tar.gz` |
 
-Extract the actual six `.whl` files and one `.tar.gz` into a new clean `dist/` directory. Do not upload the outer ZIP files or `compiler-*` artifacts to PyPI. Keep compiler bundles separately for standalone downloads.
+Extract the actual nine `.whl` files and one `.tar.gz` into a new clean `dist/` directory. Do not upload the outer ZIP files or `compiler-*` artifacts to PyPI. Keep compiler bundles separately for standalone downloads.
 
-The six wheel suffixes are listed in [supported platforms](supported-platforms.md). Every file must contain the intended package version. A previous build saved before a README update will still carry the old PyPI description; use the new run.
+The nine wheel suffixes are listed in [supported platforms](supported-platforms.md). Every file must contain the intended package version. A previous build saved before a README update will still carry the old PyPI description; use the new run.
 
 ## 3. Set up publishing tools and validate
 
@@ -139,7 +141,7 @@ To install the newest available prerelease rather than a specific version, users
 
 ## 7. Tag and provide GitHub downloads
 
-After a successful upload, tag the exact released commit (for this version, `v0.1.0`), push the tag, and create a GitHub Release with changelog notes. Attach the seven PyPI distributions and any standalone compiler bundles you want to offer. Keep declaration libraries and notices beside the compiler in those bundles.
+After a successful upload, tag the exact released commit (for this version, `v0.1.0`), push the tag, and create a GitHub Release with changelog notes. Attach the ten PyPI distributions and any standalone compiler bundles you want to offer. Keep declaration libraries and notices beside the compiler in those bundles.
 
 Tagging alone does not upload to PyPI. The current distribution workflow builds artifacts for PRs/main pushes or manual dispatch; it has no automatic publishing job.
 
@@ -150,7 +152,7 @@ Tagging alone does not upload to PyPI. The current distribution workflow builds 
 | Invalid/expired token or 403 | Check service, token, scope, and project ownership |
 | File already exists | Use a new version and rebuild; do not rename files or overwrite |
 | Name unavailable | Use a name you own; changing it requires metadata/docs updates and a rebuild |
-| Missing wheels | Upload all six wheel artifacts plus source archive from the same commit/version |
+| Missing wheels | Upload all nine wheel artifacts plus source archive from the same commit/version |
 | README rendering error | Fix Markdown/metadata, rebuild, and run strict Twine checks again |
 
 Official references: [PyPA packaging tutorial](https://packaging.python.org/en/latest/tutorials/packaging-projects/), [PyPI account/token help](https://pypi.org/help/), and [Twine documentation](https://twine.readthedocs.io/).

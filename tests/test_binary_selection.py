@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 import platform
+import struct
 import sys
 from pathlib import Path
 
@@ -25,9 +26,9 @@ def test_platform_dir_matches_running_machine() -> None:
     if system == "linux":
         assert dirname.startswith("linux-")
         if machine in {"x86_64", "amd64"}:
-            assert dirname == "linux-amd64"
+            assert dirname == ("linux-386" if struct.calcsize("P") == 4 else "linux-amd64")
         elif machine in {"aarch64", "arm64"}:
-            assert dirname == "linux-arm64"
+            assert dirname == ("linux-arm" if struct.calcsize("P") == 4 else "linux-arm64")
     elif system == "darwin":
         assert dirname.startswith("darwin-")
     elif system == "win32":
@@ -73,7 +74,7 @@ def test_binary_path_returns_absolute_path() -> None:
     assert p.is_absolute()
 
 
-def test_all_six_platform_directories_are_resolvable() -> None:
+def test_all_platform_directories_are_resolvable() -> None:
     """Every documented target maps to a concrete directory name."""
     from pytscheck.runner import _PLATFORM_DIRS
 
@@ -82,6 +83,10 @@ def test_all_six_platform_directories_are_resolvable() -> None:
         ("win32", "arm64"),
         ("linux", "x86_64"),
         ("linux", "aarch64"),
+        ("linux", "armv7l"),
+        ("linux", "i686"),
+        ("linux", "i386"),
+        ("win32", "x86"),
         ("darwin", "x86_64"),
         ("darwin", "arm64"),
     }

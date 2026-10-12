@@ -41,6 +41,6 @@ Cross-building packages an upstream binary; it does not compile Go or prove nati
 
 ## CI artifacts
 
-The **Build PyPI distributions** workflow uploads `wheel-<platform>` and `compiler-<platform>` artifacts for six targets, plus `sdist`. Extract the wheel and source artifacts before uploading to PyPI. Compiler artifacts are for standalone tooling/downloads and must not be passed to Twine.
+The **Build PyPI distributions** workflow uploads `wheel-<platform>` and `compiler-<platform>` artifacts for nine targets, plus `sdist`. Extract the wheel and source artifacts before uploading to PyPI. Compiler artifacts are for standalone tooling/downloads and must not be passed to Twine.
 
 Preserve adjacent declaration files when using a compiler bundle directly. A bare executable can start but may not find required standard libraries. See [publishing](publishing.md) for the release procedure.

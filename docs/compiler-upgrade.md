@@ -6,7 +6,7 @@ Package version, compiler version, and adapter protocol version are independent.
 
 1. Choose and inspect the intended upstream native preview version.
 2. Update the compiler pin in `scripts/build_binaries.py` and `src/pytscheck/version.py`, and each target's recorded upstream archive integrity as required by the fetch script.
-3. Fetch all six targets with `python scripts/build_binaries.py <platform>` and regenerate/verify the manifest using the repository scripts.
+3. Update the source commit and fixed Go toolchain for the x86 builds alongside the npm pin. Confirm npm metadata identifies that exact commit. Then fetch all nine targets with `python scripts/build_binaries.py <platform>` and regenerate/verify the manifest using the repository scripts.
 4. Run native tests, fixture gates, lint/type checks, and conformance before rewriting expectations.
 5. Stage changed expected diagnostics with `python scripts/update_conformance.py`; review the staged differences. Use `--apply` only when the new behavior is understood.
 6. Run `python conformance/run.py`, `python scripts/update_conformance.py --check`, benchmarks, and the release gate.
@@ -18,4 +18,4 @@ Package version, compiler version, and adapter protocol version are independent.
 
 Record changed error codes/messages/positions, removed flags, standard-library differences, platform requirements, and performance changes in the changelog. If binary minimum OS requirements change, update wheel tags, platform docs, and build tests together.
 
-A successful Linux run cannot validate a Windows/macOS compiler upgrade. Wait for native CI and all six distribution builds before publishing. Follow [publishing](publishing.md).
+A successful Linux run cannot validate a Windows/macOS compiler upgrade. Wait for native CI and all nine distribution builds before publishing. Follow [publishing](publishing.md).

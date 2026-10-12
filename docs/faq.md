@@ -42,4 +42,4 @@ The wrapper has validation and subprocess limits, but it is not a sandbox. Use o
 
 ## How do I publish?
 
-Follow [publishing](publishing.md). Upload the source archive and all six wheels for the intended version. Compiler ZIPs are separate downloads, not PyPI distributions.
+Follow [publishing](publishing.md). Upload the source archive and all nine wheels for the intended version. Compiler ZIPs are separate downloads, not PyPI distributions.

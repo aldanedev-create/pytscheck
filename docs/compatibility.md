@@ -4,7 +4,7 @@
 
 The package declares Python 3.11+. CI exercises Python 3.11, 3.12, and 3.13 on Linux, plus native compatibility and wheel installation checks on Windows and macOS. Declared support for a newer interpreter is not evidence of a separate native CI run.
 
-See [supported platforms](supported-platforms.md) for the six wheel targets. x86/32-bit Python, musl Linux such as Alpine, and unlisted OS/CPU combinations do not have dedicated supported wheels.
+See [supported platforms](supported-platforms.md) for nine wheel targets, including Alpine/musl, Linux ARMv7, and Linux/Windows x86. Unlisted OS/CPU combinations, legacy non-SSE2 x86, ARMv5/ARMv6 wheel tags, and 32-bit macOS are not supported.
 
 ## Compiler pin
 

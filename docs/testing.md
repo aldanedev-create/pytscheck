@@ -54,6 +54,8 @@ The gate validates version/license/platform consistency, fixture and compiler in
 
 ## CI
 
-`ci.yml` tests Python 3.11–3.13, integration/compatibility/security/fuzz/conformance, benchmarks, the release gate, and native macOS/Windows compatibility and built-wheel installation. `distributions.yml` builds all six wheels and the source archive. Both must pass for the exact commit being released.
+`ci.yml` tests Python 3.11–3.13, integration/compatibility/security/fuzz/conformance, benchmarks, the release gate, and native macOS/Windows compatibility and built-wheel installation. `distributions.yml` builds all nine wheels and the source archive. Both must pass for the exact commit being released.
 
 CI sets `FORCE_COLOR=1`; to reproduce locally on POSIX, also use `TERM=xterm-256color`. The runner requests plain diagnostics independently of those settings.
+
+Distribution CI also installs wheels in Alpine and 32-bit glibc containers (QEMU for foreign CPUs), plus Windows with 32-bit Python. These jobs execute the compiler and project/JSDoc/adapter/mapping regressions, not just architecture-header checks.
