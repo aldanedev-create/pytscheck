@@ -215,7 +215,7 @@ jobs:
           python scripts/build_binaries.py "$PLATFORM"
 
       - name: Native compatibility tests
-        run: python -m pytest tests/compatibility tests/adapters/test_project_context.py tests/adapters/test_v3_source_maps.py -q
+        run: python -m pytest tests/compatibility tests/adapters/test_project_context.py tests/adapters/test_v3_source_maps.py tests/integration/test_source_map_diagnostics.py -q
 
       - name: Build and install wheel
         run: |

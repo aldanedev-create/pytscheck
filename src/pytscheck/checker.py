@@ -102,7 +102,7 @@ def check_source(
     if not filename or Path(filename).name != filename:
         raise ConfigurationError("filename must be a non-empty basename")
     with tempfile.TemporaryDirectory(prefix="pytscheck-") as tmp:
-        tmp_path = Path(tmp)
+        tmp_path = Path(tmp).resolve()
         target = tmp_path / filename
         try:
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -160,7 +160,7 @@ def check_sources_virtual(
         raise ConfigurationError("adapter returned no sources to check")
 
     with tempfile.TemporaryDirectory(prefix="pytscheck-adapter-") as tmp:
-        tmp_path = Path(tmp)
+        tmp_path = Path(tmp).resolve()
         for src in sources:
             dest = tmp_path / src.path
             try:
