@@ -30,6 +30,7 @@ coverage.xml
 Thumbs.db
 
 # Bundled binaries fetched at build time (do not commit)
+/src/pytscheck/bin/*/lib/tsc*
 /src/pytscheck/bin/*/lib/tsgo*
 /src/pytscheck/bin/*/lib/*.d.ts
 

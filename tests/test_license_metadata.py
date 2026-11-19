@@ -55,7 +55,7 @@ def test_bundled_license_if_binary_present(bin_root: Path) -> None:
     for platform_dir in bin_root.glob("*-*"):
         if not platform_dir.is_dir():
             continue
-        binaries = list(platform_dir.rglob("tsgo")) + list(platform_dir.rglob("tsgo.exe"))
+        binaries = list(platform_dir.rglob("tsc")) + list(platform_dir.rglob("tsc.exe"))
         if not binaries:
             continue
         license_candidates = list(platform_dir.rglob("LICENSE")) + list(
@@ -68,7 +68,7 @@ def test_bundled_notice_if_binary_present(bin_root: Path) -> None:
     for platform_dir in bin_root.glob("*-*"):
         if not platform_dir.is_dir():
             continue
-        binaries = list(platform_dir.rglob("tsgo")) + list(platform_dir.rglob("tsgo.exe"))
+        binaries = list(platform_dir.rglob("tsc")) + list(platform_dir.rglob("tsc.exe"))
         if not binaries:
             continue
         notice = list(platform_dir.rglob("NOTICE.txt")) + list(platform_dir.rglob("NOTICE"))

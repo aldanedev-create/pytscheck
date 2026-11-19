@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch pinned tsgo binaries from npm, verify SHA-512, extract safely."""
+"""Fetch pinned stable TypeScript 7 native compilers from npm, verify SHA-512, extract safely."""
 
 from __future__ import annotations
 
@@ -19,8 +19,8 @@ from pathlib import Path
 
 REGISTRY = "https://registry.npmjs.org/"
 
-# Pin exactly. Confirmed latest tag as of Phase 0:
-# https://www.npmjs.com/package/@typescript/native-preview
+# Pin exactly. Stable native compiler, published as optional platform packages of
+# https://www.npmjs.com/package/typescript
 VERSION = "7.0.2"
 
 # Stable packages ship the executable as lib/tsc (preview used lib/tsgo).
@@ -42,7 +42,7 @@ PLATFORMS: dict[str, str] = {
 SOURCE_TARGETS = {"linux-ia32": "linux", "win32-ia32": "windows"}
 SOURCE_COMMIT = "2bd066d87f5bafd315be9f40889d0a60b9e58e0b"  # tag typescript/v7.0.2
 SOURCE_REPOSITORY = "https://github.com/microsoft/typescript-go.git"
-SOURCE_GO_VERSION = "go1.27.0"
+SOURCE_GO_VERSION = "go1.26.9"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BIN_ROOT = REPO_ROOT / "src" / "pytscheck" / "bin"

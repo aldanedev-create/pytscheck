@@ -13,7 +13,7 @@ include tox.ini
 include noxfile.py
 
 recursive-include src/pytscheck *.py py.typed
-recursive-include src/pytscheck/bin manifest.json *.d.ts LICENSE NOTICE.txt tsgo tsgo.exe
+recursive-include src/pytscheck/bin manifest.json *.d.ts LICENSE NOTICE.txt tsc tsc.exe
 
 recursive-include tests *.py
 recursive-include conformance *.py *.json

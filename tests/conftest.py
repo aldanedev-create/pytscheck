@@ -84,7 +84,7 @@ def tsgo_binary(bin_platform_dir: Path) -> Path:
     Never mocks. If the binary is not present, the calling test is skipped
     with a message telling the developer to run the fetch script.
     """
-    exe_name = "tsgo.exe" if sys.platform == "win32" else "tsgo"
+    exe_name = "tsc.exe" if sys.platform == "win32" else "tsc"
     candidate = bin_platform_dir / "lib" / exe_name
 
     if not candidate.exists():

@@ -136,7 +136,7 @@ def test_path_environment_does_not_affect_binary_selection(tsgo_binary: Path) ->
     )
     # The bundled binary should still resolve because we use __file__, not PATH.
     assert result.returncode == 0, result.stderr
-    assert "tsgo" in result.stdout
+    assert "tsc" in result.stdout
 
 
 def test_force_color_does_not_change_diagnostics(tsgo_binary: Path) -> None:

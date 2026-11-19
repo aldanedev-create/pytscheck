@@ -8,7 +8,7 @@ See [supported platforms](supported-platforms.md) for nine wheel targets, includ
 
 ## Compiler pin
 
-The compiler is `7.0.0-dev.20260707.2`, a pinned native TypeScript preview build. It is not selected from your PATH and is not your npm project's `typescript` package. Installed Node.js or Go versions do not choose the compiler.
+The compiler is `7.0.2`, the pinned stable native TypeScript 7.0 compiler. It is not selected from your PATH and is not your npm project's `typescript` package. Installed Node.js or Go versions do not choose the compiler.
 
 TypeScript semantics, flags, diagnostics, and configuration compatibility follow this pin. Do not assume a project accepted by an older `tsc` behaves identically; inspect compiler diagnostics and conformance differences. Standard-library declarations travel with the compiler.
 

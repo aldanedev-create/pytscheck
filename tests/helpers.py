@@ -306,7 +306,7 @@ def make_fake_tsgo_on_path(path: Path, *, behavior: str = "echo") -> tuple[Path,
     platform_dir = path / "fake-platform"
     lib = platform_dir / "lib"
     lib.mkdir(parents=True, exist_ok=True)
-    exe_name = "tsgo.exe" if __import__("os").name == "nt" else "tsgo"
+    exe_name = "tsc.exe" if __import__("os").name == "nt" else "tsc"
     binary = lib / exe_name
     make_fake_tsgo(binary, behavior=behavior)
     return platform_dir, binary

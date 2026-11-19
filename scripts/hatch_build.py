@@ -96,7 +96,7 @@ class CustomBuildHook(BuildHookInterface):
         """Mark the bundled compiler executable inside the wheel.
 
         Hatchling copies the mode it sees on disk, which is 0644 when building on
-        Windows, so the installed tsgo would not be runnable on Linux/macOS.
+        Windows, so the installed tsc would not be runnable on Linux/macOS.
         """
         if self.target_name != "wheel" or version == "editable":
             return
@@ -109,7 +109,7 @@ class CustomBuildHook(BuildHookInterface):
         ):
             for info in source.infolist():
                 data = source.read(info.filename)
-                if info.filename.endswith("/lib/tsgo"):  # tsgo.exe needs no mode bit
+                if info.filename.endswith("/lib/tsc"):  # tsc.exe needs no mode bit
                     info.external_attr = 0o100755 << 16
                 target.writestr(info, data)
         os.replace(temporary, artifact_path)

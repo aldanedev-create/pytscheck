@@ -24,7 +24,7 @@ See [binary distribution](binary-distribution.md) for build identifiers and [ins
 
 ## Compiler provenance and build requirements
 
-Linux ARMv7 uses the official pinned `native-preview-linux-arm` archive (upstream Go ARMv6 binary, runnable on ARMv7). Upstream does not publish x86 archives. Linux and Windows x86 are built without compiler-source modifications from commit `9977d6d38fcc78de8ae71770f3aa08256e6cc861`, the `gitHead` of compiler `7.0.0-dev.20260707.2`, using Go `1.26.9`, `GOARCH=386`, `GO386=sse2`, and `CGO_ENABLED=0`. Libraries and notices come from the matching pinned official archive. These x86 executables are PyTSCheck builds, not official upstream x86 releases. Their SHA-512, source commit, and toolchain are recorded in the manifest.
+Linux ARMv7 uses the official pinned `@typescript/typescript-linux-arm` archive (upstream Go ARMv6 binary, runnable on ARMv7). Upstream does not publish x86 archives. Linux and Windows x86 are built without compiler-source modifications from commit `2bd066d87f5bafd315be9f40889d0a60b9e58e0b`, the `gitHead` of compiler `7.0.2` (tag `typescript/v7.0.2`), using Go `1.26.9`, `GOARCH=386`, `GO386=sse2`, and `CGO_ENABLED=0`. Libraries and notices come from the matching pinned official archive. These x86 executables are PyTSCheck builds, not official upstream x86 releases. Their SHA-512, source commit, and toolchain are recorded in the manifest.
 
 Building x86 wheels from a source checkout requires Git and Go 1.26.9; installing the finished wheels requires neither Go nor Node. `scripts/publish.py` builds all nine targets and therefore also requires those build tools. All source builds use the fixed commit rather than upstream main.
 

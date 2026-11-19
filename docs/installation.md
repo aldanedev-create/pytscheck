@@ -8,11 +8,11 @@ Wheels bundle `tsgo`, standard-library declarations, and upstream notices. No No
 
 ## Install a published release
 
-Once `0.1.0` is available on PyPI:
+Once `0.2.0` is available on PyPI:
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install --only-binary=:all: "pytscheck==0.1.0"
+python -m pip install --only-binary=:all: "pytscheck==0.2.0"
 python -m pytscheck --version
 python -m pytscheck --where
 ```
@@ -30,7 +30,7 @@ python -m pip install --no-index --no-deps /path/to/actual-wheel.whl
 For Windows PowerShell, use an actual Windows wheel filename:
 
 ```powershell
-py -m pip install --no-index --no-deps .\pytscheck-0.1.0-py3-none-win_amd64.whl
+py -m pip install --no-index --no-deps .\pytscheck-0.2.0-py3-none-win_amd64.whl
 py -m pytscheck --version
 ```
 

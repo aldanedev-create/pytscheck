@@ -71,13 +71,13 @@ def test_binary_path_returns_after_restoring_permissions() -> None:
 def test_fake_binary_is_executable_on_posix(tmp_path: Path) -> None:
     if os.name == "nt":
         pytest.skip("permission bits not meaningful on Windows")
-    binary = make_fake_tsgo(tmp_path / "lib" / "tsgo", behavior="echo")
+    binary = make_fake_tsgo(tmp_path / "lib" / "tsc", behavior="echo")
     assert file_has_executable_bit(binary)
 
 
 def test_fake_binary_reads_back_as_executable(tmp_path: Path) -> None:
     if os.name == "nt":
         pytest.skip("permission bits not meaningful on Windows")
-    binary = make_fake_tsgo(tmp_path / "lib" / "tsgo", behavior="echo")
+    binary = make_fake_tsgo(tmp_path / "lib" / "tsc", behavior="echo")
     mode = binary.stat().st_mode
     assert mode & stat.S_IXUSR

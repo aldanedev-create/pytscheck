@@ -110,7 +110,7 @@ def _check_bundled_binaries() -> list[Finding]:
         if not platform_dir.is_dir():
             continue
         # Skip the manifest file's sibling behavior
-        binaries = list(platform_dir.rglob("tsgo")) + list(platform_dir.rglob("tsgo.exe"))
+        binaries = list(platform_dir.rglob("tsc")) + list(platform_dir.rglob("tsc.exe"))
         if not binaries:
             continue
         license_files = list(platform_dir.rglob("LICENSE")) + list(

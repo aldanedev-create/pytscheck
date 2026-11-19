@@ -107,7 +107,7 @@ def test_windows_long_path(tmp_path: Path) -> None:
 
 
 def test_binary_is_exe(tsgo_binary: Path) -> None:
-    assert tsgo_binary.name == "tsgo.exe"
+    assert tsgo_binary.name == "tsc.exe"
 
 
 def test_executable_bit_not_required(tsgo_binary: Path) -> None:

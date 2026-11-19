@@ -1,6 +1,6 @@
 # Publishing to PyPI
 
-This guide publishes the current **release version `0.1.0`**. It does not upload anything automatically. Use artifacts from the exact commit whose CI passed.
+This guide publishes the current **release version `0.2.0`**. It does not upload anything automatically. Use artifacts from the exact commit whose CI passed.
 
 ## Build and upload with one script
 
@@ -26,7 +26,7 @@ Each invocation uses a new directory under `build/releases/`, prints its locatio
 
 ## 1. Choose and commit the release version
 
-Package versions must agree in `pyproject.toml` and `src/pytscheck/version.py`. Leave both at `0.1.0` to publish this initial release. For a subsequent version, change both deliberately, update the changelog and documentation, commit, and wait for fresh successful CI/builds. Do not rename an existing wheel to change its version.
+Package versions must agree in `pyproject.toml` and `src/pytscheck/version.py`. Leave both at `0.2.0` to publish this release. For a subsequent version, change both deliberately, update the changelog and documentation, commit, and wait for fresh successful CI/builds. Do not rename an existing wheel to change its version.
 
 PyPI does not allow reusing a previously uploaded distribution filename. If this version was already uploaded, choose a new version and rebuild. Package-name ownership must also belong to your PyPI account; GitHub repository ownership does not reserve the PyPI name.
 
@@ -51,7 +51,7 @@ Open **Build PyPI distributions** for the chosen commit and download these artif
 | `wheel-win32-arm64` | Windows ARM64 `.whl` |
 | `wheel-darwin-x64` | macOS Intel `.whl` |
 | `wheel-darwin-arm64` | macOS Apple Silicon `.whl` |
-| `sdist` | `pytscheck-0.1.0.tar.gz` |
+| `sdist` | `pytscheck-0.2.0.tar.gz` |
 
 Extract the actual nine `.whl` files and one `.tar.gz` into a new clean `dist/` directory. Do not upload the outer ZIP files or `compiler-*` artifacts to PyPI. Keep compiler bundles separately for standalone downloads.
 
@@ -112,7 +112,7 @@ python -m twine upload --repository testpypi --username __token__ dist/*
 Create a fresh virtual environment outside the repository so the editable checkout cannot mask the installed package, then:
 
 ```bash
-python -m pip install --index-url https://test.pypi.org/simple/ --no-deps --only-binary=:all: "pytscheck==0.1.0"
+python -m pip install --index-url https://test.pypi.org/simple/ --no-deps --only-binary=:all: "pytscheck==0.2.0"
 python -m pytscheck --version
 python -m pytscheck --where
 python -c "from pytscheck import check; assert check('export const x: number = 1;').success"
@@ -132,7 +132,7 @@ python -m twine upload --username __token__ dist/*
 Review the resulting [project page](https://pypi.org/project/pytscheck/) and its files. Test in another clean environment:
 
 ```bash
-python -m pip install --only-binary=:all: "pytscheck==0.1.0"
+python -m pip install --only-binary=:all: "pytscheck==0.2.0"
 python -m pytscheck --version
 python -c "from pytscheck import check; assert check('export const x: number = 1;').success"
 ```
@@ -141,7 +141,7 @@ To install the newest available prerelease rather than a specific version, users
 
 ## 7. Tag and provide GitHub downloads
 
-After a successful upload, tag the exact released commit (for this version, `v0.1.0`), push the tag, and create a GitHub Release with changelog notes. Attach the ten PyPI distributions and any standalone compiler bundles you want to offer. Keep declaration libraries and notices beside the compiler in those bundles.
+After a successful upload, tag the exact released commit (for this version, `v0.2.0`), push the tag, and create a GitHub Release with changelog notes. Attach the ten PyPI distributions and any standalone compiler bundles you want to offer. Keep declaration libraries and notices beside the compiler in those bundles.
 
 Tagging alone does not upload to PyPI. The current distribution workflow builds artifacts for PRs/main pushes or manual dispatch; it has no automatic publishing job.
 

@@ -10,7 +10,7 @@ The default workflow type-checks with `--noEmit`. It returns diagnostics, not Ja
 
 ## Which TypeScript version runs?
 
-The pinned native compiler `7.0.0-dev.20260707.2`. It does not use a globally installed `tsc`. Check `python -m pytscheck --version` and the [compatibility guide](compatibility.md).
+The pinned native compiler `7.0.2`. It does not use a globally installed `tsc`. Check `python -m pytscheck --version` and the [compatibility guide](compatibility.md).
 
 ## Does checking contact a cloud service?
 

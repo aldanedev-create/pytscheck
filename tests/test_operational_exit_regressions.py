@@ -14,7 +14,7 @@ from tests.helpers import hide_file, make_fake_tsgo
 def executable(bin_platform_dir: Path):
     if os.name == "nt":
         pytest.skip("POSIX executable regression fixtures require a POSIX shell")
-    path = bin_platform_dir / "lib" / "tsgo"
+    path = bin_platform_dir / "lib" / "tsc"
     with hide_file(path):
         make_fake_tsgo(path)
         try:

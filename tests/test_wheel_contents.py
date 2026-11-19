@@ -45,7 +45,7 @@ def test_wheel_contains_metadata(built_wheel: Path) -> None:
 def test_wheel_contains_only_current_platform_bin(built_wheel: Path) -> None:
     """Each wheel must contain exactly one platform's tsgo binary."""
     members = list_wheel_members(built_wheel)
-    binaries = [m for m in members if m.endswith("/tsgo") or m.endswith("/tsgo.exe")]
+    binaries = [m for m in members if m.endswith("/tsc") or m.endswith("/tsc.exe")]
     if not binaries:
         pytest.skip("no binary in wheel (Phase 0 not run for this platform)")
     assert len(binaries) == 1, binaries

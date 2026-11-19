@@ -81,10 +81,10 @@ def _platform_dir() -> str:
 
 
 def binary_path() -> Path:
-    """Locate the bundled tsgo executable for the current platform."""
+    """Locate the bundled native TypeScript 7 executable (``tsc``) for the current platform."""
     here = Path(__file__).resolve().parent
     platform_dir = _platform_dir()
-    exe_name = "tsgo.exe" if sys.platform == "win32" else "tsgo"
+    exe_name = "tsc.exe" if sys.platform == "win32" else "tsc"
     candidate = here / "bin" / platform_dir / "lib" / exe_name
     if not candidate.is_file():
         download_target = {

@@ -65,7 +65,7 @@ def _hash_file(path: Path) -> tuple[str, int]:
 
 def _find_binary(platform_dir: Path) -> Path | None:
     """Locate the tsgo binary under a platform directory."""
-    for name in ("tsgo", "tsgo.exe"):
+    for name in ("tsc", "tsc.exe"):
         for candidate in platform_dir.rglob(name):
             if candidate.is_file():
                 return candidate

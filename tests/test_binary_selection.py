@@ -53,7 +53,7 @@ def test_binary_path_ends_with_correct_name() -> None:
         p = binary_path()
     except (CompilerNotFoundError, UnsupportedPlatformError):
         pytest.skip("no bundled binary present")
-    expected = "tsgo.exe" if sys.platform == "win32" else "tsgo"
+    expected = "tsc.exe" if sys.platform == "win32" else "tsc"
     assert p.name == expected
 
 

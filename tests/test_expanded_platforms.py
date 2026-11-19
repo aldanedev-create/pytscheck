@@ -21,7 +21,7 @@ def test_linux_wheel_tags_cover_glibc_and_musl() -> None:
     from packaging.utils import parse_wheel_filename
 
     for target in ("linux-x64", "linux-arm64", "linux-arm", "linux-ia32"):
-        _, _, _, tags = parse_wheel_filename(f"pytscheck-0.1.0-py3-none-{TAGS[target]}.whl")
+        _, _, _, tags = parse_wheel_filename(f"pytscheck-0.2.0-py3-none-{TAGS[target]}.whl")
         assert any(tag.platform.startswith("musllinux_1_2_") for tag in tags)
         assert any(tag.platform.startswith("manylinux_2_17_") for tag in tags)
 
@@ -41,7 +41,7 @@ def test_dynamic_python_cannot_be_shipped_as_a_musl_compiler() -> None:
 def test_downloaded_linux_compilers_are_static_and_match_cpu(bin_root: Path) -> None:
     found = False
     for target, directory in PLATFORMS.items():
-        binary = bin_root / directory / "lib/tsgo"
+        binary = bin_root / directory / "lib/tsc"
         if target.startswith("linux-") and binary.exists():
             verify_static_linux(binary, target)
             found = True

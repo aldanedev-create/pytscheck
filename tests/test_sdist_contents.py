@@ -60,8 +60,8 @@ def test_sdist_contains_no_binaries(built_sdist: Path) -> None:
     """The sdist must not bundle platform binaries (they're fetched at build)."""
     members = _sdist_members(built_sdist)
     for m in members:
-        assert not m.endswith("/tsgo"), m
-        assert not m.endswith("/tsgo.exe"), m
+        assert not m.endswith("/tsc"), m
+        assert not m.endswith("/tsc.exe"), m
 
 
 def test_sdist_no_pycache(built_sdist: Path) -> None:

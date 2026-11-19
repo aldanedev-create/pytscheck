@@ -24,7 +24,7 @@ def _wheel(tmp_path: Path, mode: int) -> Path:
             "pytscheck/bin/linux-amd64/lib/lib.d.ts",
         ):
             zf.writestr(name, "")
-        info = zipfile.ZipInfo("pytscheck/bin/linux-amd64/lib/tsgo")
+        info = zipfile.ZipInfo("pytscheck/bin/linux-amd64/lib/tsc")
         info.external_attr = mode << 16
         zf.writestr(info, b"\x7fELF")
     return wheel
