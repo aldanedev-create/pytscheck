@@ -1,94 +1,94 @@
 {
-  "compiler_version": "7.0.0-dev.20260707.2",
+  "compiler_version": "7.0.2",
   "platforms": {
-    "linux-x64": {
-      "npm_platform": "linux-x64",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-sAoW1kcmkGgcVokVqeuYBGOvdtiMnblgRnvsnpAvC8FdZ4E1fAesomkeids+79O18uFMmdj0bN9bcahGqiW4GQ==",
-      "tarball_integrity": "sha512-du0dzi6y97Po5vDNdPJTyyijHCpaS22JLRnKZEJXBDaO9gCIymOv/5QQokFRuOlQm0bWl3i9PF4OVdGP6uAOQA==",
-      "size_bytes": 24101026,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-linux-x64/-/native-preview-linux-x64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo"
-    },
     "win32-x64": {
       "npm_platform": "win32-x64",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-+xmHNlwZRRrF5oCA0JXG8vWieGHgFXCyInWycYqGze8d8yna0ATMukp33hl8yVUXNPugjWzgKVq0q56AZKIcEA==",
-      "tarball_integrity": "sha512-DL4u27stv0fo71sVhOzHSwE+YMZsbBijVI+kg5dLDLilSH79WFTJ8RSQ46vJrCMt+Gjlv/JOZP1PuLJDfioYeQ==",
-      "size_bytes": 24520504,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-win32-x64/-/native-preview-win32-x64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo.exe"
+      "version": "7.0.2",
+      "integrity": "sha512-kHHTprOfxkpYgxM+KjL+hHrhfuJrg6JgPzX2LLNbNpBklT3kjMsyGMhThLa+tOyS+WXmfWtwKtyVE5IYGdp8mw==",
+      "tarball_integrity": "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==",
+      "size_bytes": 24520544,
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc.exe"
     },
     "win32-arm64": {
       "npm_platform": "win32-arm64",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-TJt9bS9jH8WF3j3HaUip8sCyXERbKk6PFDLpUtln2ACBs1lVgUSbWgEOBzHPFPaFQ3tbg8GemeHKM5jLdf2AJQ==",
-      "tarball_integrity": "sha512-SsAwfhyHJ1akgBc+99z4+hwdbHsdWaKB8EwCNIMA6JfSLMeUjffrYvxu+vfMyxVtOVOz7RrRXRoiDiu4a2sCtg==",
-      "size_bytes": 22956856,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-win32-arm64/-/native-preview-win32-arm64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo.exe"
+      "version": "7.0.2",
+      "integrity": "sha512-y6HDjBJ256nfjIgs3ul5LacZ0ncI4inF/H5coerIHGaTxD66DiKVzXHd71C/LtF+ZdqogxnyI8EJ52HL60ICSw==",
+      "tarball_integrity": "sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==",
+      "size_bytes": 22956896,
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc.exe"
+    },
+    "linux-x64": {
+      "npm_platform": "linux-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-J23hzrxXRb8CXHDY0suHIbsRgLveJSvt4nJpM6H3BKR+BkP57M+F5D/ugCgMeAMhZBTbMpEsCfCajin26RCiiQ==",
+      "tarball_integrity": "sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==",
+      "size_bytes": 24101026,
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc"
     },
     "linux-arm64": {
       "npm_platform": "linux-arm64",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-YgMbKZeeigFULMbYZacrPIff4aneTzRv4p2U2SNzMM8Ppy7yOcQVCKC1FTvXVyDRlE5eDAcxcpe5XpDTajxuvg==",
-      "tarball_integrity": "sha512-iITBa2WjjTI5N9t5l7Z4KoOSI+2zBlhbvFzsD/f8qX8QoKjz/Y4DPyBDgezYi8nkqjjksbgSOJ3/ykzhwrB9cg==",
+      "version": "7.0.2",
+      "integrity": "sha512-SxX4hjq9ugRAPbfJbiYLSSkYbjGq9pJFSA3IwV7s2/tsBNaW0A1iPTcXSFNS1SLmAW2VE1VrHO7vxHgin+bLzA==",
+      "tarball_integrity": "sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==",
       "size_bytes": 22872226,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-linux-arm64/-/native-preview-linux-arm64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo"
-    },
-    "darwin-x64": {
-      "npm_platform": "darwin-x64",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-1A/Ngfq5Zh7M9FR6Hxf2ahHQkng4LzbjklpxQ8HOKsyiiwqE5Q6R44jsQi2huHwL+sM55aDG5rdqX4XC/qO+9w==",
-      "tarball_integrity": "sha512-Afc7M5zOwo+GpfcYwz5Z8HMB2tPVsui7nNIqEuuFB73MPdVqNn/Wmpe4tP4MRri0AtJnJknoHBaTJ/VDAp/Jhw==",
-      "size_bytes": 24971184,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-darwin-x64/-/native-preview-darwin-x64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo"
-    },
-    "darwin-arm64": {
-      "npm_platform": "darwin-arm64",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-j/YmxJNyAKiGj2dmdzwjhTCe7IsWxW39Q4PXsVOz2nfm7kBVR+fkGe0ejalR4eL3FEFT71N1TRJp0R4jXopsqg==",
-      "tarball_integrity": "sha512-wny2pgKjGbiZtnOIHVa3tXC1UfDqxNEFzyPGmiqybedG8hipG2Nfp0l5UxbaKCjkLacUpH/W5bP2hBOMVhCOzg==",
-      "size_bytes": 23653616,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-darwin-arm64/-/native-preview-darwin-arm64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo"
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc"
     },
     "linux-arm": {
       "npm_platform": "linux-arm",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-GgHqr2FYNhDEJMDmlohpPGegOONIUzxCADXu0U1pYCMW5huSn2iDYl8xbhczw7txXsiUD9mgPxO1Yc9JzJHe+Q==",
-      "tarball_integrity": "sha512-hJm/UOqZTr9FHmR7uNm8VGX4oKtfWk0Jem0zPeJFNC8ckGUfSBueyiEYMZB+XmRc1aG4x1E46y3CplP4CLHvGQ==",
+      "version": "7.0.2",
+      "integrity": "sha512-DhKeKLaVzyXnYxLFZzSabdWfCyAPQwu7QcrOhwELkas5PevjAINktsI3eIyVqH7EYqolKAEihAuu0REV8F0lKg==",
+      "tarball_integrity": "sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==",
       "size_bytes": 22937762,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-linux-arm/-/native-preview-linux-arm-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo"
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz",
+      "binary_relpath": "lib/tsc"
     },
     "linux-ia32": {
       "npm_platform": "linux-ia32",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-X7GOTr1lSju94VuLAUI1La0Ng868xQ2xH+1G4lpfYelkFMSq5YdauHFBvo8OPgopispsD8UQdGSnZN0HUTMVGg==",
-      "tarball_integrity": "sha512-du0dzi6y97Po5vDNdPJTyyijHCpaS22JLRnKZEJXBDaO9gCIymOv/5QQokFRuOlQm0bWl3i9PF4OVdGP6uAOQA==",
+      "version": "7.0.2",
+      "integrity": "sha512-/61wOXKH+A36gKXrnWMIfC3wFV5rO63FU/239wIHStea9zvhQRndG/Pt0iC04QlOjYhh4iN7miBtJ0fWtz3JDg==",
+      "tarball_integrity": "sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==",
       "size_bytes": 22753442,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-linux-x64/-/native-preview-linux-x64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo",
-      "source_commit": "9977d6d38fcc78de8ae71770f3aa08256e6cc861",
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc",
+      "source_commit": "2bd066d87f5bafd315be9f40889d0a60b9e58e0b",
       "source_repository": "https://github.com/microsoft/typescript-go.git",
       "go_version": "go1.26.9",
       "libraries_platform": "linux-x64"
     },
     "win32-ia32": {
       "npm_platform": "win32-ia32",
-      "version": "7.0.0-dev.20260707.2",
-      "integrity": "sha512-1v9pe9iisNwtufZWUOfvU0xJZgCXDjzN1UR1LW+gemPLL9wagn1+2QSXM0ksGktUbddf5DuzjmfQFrJix2C6Zg==",
-      "tarball_integrity": "sha512-DL4u27stv0fo71sVhOzHSwE+YMZsbBijVI+kg5dLDLilSH79WFTJ8RSQ46vJrCMt+Gjlv/JOZP1PuLJDfioYeQ==",
+      "version": "7.0.2",
+      "integrity": "sha512-mukYWsSM7FnWRlPoJ1kPuwxqTLlFva2rw3GbguMbVkO4fJB75KX5vMlnP7/+VOBaxOO1czNWRa5gVUtnNUdIvg==",
+      "tarball_integrity": "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==",
       "size_bytes": 23109632,
-      "tarball": "https://registry.npmjs.org/@typescript/native-preview-win32-x64/-/native-preview-win32-x64-7.0.0-dev.20260707.2.tgz",
-      "binary_relpath": "lib/tsgo.exe",
-      "source_commit": "9977d6d38fcc78de8ae71770f3aa08256e6cc861",
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc.exe",
+      "source_commit": "2bd066d87f5bafd315be9f40889d0a60b9e58e0b",
       "source_repository": "https://github.com/microsoft/typescript-go.git",
       "go_version": "go1.26.9",
       "libraries_platform": "win32-x64"
+    },
+    "darwin-x64": {
+      "npm_platform": "darwin-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-NPe74C94CcKXGPZKckS63hczsPFJV+erBOsv79x6wTjQED1ApY+6nIfLJY5nYhn5XDjbgpO6vJrpy9XIk5pAgw==",
+      "tarball_integrity": "sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==",
+      "size_bytes": 24971184,
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc"
+    },
+    "darwin-arm64": {
+      "npm_platform": "darwin-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-tS/pCDO6Zj0DNdJprLcbocK5U8/ZV+tYbzPjJpJpjZA60EtIx20+sIPzzEFniUBrafsCcbAUZg3fOAAfXhYx0A==",
+      "tarball_integrity": "sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==",
+      "size_bytes": 23653616,
+      "tarball": "https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz",
+      "binary_relpath": "lib/tsc"
     }
   }
 }
