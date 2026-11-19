@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Changed
+
+- Bundle the stable TypeScript 7.0.2 native compiler (`@typescript/typescript-<platform>`) instead of `@typescript/native-preview`. The upstream executable is named `tsc`, so pytscheck now locates `lib/tsc` (`lib/tsc.exe` on Windows).
+- x86 targets build from upstream tag `typescript/v7.0.2` (commit `2bd066d`).
+
+## [0.1.1]
+
+### Fixed
+
+- Wheels built on Windows shipped the bundled `tsgo` compiler without the executable bit, so Linux and macOS installs failed with "bundled tsgo is not executable". The build hook now sets the mode and the release check rejects wheels without it.
+
 - Add musllinux 1.2+ tags to verified static Linux wheels, official ARMv7 binaries, and pinned-source Linux/Windows x86 builds. Test installed wheels in Alpine, 32-bit Linux, and 32-bit Windows environments.
 
 ### Added

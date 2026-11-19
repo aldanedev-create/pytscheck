@@ -14,7 +14,7 @@ PyTSCheck wraps Microsoft's native TypeScript compiler, `tsgo`, and returns stru
 
 Requires Python **3.11 or later** on a [supported platform](https://github.com/aldanedev-create/pytscheck/blob/main/docs/supported-platforms.md).
 
-The current package version is **`0.1.0`**, an initial release. Once that version is published to PyPI:
+The current package version is **`0.2.0`**, an initial release. Once that version is published to PyPI:
 
 ```bash
 python -m pip install --only-binary=:all: "pytscheck==0.1.0"
@@ -97,7 +97,7 @@ Adapters live in consuming packages; core does not ship framework integrations. 
 
 - Python 3.11, 3.12, and 3.13 are exercised in CI.
 - Six wheels cover Linux, Windows, and macOS on x64 and ARM64. Linux wheels target glibc 2.17+; macOS wheels require macOS 12+.
-- The bundled compiler is pinned to **`7.0.0-dev.20260707.2`**. Its TypeScript behavior may differ from another `tsc` or `tsgo` version.
+- The bundled compiler is pinned to **`7.0.2`**. Its TypeScript behavior may differ from another `tsc` or `tsgo` version.
 - Checks run locally. Installing a wheel requires no compiler download at check time; building from source can download the pinned binary.
 - This is a checker API, not a JavaScript bundler, language server, or incremental build service. Project references are not automatically built with `tsgo -b`.
 

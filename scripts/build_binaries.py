@@ -21,7 +21,10 @@ REGISTRY = "https://registry.npmjs.org/"
 
 # Pin exactly. Confirmed latest tag as of Phase 0:
 # https://www.npmjs.com/package/@typescript/native-preview
-VERSION = "7.0.0-dev.20260707.2"
+VERSION = "7.0.2"
+
+# Stable packages ship the executable as lib/tsc (preview used lib/tsgo).
+BINARY_NAME = "tsc"
 
 # npm platform  ->  bin/ folder
 PLATFORMS: dict[str, str] = {
@@ -37,9 +40,9 @@ PLATFORMS: dict[str, str] = {
 }
 
 SOURCE_TARGETS = {"linux-ia32": "linux", "win32-ia32": "windows"}
-SOURCE_COMMIT = "9977d6d38fcc78de8ae71770f3aa08256e6cc861"
+SOURCE_COMMIT = "2bd066d87f5bafd315be9f40889d0a60b9e58e0b"  # tag typescript/v7.0.2
 SOURCE_REPOSITORY = "https://github.com/microsoft/typescript-go.git"
-SOURCE_GO_VERSION = "go1.26.9"
+SOURCE_GO_VERSION = "go1.27.0"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BIN_ROOT = REPO_ROOT / "src" / "pytscheck" / "bin"
@@ -51,7 +54,7 @@ _EXTRACT_KW: dict = {"filter": "data"} if sys.version_info >= (3, 12) else {}
 
 def _npm_pkg(platform: str) -> str:
     # URL-encode the leading @typescript/ scope
-    return f"@typescript%2Fnative-preview-{platform}"
+    return f"@typescript%2Ftypescript-{platform}"
 
 
 def _fetch_metadata(platform: str) -> dict:
@@ -110,7 +113,7 @@ def _fetch_npm(platform: str, out_root: Path) -> dict:
         shutil.rmtree(dest)
     _safe_extract(data, dest)
 
-    exe_name = "tsgo.exe" if platform.startswith("win32") else "tsgo"
+    exe_name = f"{BINARY_NAME}.exe" if platform.startswith("win32") else BINARY_NAME
     exe = dest / "lib" / exe_name
     if not exe.exists():
         # Fallback: search for the binary anywhere

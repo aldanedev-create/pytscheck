@@ -18,8 +18,6 @@ PLATFORMS = (
     "linux-x64",
     "linux-arm64",
     "linux-arm",
-    "linux-ia32",
-    "win32-ia32",
     "win32-x64",
     "win32-arm64",
     "darwin-x64",

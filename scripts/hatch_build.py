@@ -17,8 +17,6 @@ TAGS = {
     "linux-x64": "manylinux_2_17_x86_64.manylinux2014_x86_64.musllinux_1_2_x86_64",
     "linux-arm64": "manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_2_aarch64",
     "linux-arm": "manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_2_armv7l",
-    "linux-ia32": "manylinux_2_17_i686.manylinux2014_i686.musllinux_1_2_i686",
-    "win32-ia32": "win32",
     "win32-x64": "win_amd64",
     "win32-arm64": "win_arm64",
     "darwin-x64": "macosx_12_0_x86_64",
@@ -93,3 +91,25 @@ class CustomBuildHook(BuildHookInterface):
         build_data["pure_python"] = False
         build_data["force_include"][str(dest)] = f"pytscheck/bin/{PLATFORMS[target]}"
         build_data["force_include"][str(wheel_manifest)] = "pytscheck/bin/manifest.json"
+
+    def finalize(self, version: str, build_data: dict, artifact_path: str) -> None:
+        """Mark the bundled compiler executable inside the wheel.
+
+        Hatchling copies the mode it sees on disk, which is 0644 when building on
+        Windows, so the installed tsgo would not be runnable on Linux/macOS.
+        """
+        if self.target_name != "wheel" or version == "editable":
+            return
+        import zipfile
+
+        temporary = artifact_path + ".tmp"
+        with (
+            zipfile.ZipFile(artifact_path) as source,
+            zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED) as target,
+        ):
+            for info in source.infolist():
+                data = source.read(info.filename)
+                if info.filename.endswith("/lib/tsgo"):  # tsgo.exe needs no mode bit
+                    info.external_attr = 0o100755 << 16
+                target.writestr(info, data)
+        os.replace(temporary, artifact_path)

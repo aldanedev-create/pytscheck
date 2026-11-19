@@ -295,9 +295,13 @@ def check_wheel_contents(wheel: Path) -> Check:
     if any(n.startswith("tests/") for n in names):
         problems.append("contains tests/")
 
-    binaries = [n for n in names if n.endswith(("/tsgo", "/tsgo.exe"))]
+    binaries = [n for n in names if n.endswith(("/tsc", "/tsc.exe"))]
     if len(binaries) != 1:
         problems.append(f"expected exactly one native compiler, found {len(binaries)}")
+    with zipfile.ZipFile(wheel) as zf:
+        for info in zf.infolist():
+            if info.filename.endswith("/lib/tsgo") and not (info.external_attr >> 16) & 0o111:
+                problems.append("tsgo is not marked executable in the wheel")
     if not any(n.endswith(".d.ts") for n in names):
         problems.append("missing bundled TypeScript libraries")
     if "py3-none-any" in wheel.name:
